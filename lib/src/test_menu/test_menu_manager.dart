@@ -47,9 +47,9 @@ abstract class TestMenuManager {
     showMenu(menu);
   }
 
-  bool pop() {
+  bool pop([int count = 1]) {
     if (stackMenus.length > 1) {
-      stackMenus.removeLast();
+      stackMenus.removeRange(stackMenus.length - count, stackMenus.length);
       showMenu(activeMenu);
       return true;
     }

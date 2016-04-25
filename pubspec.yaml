@@ -3,6 +3,9 @@ version: 0.0.1
 homepage: https://github.com/tekartik/tekartik_test_menu.dart
 # git://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
+author: Alexandre Roux <alex@tekartik.com>
+environment:
+  sdk: '>=1.0.0 <2.0.0'
 dependencies:
   tekartik_mdl_js:
     git: git://github.com/tekartik/mdl_js.dart
