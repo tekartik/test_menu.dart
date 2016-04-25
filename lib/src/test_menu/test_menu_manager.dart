@@ -64,8 +64,8 @@ abstract class TestMenuManager {
 
   Future runItem(TestItem item) {
     print("running '$item'");
+    onProcessItem(item);
     return new Future.sync(item.run).then((_) {
-      onProcessItem(item);
       print("done '$item'");
     });
   }

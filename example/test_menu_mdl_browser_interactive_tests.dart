@@ -15,6 +15,7 @@ main() async {
 
   TestMenu menu = new TestMenu("main");
   menu.add("print hi", () => print('hi'));
+  menu.add("crash", () => print(null.length));
   menu.addMenu(subMenu);
   showTestMenu(menu);
 }

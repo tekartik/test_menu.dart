@@ -51,8 +51,6 @@ class TestMenuManagerBrowser extends TestMenuManager {
   }
 
   void onProcessItem(TestItem item) {
-    super.onProcessItem(item);
-
     List<String> list = new List();
 
     TestMenu lastMenu = null;
@@ -79,6 +77,8 @@ class TestMenuManagerBrowser extends TestMenuManager {
     }
 
     window.location.hash = "#${list.join('_')}";
+    // process after setting the hash to allow reload in case of crash in processing
+    super.onProcessItem(item);
   }
 
   void displayMenu(TestMenu menu) {
