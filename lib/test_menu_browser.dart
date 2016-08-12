@@ -2,6 +2,7 @@ library tekartik_test_menu_browser;
 
 import 'dart:html';
 import 'test_menu.dart';
+import 'src/common.dart';
 
 const String CONTAINER_ID = "tekartik_test_menu_container";
 
@@ -10,6 +11,33 @@ class TestMenuManagerBrowser extends TestMenuManager {
   TestMenu displayedMenu = null;
   Element container = null;
 
+  Element output = null;
+  InputElement input = null;
+  void write(Object message) {
+    String text ="$message";
+    devPrint("writing $text");
+    output.text += "$text\n";
+  }
+
+  Completer<String> promptCompleter;
+  Future prompt(Object message) {
+    if (input == null) {
+      input = new InputElement();
+      container.children.add(input);
+      input.onChange.listen((_) {
+        devPrint("on change: ${input.value}");
+        if (promptCompleter != null) {
+          promptCompleter.complete(input.value);
+          promptCompleter = null;
+        }
+      });
+    }
+    write(message ?? "Enter text");
+    var completer = new Completer.sync();
+    promptCompleter  = completer;
+    return completer.future;
+
+  }
   TestMenuManagerBrowser() {
     String hash = window.location.hash;
 

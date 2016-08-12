@@ -61,6 +61,8 @@ abstract class TestMenuManager {
   }
 
   void showMenu(TestMenu menu);
+  void write(Object message);
+  Future<String> prompt(Object message);
 
   Future runItem(TestItem item) {
     print("running '$item'");

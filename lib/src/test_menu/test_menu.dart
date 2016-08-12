@@ -12,7 +12,7 @@ abstract class TestItem {
   dynamic run();
 }
 
-typedef void TestItemFn();
+typedef R TestItemFn<R>();
 
 abstract class _BaseTestItem {
   String name;
@@ -28,8 +28,8 @@ class RunnableTestItem extends _BaseTestItem implements TestItem {
   TestItemFn fn;
   RunnableTestItem(String name, this.fn) : super(name);
 
-  void run() {
-    fn();
+  run() {
+    return fn();
   }
 }
 

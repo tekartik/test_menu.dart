@@ -5,14 +5,23 @@ import 'test_menu.dart';
 import 'package:tekartik_mdl_js/mdl_js_loader.dart';
 //import 'package:tekartik_mdl_js/mdl_js.dart';
 import 'package:tekartik_mdl_js/mdl_list.dart';
+import 'test_menu_browser.dart' as common_browser;
 import 'dart:async';
+import 'src/common.dart';
 
 const String CONTAINER_ID = "tekartik_test_menu_container";
 
 // can be extended
-class TestMenuManagerBrowser extends TestMenuManager {
+class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
   TestMenu displayedMenu = null;
   Element container = null;
+  Element output = null;
+
+  void write(Object message) {
+    String text ="$message";
+    devPrint("writing $text");
+    output.text += "$text\n";
+  }
 
   TestMenuManagerBrowser() {
     String hash = window.location.hash;
@@ -81,6 +90,12 @@ class TestMenuManagerBrowser extends TestMenuManager {
     super.onProcessItem(item);
   }
 
+  void init() {
+    output = new PreElement();
+    // TODO find a field
+    document.body.children.add(output);
+
+  }
   void displayMenu(TestMenu menu) {
     findContainer();
 
@@ -143,6 +158,7 @@ class TestMenuManagerBrowser extends TestMenuManager {
 Future initTestMenuBrowser() async {
   await Future.wait([loadMdlJs(), loadMdlCss(), loadMaterialIconsCss()]);
   _testMenuManagerBrowser = new TestMenuManagerBrowser();
+  _testMenuManagerBrowser.init();
 }
 
 TestMenuManagerBrowser _testMenuManagerBrowser;
