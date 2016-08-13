@@ -10,15 +10,16 @@ dependencies:
   func: any
   tekartik_mdl_js:
     git: git://github.com/tekartik/mdl_js.dart
+  dart_to_js_script_rewriter: any
+  yacht:
+    git: git://github.com/tekartik/yacht.dart
+
 dev_dependencies:
   grinder: any
   dev_test: any
   test: any
   tekartik_deploy:
     git: git://github.com/tekartik/tekartik_deploy.dart
-  dart_to_js_script_rewriter: any
-  yacht:
-    git: git://github.com/tekartik/yacht.dart
   platform_context:
     git: https://github.com/tekartik/platform_context.dart
 transformers:
