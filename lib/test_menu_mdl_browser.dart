@@ -6,8 +6,6 @@ import 'package:tekartik_mdl_js/mdl_js_loader.dart';
 import 'package:tekartik_mdl_js/mdl_list.dart';
 import 'package:tekartik_mdl_js/mdl_textfield.dart';
 import 'package:platform_context/context_browser.dart';
-import 'package:platform_context/context.dart';
-
 
 
 import 'src/common.dart';
@@ -85,6 +83,15 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
   void findContainer() {
     if (container == null) {
+
+      //devPrint(browserPlatformContext);
+      /*
+      devPrint(platformContext);
+      devPrint(platformContext.browser);
+      devPrint(platformContext.browser.isMobile);
+      */
+      //devPrint(isMobile);
+
       container = document.getElementById(CONTAINER_ID);
       if (container == null) {
         container = new DivElement()
