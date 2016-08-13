@@ -215,7 +215,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       for (TestMenu testMenu in testMenuManager.stackMenus) {
         int menuPopCount = popCount--;
         _clickOnMenu([_]) {
-          devPrint("Click on menu");
+          //devPrint("Click on menu");
           if (menuPopCount <= activeDepth && menuPopCount > 0) {
             testMenuManager.pop(menuPopCount);
           } else {

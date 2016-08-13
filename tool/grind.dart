@@ -1,13 +1,10 @@
 import 'package:grinder/grinder.dart';
-import 'package:process_run/cmd_run.dart';
-import 'package:process_run/cmd_run.dart' as process;
-//import 'package:tekartik_pub/pub_fs_io.dart';
-import 'package:fs_shim/fs_io.dart';
-import 'package:tekartik_deploy/gs_deploy.dart';
 import 'package:path/path.dart';
-import 'dart:async';
-//import 'package:tekartik_pub/script.dart';
+import 'package:process_run/cmd_run.dart';
+import 'package:tekartik_deploy/gs_deploy.dart';
+//import 'package:tekartik_pub/pub_fs_io.dart';
 
+//import 'package:tekartik_pub/script.dart';
 
 
 main(args) async {
@@ -56,9 +53,10 @@ deploy() {
 @Task('Fs Deploy built app.')
 fs_deploy_starter() async {
 //...
-  ProcessCmd cmd = processCmd("fsdeploy", [join("build", "example", "starter", "deploy.yaml")]);
+  ProcessCmd cmd = processCmd(
+      "fsdeploy", [join("build", "example", "starter", "deploy.yaml")]);
 
-  await devRunCmd(cmd);
+  await runCmd(cmd);
 }
 
 /*
@@ -97,13 +95,12 @@ build_starter() {
 }
 
 gsDeploy(String ioInPath, String gsOut) async {
-
-
   ProcessCmd cmd = gsDeployCmd(ioInPath, gsOut);
   await runCmd(cmd);
 }
 
 @Task('Test deploy.')
 gstestdeploy() async {
-  await gsDeploy(join('build', 'example', 'deploy', 'starter'), "gs://gstest.tekartik.com/test_menu");
+  await gsDeploy(join('build', 'example', 'deploy', 'starter'),
+      "gs://gstest.tekartik.com/test_menu");
 }
