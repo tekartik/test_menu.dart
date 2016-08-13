@@ -13,7 +13,9 @@ abstract class TestMenuManager {
   List<TestMenu> stackMenus = new List();
 
   static List<String> initCommandsFromHash(String hash) {
-    print("hash: $hash");
+    if (debugTestMenuManager) {
+      print("hash: $hash");
+    }
     int firstHash = hash.indexOf('#');
     if (firstHash == 0) {
       int nextHash = hash.indexOf('#', 1);
@@ -26,18 +28,23 @@ abstract class TestMenuManager {
       hash = hash.substring(0, firstHash);
     }
     List<String> commands = hash.split('_');
-    print("hash: $hash commands: $commands");
+    if (debugTestMenuManager) {
+      print("hash: $hash commands: $commands");
+    }
     return commands;
   }
 
   TestMenuManager() {
     testMenuManager = this;
   }
+
+  /*
   TestMenu _startMenu;
 
   void setStartMenu(TestMenu menu) {
     _startMenu = menu;
   }
+  */
 
   void push(TestMenu menu) {
     if (stackMenus.contains(menu)) {
@@ -65,10 +72,14 @@ abstract class TestMenuManager {
   Future<String> prompt(Object message);
 
   Future runItem(TestItem item) {
-    print("running '$item'");
+    if (debugTestMenuManager) {
+      print("running '$item'");
+    }
     onProcessItem(item);
     return new Future.sync(item.run).then((_) {
-      print("done '$item'");
+      if (debugTestMenuManager) {
+        print("done '$item'");
+      }
     });
   }
 

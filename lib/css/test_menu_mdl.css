@@ -1,0 +1,12 @@
+#tekartik_test_menu_container #test_menu {
+    padding: 10px 10px 0 10px;
+}
+
+#tekartik_test_menu_container #output {
+    padding: 8px 10px;
+    background-color: #e5e5e5;
+}
+
+#tekartik_test_menu_container #input {
+    margin: 0 10px 10px 10px;
+}

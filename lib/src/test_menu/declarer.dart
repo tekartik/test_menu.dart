@@ -3,7 +3,6 @@
 import '../../test_menu.dart';
 import '../common.dart';
 
-typedef _Body();
 
 /*
 abstract class Callback {

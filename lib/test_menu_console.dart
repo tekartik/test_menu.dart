@@ -1,11 +1,9 @@
 library tekartik_test_menu_console;
 
 import 'dart:io';
-import 'dart:async';
-import 'dart:convert';
 import 'test_menu.dart';
-import 'package:tekartik_core/dev_utils.dart';
 import 'src/common.dart';
+export 'src/common.dart';
 
 // set to false before checkin
 bool testMenuConsoleDebug = false;
@@ -176,7 +174,7 @@ class _TestMenuManagerConsole extends TestMenuManager {
 //      });
     if (!_argumentsHandled) {
       _argumentsHandled = true;
-      List<String> commands;
+      // List<String> commands;
       try {
         String lastArg = arguments.last;
         initialCommands = lastArg.split(';');
@@ -214,7 +212,7 @@ class _TestMenuManagerConsole extends TestMenuManager {
   }
 
   void write(Object message) {
-    print("$message");
+    stdout.writeln("$message");
   }
 
   Future<String> prompt(Object message) {

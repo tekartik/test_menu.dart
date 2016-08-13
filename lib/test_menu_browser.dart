@@ -1,10 +1,16 @@
 library tekartik_test_menu_browser;
 
 import 'dart:html';
-import 'test_menu.dart';
+import 'dart:js';
+
 import 'src/common.dart';
+import 'test_menu.dart';
 
 const String CONTAINER_ID = "tekartik_test_menu_container";
+
+js_test(String name) {
+  context.callMethod(name);
+}
 
 // can be extended
 class TestMenuManagerBrowser extends TestMenuManager {
@@ -12,32 +18,35 @@ class TestMenuManagerBrowser extends TestMenuManager {
   Element container = null;
 
   Element output = null;
-  InputElement input = null;
+  InputElement basicInput;
+
   void write(Object message) {
-    String text ="$message";
-    devPrint("writing $text");
+    String text = "$message";
+    //print("writing $text");
     output.text += "$text\n";
   }
 
+
   Completer<String> promptCompleter;
+
   Future prompt(Object message) {
-    if (input == null) {
-      input = new InputElement();
-      container.children.add(input);
-      input.onChange.listen((_) {
-        devPrint("on change: ${input.value}");
+    if (basicInput == null) {
+      basicInput = new InputElement();
+      container.children.add(basicInput);
+      basicInput.onChange.listen((_) {
+        // devPrint("on change: ${basicInput.value}");
         if (promptCompleter != null) {
-          promptCompleter.complete(input.value);
+          promptCompleter.complete(basicInput.value);
           promptCompleter = null;
         }
       });
     }
     write(message ?? "Enter text");
     var completer = new Completer.sync();
-    promptCompleter  = completer;
+    promptCompleter = completer;
     return completer.future;
-
   }
+
   TestMenuManagerBrowser() {
     String hash = window.location.hash;
 
@@ -122,7 +131,7 @@ class TestMenuManagerBrowser extends TestMenuManager {
             runItem(item);
           });
         list.children.add(liElement);
-        print('$i ${item}');
+        //print('$i ${item}');
       }
 
       displayedMenu = menu;

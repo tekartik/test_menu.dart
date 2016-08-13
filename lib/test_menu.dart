@@ -10,6 +10,8 @@ part 'src/test_menu/test_menu.dart';
 
 part 'src/test_menu/test_menu_manager.dart';
 
+bool debugTestMenuManager = false;
+
 void showTestMenu(TestMenu menu) {
   testMenuManager.push(menu);
 }

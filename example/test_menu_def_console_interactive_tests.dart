@@ -1,7 +1,6 @@
 library test_menu_console_interactive_test;
 
 import 'package:tekartik_test_menu/test_menu_console.dart';
-import 'package:tekartik_test_menu/test_menu.dart';
 
 import 'common_test_menu_def.dart' as common_test_menu;
 
