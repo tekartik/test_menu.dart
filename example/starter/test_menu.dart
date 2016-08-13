@@ -21,6 +21,9 @@ main() async {
     item("print hi", () {
       print('hi');
     });
+    item("crash", () {
+      throw "Hi";
+    });
     menu('sub', () {
       item("print hi", () => print('hi'));
     });

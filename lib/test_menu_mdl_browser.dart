@@ -140,6 +140,16 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
     }
   }
 
+  @override
+  Future runItem(TestItem item) async {
+    try {
+      return await super.runItem(item);
+    } catch (e, st) {
+      write(e);
+      write(st);
+      write(e);
+    }
+  }
   void autoScroll() {
     window.scrollTo(0, document.body.scrollHeight);
   }
