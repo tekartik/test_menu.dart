@@ -13,6 +13,8 @@ dependencies:
   dart_to_js_script_rewriter: any
   yacht:
     git: git://github.com/tekartik/yacht.dart
+  platform_context:
+    git: https://github.com/tekartik/platform_context.dart
 
 dev_dependencies:
   grinder: any
@@ -20,8 +22,6 @@ dev_dependencies:
   test: any
   tekartik_deploy:
     git: git://github.com/tekartik/tekartik_deploy.dart
-  platform_context:
-    git: https://github.com/tekartik/platform_context.dart
 transformers:
   - dart_to_js_script_rewriter
   - yacht
