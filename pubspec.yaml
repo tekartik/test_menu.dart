@@ -14,9 +14,9 @@ dependencies:
   yacht:
     git: git://github.com/tekartik/yacht.dart
   platform_context:
-    git: https://github.com/tekartik/platform_context.dart
+    git: git://github.com/tekartik/platform_context.dart
   tekartik_pub:
-    git: https://github.com/tekartik/tekartik_pub.dart
+    git: git://github.com/tekartik/tekartik_pub.dart
 
 dev_dependencies:
   grinder: any
