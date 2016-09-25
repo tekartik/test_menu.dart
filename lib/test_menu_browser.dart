@@ -3,7 +3,7 @@ library tekartik_test_menu_browser;
 import 'dart:html';
 import 'dart:js';
 
-import 'src/common.dart';
+import 'src/common_browser.dart';
 import 'test_menu.dart';
 
 const String CONTAINER_ID = "tekartik_test_menu_container";

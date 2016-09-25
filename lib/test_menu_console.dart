@@ -2,8 +2,8 @@ library tekartik_test_menu_console;
 
 import 'dart:io';
 import 'test_menu.dart';
-import 'src/common.dart';
-export 'src/common.dart';
+import 'src/common_io.dart';
+export 'src/common_io.dart';
 
 // set to false before checkin
 bool testMenuConsoleDebug = false;

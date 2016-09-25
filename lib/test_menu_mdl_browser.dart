@@ -8,8 +8,8 @@ import 'package:tekartik_mdl_js/mdl_textfield.dart';
 import 'package:platform_context/context_browser.dart';
 
 
-import 'src/common.dart';
-export 'src/common.dart';
+import 'src/common_browser.dart';
+export 'src/common_browser.dart';
 import 'test_menu.dart';
 import 'test_menu_browser.dart' as common_browser;
 
