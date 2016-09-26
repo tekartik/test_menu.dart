@@ -54,7 +54,7 @@ deploy() {
 fs_deploy_starter() async {
 //...
   ProcessCmd cmd = processCmd(
-      "fsdeploy", [join("build", "example", "starter", "deploy.yaml")]);
+      "fsdeploy", [join("build", "example", "starter_browser", "deploy.yaml")]);
 
   await runCmd(cmd);
 }
@@ -89,9 +89,9 @@ gsprod() {}
 gstest() {}
 */
 
-@Task('build starter')
+@Task('build starter_browser')
 build_starter() {
-  Pub.build(directories: [url.join('example', 'starter')]);
+  Pub.build(directories: [url.join('example', 'starter_browser')]);
 }
 
 gsDeploy(String ioInPath, String gsOut) async {
@@ -101,6 +101,6 @@ gsDeploy(String ioInPath, String gsOut) async {
 
 @Task('Test deploy.')
 gstestdeploy() async {
-  await gsDeploy(join('build', 'example', 'deploy', 'starter'),
+  await gsDeploy(join('build', 'example', 'deploy', 'starter_browser'),
       "gs://gstest.tekartik.com/test_menu");
 }

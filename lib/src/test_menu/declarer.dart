@@ -61,7 +61,25 @@ class Runner {
         testMenu = item.menu;
       }
     }
-    showTestMenu(testMenu);
+
+    // look for solo stuff
+    bool _hasSolo = false;
+    _handleSolo(TestMenu testMenu) async {
+      for (TestItem item in testMenu.items) {
+        if (item is RunnableTestItem) {
+          if (item.solo == true) {
+            _hasSolo = true;
+            await item.run();
+          }
+        } else if (item is MenuTestItem) {
+          _handleSolo(item.menu);
+        }
+      }
+    }
+    await _handleSolo(testMenu);
+    if (!_hasSolo) {
+      showTestMenu(testMenu);
+    }
   }
 
   void write(Object message) {
@@ -77,8 +95,8 @@ class Declarer {
   // current test menu
   TestMenu _testMenu = new TestMenu(null);
 
-  void menu(String name, VoidFunc0 body) {
-    TestMenu newMenu = new TestMenu(name);
+  void menu(String name, VoidFunc0 body, {String cmd}) {
+    TestMenu newMenu = new TestMenu(name, cmd: cmd);
     _testMenu.addMenu(newMenu);
 
     TestMenu parentTestMenu = _testMenu;
@@ -87,19 +105,19 @@ class Declarer {
     _testMenu = parentTestMenu;
   }
 
-  void item(String name, Func0 body) {
-    TestItem item = new TestItem.fn(name, body);
+  void item(String name, Func0 body, {String cmd, bool solo}) {
+    TestItem item = new TestItem.fn(name, body, cmd: cmd, solo: solo);
     _testMenu.addItem(item);
     //_testMenu.add("print hi", () => print('hi'));
   }
 
 
-  Future run() {
+  Future run() async {
     // simply show top menu, if empty exit, other go directly in sub menu
     //_testMenu.length
 
     runner = new Runner(this);
-    runner.run();
+    await runner.run();
 
 
 

@@ -1,18 +1,24 @@
 library tekartik_test_menu;
 
 import 'dart:async';
+
 import 'package:func/func.dart';
 
 import 'src/test_menu/declarer.dart';
-//import 'src/common.dart';
 
 part 'src/test_menu/test_menu.dart';
 
 part 'src/test_menu/test_menu_manager.dart';
+//import 'src/common.dart';
+
 
 bool debugTestMenuManager = false;
 
 void showTestMenu(TestMenu menu) {
+  if (testMenuManager == null) {
+    print(
+        'Cannot tell whether you\'re running from io or browser. Please include the proper header');
+  }
   testMenuManager.push(menu);
 }
 
@@ -31,21 +37,32 @@ Declarer get _declarer {
   return __declarer;
 }
 
+Declarer testMenuNewDeclarer() {
+  __declarer = new Declarer();
+  return __declarer;
+}
+
 ///
 /// Declare a menu
 ///
 /// declaration must be sync
 ///
-void menu(String name, VoidFunc0 body) {
-  _declarer.menu(name, body);
+void menu(String name, VoidFunc0 body, {String cmd}) {
+  _declarer.menu(name, body, cmd: cmd);
 }
 
 ///
 /// Declare a menu item
 ///
 /// can return a future
-void item(String name, Func0 body) {
-  _declarer.item(name, body);
+///
+/// @param cmd command shortcut (instead of incremental number)
+void item(String name, Func0 body, {String cmd}) {
+  _declarer.item(name, body, cmd: cmd);
+}
+
+void solo_item(String name, Func0 body, {String cmd}) {
+  _declarer.item(name, body, cmd: cmd, solo: true);
 }
 
 void write(Object message) {
