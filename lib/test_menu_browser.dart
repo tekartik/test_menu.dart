@@ -4,7 +4,9 @@ import 'dart:html';
 import 'dart:js';
 
 import 'src/common_browser.dart';
+export 'src/common_browser.dart';
 import 'test_menu.dart';
+export 'test_menu.dart';
 
 const String CONTAINER_ID = "tekartik_test_menu_container";
 
@@ -147,8 +149,18 @@ class TestMenuManagerBrowser extends TestMenuManager {
   }
 }
 
-void initTestMenuBrowser() {
+void initTestMenuBrowser({List<String> jsFiles}) {
+  testMenuLoadJs(jsFiles);
   _testMenuManagerBrowser = new TestMenuManagerBrowser();
+
+}
+
+Future testMenuLoadJs(List<String> jsFiles) async {
+  if (jsFiles != null) {
+    for (String jsFile in jsFiles) {
+      await loadJavascriptScript(jsFile);
+    }
+  }
 }
 
 TestMenuManagerBrowser _testMenuManagerBrowser;

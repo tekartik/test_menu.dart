@@ -6,7 +6,7 @@ import 'package:tekartik_mdl_js/mdl_js_loader.dart';
 import 'package:tekartik_mdl_js/mdl_list.dart';
 import 'package:tekartik_mdl_js/mdl_textfield.dart';
 import 'package:platform_context/context_browser.dart';
-
+import 'test_menu_browser.dart' as browser;
 
 import 'src/common_browser.dart';
 export 'src/common_browser.dart';
@@ -317,12 +317,9 @@ Future initTestMenuBrowser({List<String> js}) async {
   if (debugTestMenuManager) {
     print("loading js: $js");
   }
-  if (js != null) {
-    for (String jsFile in js) {
-      futures.add(loadJavascriptScript(jsFile));
-    }
-  }
   await Future.wait(futures);
+  await browser.testMenuLoadJs(js);
+
   _testMenuManagerBrowser = new TestMenuManagerBrowser();
   _testMenuManagerBrowser.init();
 }

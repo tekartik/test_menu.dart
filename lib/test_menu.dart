@@ -61,6 +61,7 @@ void item(String name, Func0 body, {String cmd}) {
   _declarer.item(name, body, cmd: cmd);
 }
 
+@deprecated
 void solo_item(String name, Func0 body, {String cmd}) {
   _declarer.item(name, body, cmd: cmd, solo: true);
 }
