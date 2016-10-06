@@ -24,6 +24,9 @@ dev_dependencies:
   test: any
   tekartik_deploy:
     git: git://github.com/tekartik/tekartik_deploy.dart
+  chrome_travis:
+    git: git://github.com/tekartik/chrome_travis.dart
+    version: '>=0.1.3'
 transformers:
   - dart_to_js_script_rewriter
   - yacht
