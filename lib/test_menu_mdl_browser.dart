@@ -201,6 +201,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
   void _updateMenuHash() {
     window.location.hash = "#${getMenuStackNames().join('_')}";
   }
+
   void displayMenu(TestMenu menu) {
     findContainer();
 
@@ -293,12 +294,13 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
   Completer<String> promptCompleter;
 
-  Future prompt(Object message) {
+  @override
+  Future<String> prompt(Object message) {
     //String message = (message == null || message.length == 0)
     message = message == null ? "Enter text" : "$message";
     input.value = null;
     write("$message >");
-    var completer = new Completer.sync();
+    var completer = new Completer<String>.sync();
     promptCompleter = completer;
     input.label = message;
     input.focus();

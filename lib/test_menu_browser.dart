@@ -19,6 +19,7 @@ class TestMenuManagerBrowser extends TestMenuManager {
   TestMenu displayedMenu = null;
   Element container = null;
 
+  Element menuContainer = null;
   Element output = null;
   InputElement basicInput;
 
@@ -31,20 +32,10 @@ class TestMenuManagerBrowser extends TestMenuManager {
 
   Completer<String> promptCompleter;
 
-  Future prompt(Object message) {
-    if (basicInput == null) {
-      basicInput = new InputElement();
-      container.children.add(basicInput);
-      basicInput.onChange.listen((_) {
-        // devPrint("on change: ${basicInput.value}");
-        if (promptCompleter != null) {
-          promptCompleter.complete(basicInput.value);
-          promptCompleter = null;
-        }
-      });
-    }
+  @override
+  Future<String> prompt(Object message) {
     write(message ?? "Enter text");
-    var completer = new Completer.sync();
+    var completer = new Completer<String>.sync();
     promptCompleter = completer;
     return completer.future;
   }
@@ -62,6 +53,22 @@ class TestMenuManagerBrowser extends TestMenuManager {
         container = new DivElement();
         document.body.children.add(container);
       }
+
+      basicInput = new InputElement();
+
+      basicInput.onChange.listen((_) {
+        // devPrint("on change: ${basicInput.value}");
+        if (promptCompleter != null) {
+          promptCompleter.complete(basicInput.value);
+          promptCompleter = null;
+        }
+      });
+
+      menuContainer = new DivElement();
+
+      output = new PreElement();
+
+      container.children.addAll([output, menuContainer, basicInput]);
     }
   }
 
@@ -137,7 +144,7 @@ class TestMenuManagerBrowser extends TestMenuManager {
       }
 
       displayedMenu = menu;
-      container.children
+      menuContainer.children
         ..clear()
         ..addAll([header, list]);
     }

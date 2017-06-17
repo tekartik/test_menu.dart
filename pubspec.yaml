@@ -1,5 +1,5 @@
 name: tekartik_test_menu
-version: 0.2.0
+version: 0.3.0
 homepage: https://github.com/tekartik/tekartik_test_menu.dart
 # git://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
@@ -30,6 +30,11 @@ dev_dependencies:
 transformers:
   - dart_to_js_script_rewriter
   - yacht
+
+# try ddc
+web:
+  compiler:
+    debug: dartdevc
 
 dependency_overrides:
 #  tekartik_mdl_js:
