@@ -19,6 +19,7 @@ main(List<String> args) async {
       }, cmd: "e");
       menu('sub', () {
         item("print hi", () => print('hi'));
+        // ignore: deprecated_member_use
         solo_item("print hi", () {
           print('hi');
         });

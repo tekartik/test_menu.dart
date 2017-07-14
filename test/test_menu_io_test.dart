@@ -12,6 +12,7 @@ main() {
       int c;
       var declarer = testMenuNewDeclarer();
       menu('main', () {
+        // ignore: deprecated_member_use
         solo_item("1", () async {
           a = 1;
         });
@@ -19,6 +20,7 @@ main() {
           b = 2;
         });
         menu('sub', () {
+          // ignore: deprecated_member_use
           solo_item("3", () {
             c = 3;
           });
