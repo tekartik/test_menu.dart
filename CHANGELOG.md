@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- limit output to 100 lines on browser
+
 ## 0.3.0
 
 - Add DDC support

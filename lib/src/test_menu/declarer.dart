@@ -4,7 +4,6 @@ import '../../test_menu.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 //import '../common.dart';
 
-
 /*
 abstract class Callback {
   TestMenu parent;
@@ -50,7 +49,7 @@ class Runner {
   Runner(this.declarer);
 
   Future run() async {
-    TestMenu testMenu =declarer._testMenu;
+    TestMenu testMenu = declarer._testMenu;
     if (testMenu.length == 0) {
       write('No menu or item declared');
       // exiting
@@ -76,6 +75,7 @@ class Runner {
         }
       }
     }
+
     await _handleSolo(testMenu);
     if (!_hasSolo) {
       showTestMenu(testMenu);
@@ -91,7 +91,6 @@ class Runner {
 Runner runner;
 
 class Declarer {
-
   // current test menu
   TestMenu _testMenu = new TestMenu(null);
 
@@ -111,17 +110,12 @@ class Declarer {
     //_testMenu.add("print hi", () => print('hi'));
   }
 
-
   Future run() async {
     // simply show top menu, if empty exit, other go directly in sub menu
     //_testMenu.length
 
     runner = new Runner(this);
     await runner.run();
-
-
-
-
 
     //TODO wait for completion
     return new Future.value(runner);

@@ -17,7 +17,6 @@ String _exitCommand = ".";
 String _helpCommand = "h";
 
 class _TestMenuManagerConsole extends TestMenuManager {
-
   static final String TAG = "[test_menu_console]";
 
   List<String> arguments;
@@ -126,8 +125,7 @@ class _TestMenuManagerConsole extends TestMenuManager {
           print("$TAG done '$item'");
         }
       });
-    }
-    else {
+    } else {
       print('errorValue: $line');
       print('$_exitCommand exit');
       print('$_helpCommand display menu again');
@@ -135,7 +133,6 @@ class _TestMenuManagerConsole extends TestMenuManager {
 
     return new Future.value();
   }
-
 
 //void main() {
 //readLine().listen(processLine);
@@ -168,7 +165,6 @@ class _TestMenuManagerConsole extends TestMenuManager {
 //      });
     if (!_argumentsHandled) {
       _argumentsHandled = true;
-
 
       _nextLine();
       /*

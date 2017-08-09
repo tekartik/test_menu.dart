@@ -3,6 +3,7 @@ library tekartik_test_menu_browser;
 import 'dart:html';
 import 'dart:js';
 
+import 'package:tekartik_test_menu/src/out_buffer.dart';
 import 'src/common_browser.dart';
 export 'src/common_browser.dart';
 import 'test_menu.dart';
@@ -23,12 +24,13 @@ class TestMenuManagerBrowser extends TestMenuManager {
   Element output = null;
   InputElement basicInput;
 
-  void write(Object message) {
-    String text = "$message";
-    //print("writing $text");
-    output.text += "$text\n";
-  }
+  var outBuffer = new OutBuffer(100);
 
+  void write(Object message) {
+    outBuffer.add("$message");
+    //print("writing $text");
+    output.text = outBuffer.toString();
+  }
 
   Completer<String> promptCompleter;
 
@@ -159,7 +161,6 @@ class TestMenuManagerBrowser extends TestMenuManager {
 void initTestMenuBrowser({List<String> jsFiles}) {
   testMenuLoadJs(jsFiles);
   _testMenuManagerBrowser = new TestMenuManagerBrowser();
-
 }
 
 Future testMenuLoadJs(List<String> jsFiles) async {

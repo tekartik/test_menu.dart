@@ -2,8 +2,7 @@ import 'package:tekartik_test_menu/test_menu_io.dart';
 import 'dart:io';
 
 main(List<String> args) async {
-  mainMenu(args, ()
-  {
+  mainMenu(args, () {
     menu('main', () {
       item("write hola", () async {
         write('Hola');

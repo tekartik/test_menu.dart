@@ -6,7 +6,6 @@ import 'package:tekartik_deploy/gs_deploy.dart';
 
 //import 'package:tekartik_pub/script.dart';
 
-
 main(args) async {
 //   pkg = new IoFsPubPackage(   await getPubPackageDir(new File(binScriptPath).parent));
   await grind(args);
@@ -53,8 +52,8 @@ deploy() {
 @Task('Fs Deploy built app.')
 fs_deploy_starter() async {
 //...
-  ProcessCmd cmd = processCmd(
-      "fsdeploy", [join("build", "example", "starter_browser_mdl", "deploy.yaml")]);
+  ProcessCmd cmd = processCmd("fsdeploy",
+      [join("build", "example", "starter_browser_mdl", "deploy.yaml")]);
 
   await runCmd(cmd);
 }

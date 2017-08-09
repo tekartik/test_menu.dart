@@ -31,5 +31,10 @@ main() async {
     menu('sub', () {
       item("print hi", () => print('hi'));
     });
+    item("write 250 lines", () {
+      for (int i = 1; i <= 250; i++) {
+        write("$i: this is a line, but only 100 of them will be displayed");
+      }
+    });
   });
 }
