@@ -16,6 +16,9 @@ dependencies:
     git: git://github.com/tekartik/yacht.dart
   platform_context:
     git: git://github.com/tekartik/platform_context.dart
+  tekartik_common_utils:
+    git: git://github.com/tekartik/common_utils.dart
+    version: '>=0.4.5'
   tekartik_pub:
     git: git://github.com/tekartik/pub.dart
 

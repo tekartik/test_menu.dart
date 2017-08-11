@@ -6,7 +6,7 @@ import 'package:tekartik_mdl_js/mdl_js_loader.dart';
 import 'package:tekartik_mdl_js/mdl_list.dart';
 import 'package:tekartik_mdl_js/mdl_textfield.dart';
 import 'package:platform_context/context_browser.dart';
-import 'package:tekartik_test_menu/src/out_buffer.dart';
+import 'package:tekartik_common_utils/out_buffer.dart';
 import 'test_menu_browser.dart' as browser;
 
 import 'src/common_browser.dart';

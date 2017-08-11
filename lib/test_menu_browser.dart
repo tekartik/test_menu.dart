@@ -2,8 +2,7 @@ library tekartik_test_menu_browser;
 
 import 'dart:html';
 import 'dart:js';
-
-import 'package:tekartik_test_menu/src/out_buffer.dart';
+import 'package:tekartik_common_utils/out_buffer.dart';
 import 'src/common_browser.dart';
 export 'src/common_browser.dart';
 import 'test_menu.dart';
