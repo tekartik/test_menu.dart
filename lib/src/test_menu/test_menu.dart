@@ -156,7 +156,7 @@ class TestMenu extends Object with _WithParentMixin {
 
   @override
   String toString() {
-    return "test menu '$name'";
+    return "tm'$name'";
   }
 
   int indexOfItem(TestItem item) {

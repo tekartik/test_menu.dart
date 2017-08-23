@@ -20,7 +20,10 @@ main() async {
       throw "crash";
     });
     menu('sub', () {
-      item("print hi", () => print('hi'));
+      menu('below', () {
+        item("write below", () => write('below sub'));
+      });
+      item("write sub", () => print('sub'));
     });
     item("write 250 lines", () {
       for (int i = 1; i <= 250; i++) {

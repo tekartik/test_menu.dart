@@ -4,7 +4,6 @@ import 'package:tekartik_test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'package:stack_trace/stack_trace.dart';
 
-//import 'src/common.dart';
 bool get debugTestMenuManager => TestMenuManager.debug.on;
 
 TestMenuManager _testMenuManager;
@@ -25,12 +24,6 @@ set testMenuManager(TestMenuManager testMenuManager) =>
 
 initTestMenuManager() {}
 
-@deprecated
-void showTestMenu(TestMenu menu) {
-  initTestMenuManager();
-  testMenuManager.push(menu);
-}
-
 Future pushMenu(TestMenu menu) async {
   initTestMenuManager();
   return await testMenuManager.pushMenu(menu);
@@ -44,33 +37,11 @@ Future processMenu(TestMenu menu) async {
   return await testMenuManager.processMenu(menu);
 }
 
-/*
-class TestMenuManagerDefault extends TestMenuManager {
-
-  TestMenuPresenter presenter;
-
-  TestMenuManagerDefault(this.presenter);
-
-  @override
-  Future presentMenu(TestMenu menu) async {
-    await testMenuPresenter.presentMenu(menu);
-  }
-
-  @override
-  Future<String> prompt(Object message) {
-    return testMenuPresenter.prompt(message);
-  }
-
-  Future runItem(TestItem item) async {
-    await testMenuPresenter.preProcessItem(item);
-    await super.runItem(item);
-  }
-}
-
-*/
 class TestMenuRunner {
   final TestMenu menu;
   final TestMenuRunner parent;
+
+  toString() => menu.toString();
 
   bool entered = false;
 
@@ -128,7 +99,8 @@ class TestMenuManager {
 
   TestMenu get activeMenu => activeMenuRunner?.menu;
 
-  List<TestMenuRunner> stackMenus = new List();
+  List<TestMenuRunner> get stackMenus => _stackMenus;
+  List<TestMenuRunner> _stackMenus = [];
 
   static List<String> initCommandsFromHash(String hash) {
     if (debugTestMenuManager) {
@@ -166,7 +138,13 @@ class TestMenuManager {
   */
 
   Future pushMenu(TestMenu menu) async {
+    if (TestMenuManager.debug.on) {
+      write("[mgr] pushMenu $menu to ${testMenuManager.stackMenus}");
+    }
     if (_push(menu)) {
+      if (TestMenuManager.debug.on) {
+        write("[mgr] presenting $menu");
+      }
       await presenter.presentMenu(menu);
 
       //eventually process init items
@@ -177,6 +155,7 @@ class TestMenuManager {
     return true;
   }
 
+  /*
   @deprecated
   bool push(TestMenu menu) {
     if (_push(menu)) {
@@ -184,6 +163,7 @@ class TestMenuManager {
     }
     return true;
   }
+  */
 
   bool stackContainsMenu(TestMenu menu) {
     return menuRunners[menu] != null;
@@ -194,10 +174,7 @@ class TestMenuManager {
       return false;
     }
     TestMenuRunner runner = new TestMenuRunner(activeMenuRunner, menu);
-    _pushMenuRunner(runner);
-    menuRunners[menu] = runner;
-    stackMenus.add(runner);
-    return true;
+    return _pushMenuRunner(runner);
   }
 
   bool _pushMenuRunner(TestMenuRunner menuRunner) {
@@ -211,9 +188,15 @@ class TestMenuManager {
 
   Future<bool> popMenu([int count = 1]) async {
     TestMenuRunner activeMenuRunner = this.activeMenuRunner;
+    if (TestMenuManager.debug.on) {
+      write("[mgr] poping $activeMenuRunner from ${testMenuManager.stackMenus}");
+    }
     bool poped = _pop(count);
     if (poped && activeMenuRunner != null) {
       await activeMenuRunner.leave();
+      if (TestMenuManager.debug.on) {
+      write("[mgr] presenting ${this.activeMenuRunner.menu}");
+          }
       await presenter.presentMenu(this.activeMenuRunner.menu);
     }
     return poped;
@@ -231,8 +214,26 @@ class TestMenuManager {
   */
 
   bool _pop([int count = 1]) {
-    if (stackMenus.length > 1) {
-      stackMenus.removeRange(stackMenus.length - count, stackMenus.length);
+    if (TestMenuManager.debug.on) {
+      write("${stackMenus} poping $count");
+    }
+
+    if (stackMenus.length > count) {
+      if (TestMenuManager.debug.on) {
+        write("${stackMenus} after poping $count");
+      }
+      // Remove and clear menuRunners
+      int start = stackMenus.length - count;
+      int end = stackMenus.length;
+      List<TestMenuRunner> removedRunner = stackMenus.sublist(start, end);
+      for (TestMenuRunner menuRunner in removedRunner) {
+        menuRunners.remove(menuRunner.menu);
+      }
+      stackMenus.removeRange(start, end);
+
+      if (TestMenuManager.debug.on) {
+        write("${stackMenus} after poping $count");
+      }
       return true;
     }
     return false;
@@ -242,6 +243,7 @@ class TestMenuManager {
     return stackMenus.length - 1;
   }
 
+  /*
   Future _run(Runnable runnable) async {
     if (debugTestMenuManager) {
       print("[run] running '$runnable'");
@@ -257,13 +259,20 @@ class TestMenuManager {
       }
     }
   }
+  */
 
   Future runItem(TestItem item) async {
-    await enterMenu(item.parent);
-    await _run(item);
+    TestMenuRunner runner = menuRunners[item.parent];
+    await runner.enter();
+    if (item is MenuTestItem) {
+     await pushMenu(item.menu);
+    } else {
+      // Update hash in browser for example
+      testMenuPresenter.preProcessItem(item);
+      await runner._run(item);
+    }
   }
 
-  Future enterMenu(TestMenu menu) async {}
 
   /**
    * Commands executed on startup
