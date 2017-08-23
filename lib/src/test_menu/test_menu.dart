@@ -1,7 +1,16 @@
 import 'dart:async';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
-abstract class TestItem {
+abstract class WithParent {
+  TestMenu get parent;
+  set parent(TestMenu parent);
+}
+
+class _WithParentMixin implements WithParent {
+  TestMenu parent;
+}
+
+abstract class TestItem implements Runnable, WithParent {
   String get cmd;
   String get name;
   factory TestItem.fn(String name, TestItemFn fn, {String cmd, bool solo}) {
@@ -10,8 +19,6 @@ abstract class TestItem {
   factory TestItem.menu(TestMenu menu) {
     return new MenuTestItem(menu);
   }
-  // can be void or future
-  dynamic run();
 }
 
 typedef R TestItemFn<R>();
@@ -38,7 +45,7 @@ class _RunnableMixin implements Runnable {
   }
 }
 
-class MenuEnter extends Object with _RunnableMixin {
+class MenuEnter extends Object with _RunnableMixin, _WithParentMixin {
   MenuEnter(TestItemFn fn) {
     this.fn = fn;
   }
@@ -49,7 +56,7 @@ class MenuEnter extends Object with _RunnableMixin {
   }
 }
 
-class MenuLeave extends Object with _RunnableMixin {
+class MenuLeave extends Object with _RunnableMixin, _WithParentMixin {
   MenuLeave(TestItemFn fn) {
     this.fn = fn;
   }
@@ -61,7 +68,7 @@ class MenuLeave extends Object with _RunnableMixin {
 }
 
 class RunnableTestItem extends _BaseTestItem
-    with _RunnableMixin
+    with _RunnableMixin, _WithParentMixin
     implements TestItem {
   String cmd;
   bool solo;
@@ -71,7 +78,9 @@ class RunnableTestItem extends _BaseTestItem
   }
 }
 
-class MenuTestItem extends _BaseTestItem implements TestItem {
+class MenuTestItem extends _BaseTestItem
+    with _WithParentMixin
+    implements TestItem {
   TestMenu menu;
   String get cmd => menu.cmd;
   MenuTestItem(this.menu) : super(null) {
@@ -88,7 +97,7 @@ class MenuTestItem extends _BaseTestItem implements TestItem {
   }
 }
 
-class TestMenu {
+class TestMenu extends Object with _WithParentMixin {
   String cmd;
   String name;
   List<TestItem> _items = [];
@@ -101,10 +110,30 @@ class TestMenu {
   Iterable<MenuEnter> get enters => _enters;
   Iterable<MenuLeave> get leaves => _leaves;
   void add(String name, TestItemFn fn) => addItem(new TestItem.fn(name, fn));
-  void addEnter(MenuEnter menuEnter) => _enters.add(menuEnter);
-  void addLeave(MenuLeave menuLeave) => _leaves.add(menuLeave);
-  void addMenu(TestMenu menu) => addItem(new TestItem.menu(menu));
-  void addItem(TestItem item) => _items.add(item);
+  fixParent(WithParent child) {
+    child.parent = this;
+  }
+
+  void addEnter(MenuEnter menuEnter) {
+    fixParent(menuEnter);
+    _enters.add(menuEnter);
+  }
+
+  void addLeave(MenuLeave menuLeave) {
+    fixParent(menuLeave);
+    _leaves.add(menuLeave);
+  }
+
+  void addMenu(TestMenu menu) {
+    fixParent(menu);
+    addItem(new TestItem.menu(menu));
+  }
+
+  void addItem(TestItem item) {
+    fixParent(item);
+    _items.add(item);
+  }
+
   void addAll(List<TestItem> items) => items.forEach((TestItem item) {
         addItem(item);
       });

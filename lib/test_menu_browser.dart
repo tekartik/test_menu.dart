@@ -7,7 +7,7 @@ import 'package:tekartik_common_utils/out_buffer.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
-
+import 'package:tekartik_browser_utils/location_info_utils.dart';
 import 'src/common_browser.dart';
 
 export 'src/common_browser.dart';
@@ -31,8 +31,12 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
   var outBuffer = new OutBuffer(100);
 
+  @override
   void write(Object message) {
     outBuffer.add("$message");
+    if (debugTestMenuManager) {
+      print("[bwsr writ] $message");
+    }
     //print("writing $text");
     output.text = outBuffer.toString();
   }
@@ -47,7 +51,12 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     return completer.future;
   }
 
-  TestMenuManagerBrowser() {}
+  TestMenuManagerBrowser() {
+    if (locationInfo.arguments.containsKey("debug")) {
+      // ignore: deprecated_member_use
+      TestMenuManager.debug.on = true;
+    }
+  }
 
   void findContainer() {
     if (container == null) {
@@ -81,7 +90,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
     TestMenu lastMenu = null;
     for (int i = testMenuManager.stackMenus.length - 1; i >= 0; i--) {
-      TestMenu menu = testMenuManager.stackMenus[i];
+      TestMenu menu = testMenuManager.stackMenus[i].menu;
 
       int index;
 
@@ -120,8 +129,8 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     if (displayedMenu != menu) {
       Element header = new HeadingElement.h3();
       StringBuffer sb = new StringBuffer();
-      for (TestMenu testMenu in testMenuManager.stackMenus) {
-        sb.write(' > ${testMenu.name}');
+      for (TestMenuRunner runner in testMenuManager.stackMenus) {
+        sb.write(' > ${runner.menu.name}');
       }
       header.setInnerHtml(sb.toString());
       Element list = new UListElement();
@@ -163,7 +172,6 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   @override
   presentMenu(TestMenu menu) {
     displayMenu(menu);
-    processMenu(menu);
   }
 }
 

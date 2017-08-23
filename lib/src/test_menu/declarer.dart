@@ -50,10 +50,11 @@ class Declarer {
   TestMenu testMenu = new TestMenu(null);
 
   void menu(String name, VoidFunc0 body, {String cmd}) {
-    TestMenu newMenu = new TestMenu(name, cmd: cmd);
-    testMenu.addMenu(newMenu);
-
     TestMenu parentTestMenu = testMenu;
+
+    TestMenu newMenu = new TestMenu(name, cmd: cmd);
+    parentTestMenu.addMenu(newMenu);
+
     testMenu = newMenu;
     body();
     testMenu = parentTestMenu;

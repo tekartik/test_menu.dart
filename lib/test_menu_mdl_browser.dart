@@ -40,6 +40,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
   var outBuffer = new OutBuffer(100);
 
+  @override
   void write(Object message) {
     String text = "$message";
     if (debugTestMenuManager) {
@@ -153,7 +154,8 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
       //StringBuffer sb = new StringBuffer();
       int popCount = testMenuManager.activeDepth;
-      for (TestMenu testMenu in testMenuManager.stackMenus) {
+      for (TestMenuRunner runner in testMenuManager.stackMenus) {
+        TestMenu testMenu = runner.menu;
         int menuPopCount = popCount--;
         _clickOnMenu([_]) {
           //devPrint("Click on menu");
@@ -192,6 +194,9 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
               ..appendText('-'))
             ..appendText("exit"))
           ..onClick.listen((_) {
+            if (TestMenuManager.debug.on) {
+              write("[mdl poping] ${testMenuManager.menuRunners}");
+            }
             testMenuManager.popMenu();
           });
         list.children.add(liElement);

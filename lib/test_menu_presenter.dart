@@ -2,6 +2,7 @@
 
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
 // What to implement
 abstract class TestMenuPresenter {
@@ -42,6 +43,7 @@ class NullTestMenuPresenter extends _NullTestMenuPresenter {
   NullTestMenuPresenter() {
     // set as presenter
     testMenuPresenter = this;
+    testMenuManager = null;
   }
 }
 

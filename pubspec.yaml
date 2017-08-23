@@ -1,5 +1,5 @@
 name: tekartik_test_menu
-version: 0.4.1
+version: 0.4.2
 homepage: https://github.com/tekartik/test_menu.dart
 # git://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
@@ -26,6 +26,9 @@ dev_dependencies:
   grinder: any
   dev_test: any
   test: any
+  tekartik_browser_utils:
+    git: git://github.com/tekartik/browser_utils.dart
+    version: '>=0.5.0'
   tekartik_deploy:
     git: git://github.com/tekartik/deploy.dart
   chrome_travis:

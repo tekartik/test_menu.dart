@@ -28,17 +28,21 @@ class Runner {
     // look for solo stuff
     bool _hasSolo = false;
 
+    List<TestMenu> tree = [];
     _handleSolo(TestMenu testMenu) async {
+      tree.add(testMenu);
       for (TestItem item in testMenu.items) {
         if (item is RunnableTestItem) {
           if (item.solo == true) {
             _hasSolo = true;
-            await item.run();
+            await testMenuManager.runItem(item);
+            //await item.run();
           }
         } else if (item is MenuTestItem) {
-          _handleSolo(item.menu);
+          await _handleSolo(item.menu);
         }
       }
+      tree.remove(testMenu);
     }
 
     await _handleSolo(testMenu);
@@ -48,12 +52,7 @@ class Runner {
   }
 
   void write(Object message) {
-    if (testMenuPresenter != null) {
-      testMenuPresenter.write(message);
-    } else {
-      //compatibility
-      testMenuManager.write(message);
-    }
+    testMenuPresenter?.write(message);
   }
 }
 

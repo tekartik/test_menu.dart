@@ -1,6 +1,8 @@
 library test_menu_test;
 
 import 'dart:async';
+import 'package:tekartik_common_utils/async_utils.dart';
+import 'package:tekartik_test_menu/src/common_import.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'package:dev_test/test.dart';
@@ -43,7 +45,7 @@ main() {
       expect(presenter.text, "some text");
     });
 
-    test('enter', () async {
+    test('enter_only', () async {
       bool ran = false;
 
       // We always need a presenter
@@ -52,6 +54,26 @@ main() {
         ran = true;
       });
 
+      await testMenuRun();
+      expect(ran, isTrue);
+    });
+
+    test('enter_then_item', () async {
+      bool ran = false;
+      bool ranEnter = false;
+
+      // We always need a presenter
+      new NullTestMenuPresenter();
+      enter(() async {
+        sleep(1);
+        ranEnter = true;
+      });
+      item("test", () {
+        expect(ranEnter, isTrue);
+        ran = true;
+      });
+
+      testMenuManager.initCommands = ["0"];
       await testMenuRun();
       expect(ran, isTrue);
     });

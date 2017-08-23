@@ -3,8 +3,8 @@ library tekartik_test_menu;
 import 'dart:async';
 
 import 'package:func/func.dart';
-import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
+import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'src/test_menu/declarer.dart';
 
 ///
@@ -67,11 +67,13 @@ void solo_item(String name, Func0 body, {String cmd}) {
 }
 
 void write(Object message) {
-  testMenuManager.write(message);
+  testMenuPresenter.write(message);
+  //testMenuManager.write(message);
 }
 
 Future<String> prompt([Object message]) {
-  return testMenuManager.prompt(message);
+  //return testMenuManager.prompt(message);
+  return testMenuPresenter.prompt(message);
 }
 
 //

@@ -39,7 +39,9 @@ main() async {
         await sleep(1000);
         write('leave sub done');
       });
-      item("print hi", () => print('hi'));
+      item("write hi", () {
+        write('hi from slow_sub');
+      });
     });
   });
 }

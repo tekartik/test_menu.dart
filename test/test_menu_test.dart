@@ -1,6 +1,6 @@
 library test_menu_test;
 
-import 'package:test/test.dart';
+import 'package:dev_test/test.dart';
 import 'package:tekartik_test_menu/test_menu.dart';
 
 main() {

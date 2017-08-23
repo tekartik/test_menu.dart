@@ -1,20 +1,29 @@
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'package:stack_trace/stack_trace.dart';
 
 //import 'src/common.dart';
 bool get debugTestMenuManager => TestMenuManager.debug.on;
 
-initTestMenuManager() {
-  if (testMenuManager == null) {
+TestMenuManager _testMenuManager;
+
+TestMenuManager get testMenuManager {
+  if (_testMenuManager == null) {
     if (testMenuPresenter != null) {
-      testMenuManager = new TestMenuManagerDefault(testMenuPresenter);
+      _testMenuManager = new TestMenuManager(testMenuPresenter);
     } else {
       throw ('Cannot tell whether you\'re running from io or browser. Please include the proper header');
     }
   }
+  return _testMenuManager;
 }
+
+set testMenuManager(TestMenuManager testMenuManager) =>
+    _testMenuManager = testMenuManager;
+
+initTestMenuManager() {}
 
 @deprecated
 void showTestMenu(TestMenu menu) {
@@ -35,7 +44,9 @@ Future processMenu(TestMenu menu) async {
   return await testMenuManager.processMenu(menu);
 }
 
+/*
 class TestMenuManagerDefault extends TestMenuManager {
+
   TestMenuPresenter presenter;
 
   TestMenuManagerDefault(this.presenter);
@@ -50,29 +61,74 @@ class TestMenuManagerDefault extends TestMenuManager {
     return testMenuPresenter.prompt(message);
   }
 
-  @override
-  void write(Object message) {
-    return testMenuPresenter.write(message);
-  }
-
   Future runItem(TestItem item) async {
     await testMenuPresenter.preProcessItem(item);
     await super.runItem(item);
   }
 }
 
-abstract class TestMenuManager {
+*/
+class TestMenuRunner {
+  final TestMenu menu;
+  final TestMenuRunner parent;
+
+  bool entered = false;
+
+  TestMenuRunner(this.parent, this.menu);
+
+  Future enter() async {
+    if (!entered) {
+      entered = true;
+      await parent?.enter();
+      for (var enter_ in menu.enters) {
+        await _run(enter_);
+      }
+    }
+  }
+
+  Future _run(Runnable runnable) async {
+    if (debugTestMenuManager) {
+      write("[run] running '$runnable'");
+    }
+    try {
+      await runnable.run();
+    } catch (e, st) {
+      testMenuPresenter.write("ERROR CAUGHT $e ${Trace.format(st)}");
+      rethrow;
+    } finally {
+      if (debugTestMenuManager) {
+        write("[run] done '$runnable'");
+      }
+    }
+  }
+
+  Future leave() async {
+    if (!entered) {
+      entered = false;
+      for (var leave in menu.leaves) {
+        await _run(leave);
+      }
+    }
+  }
+}
+
+class TestMenuManager {
+  final TestMenuPresenter presenter;
+  SynchronizedLock lock = new SynchronizedLock();
   static final DevFlag debug = new DevFlag("TestMenuManager");
   //TestMenu displayedMenu;
+  Map<TestMenu, TestMenuRunner> menuRunners = {};
 
-  TestMenu get activeMenu {
+  TestMenuRunner get activeMenuRunner {
     if (stackMenus.length > 0) {
       return stackMenus.last;
     }
     return null;
   }
 
-  List<TestMenu> stackMenus = new List();
+  TestMenu get activeMenu => activeMenuRunner?.menu;
+
+  List<TestMenuRunner> stackMenus = new List();
 
   static List<String> initCommandsFromHash(String hash) {
     if (debugTestMenuManager) {
@@ -96,7 +152,7 @@ abstract class TestMenuManager {
     return commands;
   }
 
-  TestMenuManager() {
+  TestMenuManager(this.presenter) {
     // unique?
     testMenuManager = this;
   }
@@ -111,8 +167,12 @@ abstract class TestMenuManager {
 
   Future pushMenu(TestMenu menu) async {
     if (_push(menu)) {
-      await presentMenu(menu);
-      await runEnters(menu);
+      await presenter.presentMenu(menu);
+
+      //eventually process init items
+      await menuRunners[menu]?.enter();
+
+      await processMenu(menu);
     }
     return true;
   }
@@ -120,25 +180,41 @@ abstract class TestMenuManager {
   @deprecated
   bool push(TestMenu menu) {
     if (_push(menu)) {
-      presentMenu(menu);
+      presenter.presentMenu(menu);
     }
     return true;
   }
 
+  bool stackContainsMenu(TestMenu menu) {
+    return menuRunners[menu] != null;
+  }
+
   bool _push(TestMenu menu) {
-    if (stackMenus.contains(menu)) {
+    if (stackContainsMenu(menu)) {
       return false;
     }
-    stackMenus.add(menu);
+    TestMenuRunner runner = new TestMenuRunner(activeMenuRunner, menu);
+    _pushMenuRunner(runner);
+    menuRunners[menu] = runner;
+    stackMenus.add(runner);
+    return true;
+  }
+
+  bool _pushMenuRunner(TestMenuRunner menuRunner) {
+    //if (stackMenus.contains(menuRunner)) {
+    //  return false;
+    //}
+    menuRunners[menuRunner.menu] = menuRunner;
+    stackMenus.add(menuRunner);
     return true;
   }
 
   Future<bool> popMenu([int count = 1]) async {
-    TestMenu activeMenu = this.activeMenu;
+    TestMenuRunner activeMenuRunner = this.activeMenuRunner;
     bool poped = _pop(count);
-    if (poped && activeMenu != null) {
-      await runLeaves(activeMenu);
-      await presentMenu(this.activeMenu);
+    if (poped && activeMenuRunner != null) {
+      await activeMenuRunner.leave();
+      await presenter.presentMenu(this.activeMenuRunner.menu);
     }
     return poped;
   }
@@ -166,14 +242,7 @@ abstract class TestMenuManager {
     return stackMenus.length - 1;
   }
 
-  // to override
-  Future presentMenu(TestMenu menu);
-
-  void write(Object message);
-
-  Future<String> prompt(Object message);
-
-  Future run(Runnable runnable) async {
+  Future _run(Runnable runnable) async {
     if (debugTestMenuManager) {
       print("[run] running '$runnable'");
     }
@@ -189,34 +258,12 @@ abstract class TestMenuManager {
     }
   }
 
-  Future runEnters(TestMenu menu) async {
-    for (var enter in menu.enters) {
-      await run(enter);
-    }
-  }
-
-  Future runLeaves(TestMenu menu) async {
-    for (var leave in menu.leaves) {
-      await run(leave);
-    }
-  }
-
   Future runItem(TestItem item) async {
-    if (debugTestMenuManager) {
-      print("[runItem] running '$item'");
-    }
-    //onProcessItem(item);
-    try {
-      await item.run();
-    } catch (e, st) {
-      write("ERROR CAUGHT $e ${Trace.format(st)}");
-      rethrow;
-    } finally {
-      if (debugTestMenuManager) {
-        print("[runItem] '$item'");
-      }
-    }
+    await enterMenu(item.parent);
+    await _run(item);
   }
+
+  Future enterMenu(TestMenu menu) async {}
 
   /**
    * Commands executed on startup
@@ -303,5 +350,3 @@ abstract class TestMenuManager {
 
   //void onProcessItem(TestItem item) {}
 }
-
-TestMenuManager testMenuManager;
