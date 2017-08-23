@@ -17,6 +17,12 @@ main(List<String> args) async {
         stderr.write(await prompt());
       }, cmd: "e");
       menu('sub', () {
+        enter(() async {
+          print('enter sub');
+        });
+        leave(() async {
+          print('leave sub');
+        });
         item("print hi", () => print('hi'));
       });
     });

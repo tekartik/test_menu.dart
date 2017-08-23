@@ -1,0 +1,87 @@
+library test_menu_test;
+
+import 'dart:async';
+import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/test_menu_presenter.dart';
+import 'package:dev_test/test.dart';
+import 'package:tekartik_test_menu/test_menu.dart';
+
+class TestMenuPresenter1 extends Object
+    with TestMenuPresenterMixin
+    implements TestMenuPresenter {
+  String text;
+
+  TestMenuPresenter1() {
+    // set as presenter
+    testMenuPresenter = this;
+  }
+  TestMenu menu;
+  @override
+  presentMenu(TestMenu menu) {
+    this.menu = menu;
+  }
+
+  @override
+  Future<String> prompt(Object message) async {
+    return null;
+  }
+
+  @override
+  void write(Object message) {
+    text = message.toString();
+  }
+}
+
+main() {
+  group('test_menu_presenter', () {
+    test('test_menu', () async {
+      var presenter = new TestMenuPresenter1();
+      menu('test', () {});
+      await testMenuRun();
+      write("some text");
+      expect(presenter.menu.name, "test");
+      expect(presenter.text, "some text");
+    });
+
+    test('enter', () async {
+      bool ran = false;
+
+      // We always need a presenter
+      new NullTestMenuPresenter();
+      enter(() {
+        ran = true;
+      });
+
+      await testMenuRun();
+      expect(ran, isTrue);
+    });
+  });
+
+  /*
+      TestItem item = new TestItem.fn("test", () {
+        ran = true;
+      });
+      expect(item.name, "test");
+      expect(ran, false);
+      item.run();
+      expect(ran, true);
+    });
+
+    test('menu', () {
+      TestMenu menu = new TestMenu("menu");
+      TestItem item = new TestItem.menu(menu);
+      expect(item.name, "menu");
+    });
+  });
+
+  group('test menu', () {
+    test('list', () {
+      TestMenu menu = new TestMenu("menu");
+      expect(menu.name, "menu");
+      TestItem item = new TestItem.fn("test", () => null);
+      menu.addItem(item);
+      expect(menu[0], item);
+    });
+  });
+  */
+}

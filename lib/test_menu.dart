@@ -3,23 +3,9 @@ library tekartik_test_menu;
 import 'dart:async';
 
 import 'package:func/func.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
 import 'src/test_menu/declarer.dart';
-
-part 'src/test_menu/test_menu.dart';
-
-part 'src/test_menu/test_menu_manager.dart';
-//import 'src/common.dart';
-
-bool debugTestMenuManager = false;
-
-void showTestMenu(TestMenu menu) {
-  if (testMenuManager == null) {
-    print(
-        'Cannot tell whether you\'re running from io or browser. Please include the proper header');
-  }
-  testMenuManager.push(menu);
-}
 
 ///
 /// The declarer class handling the logic
@@ -30,6 +16,7 @@ Declarer get _declarer {
   if (__declarer == null) {
     __declarer = new Declarer();
     scheduleMicrotask(() {
+      // An automatic microtask is run after the menu is declarer
       testMenuRun();
     });
   }
@@ -60,6 +47,20 @@ void item(String name, Func0 body, {String cmd}) {
   _declarer.item(name, body, cmd: cmd);
 }
 
+///
+/// Declare function called when we enter a menu
+///
+void enter(Func0 body) {
+  _declarer.enter(body);
+}
+
+///
+/// Declare function called when we leave a menu
+///
+void leave(Func0 body) {
+  _declarer.leave(body);
+}
+
 @deprecated
 void solo_item(String name, Func0 body, {String cmd}) {
   _declarer.item(name, body, cmd: cmd, solo: true);
@@ -73,9 +74,12 @@ Future<String> prompt([Object message]) {
   return testMenuManager.prompt(message);
 }
 
-testMenuRun() {
+//
+// run the last declared menu/items
+//
+Future testMenuRun() async {
   if (_declarer != null) {
-    _declarer.run();
+    await _declarer.run();
     __declarer = null;
   }
 }

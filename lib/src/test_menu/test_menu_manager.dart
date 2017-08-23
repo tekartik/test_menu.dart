@@ -1,4 +1,65 @@
-part of tekartik_test_menu;
+import 'package:tekartik_common_utils/common_utils_import.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/test_menu_presenter.dart';
+
+//import 'src/common.dart';
+
+bool debugTestMenuManager = false;
+
+initTestMenuManager() {
+  if (testMenuManager == null) {
+    if (testMenuPresenter != null) {
+      testMenuManager = new TestMenuManagerDefault(testMenuPresenter);
+    } else {
+      throw ('Cannot tell whether you\'re running from io or browser. Please include the proper header');
+    }
+  }
+}
+
+@deprecated
+void showTestMenu(TestMenu menu) {
+  initTestMenuManager();
+  testMenuManager.push(menu);
+}
+
+Future pushMenu(TestMenu menu) async {
+  initTestMenuManager();
+  return await testMenuManager.pushMenu(menu);
+}
+
+Future popMenu() async {
+  return await testMenuManager.popMenu();
+}
+
+Future processMenu(TestMenu menu) async {
+  return await testMenuManager.processMenu(menu);
+}
+
+class TestMenuManagerDefault extends TestMenuManager {
+  TestMenuPresenter presenter;
+
+  TestMenuManagerDefault(this.presenter);
+
+  @override
+  Future presentMenu(TestMenu menu) async {
+    await testMenuPresenter.presentMenu(menu);
+  }
+
+  @override
+  Future<String> prompt(Object message) {
+    return testMenuPresenter.prompt(message);
+  }
+
+  @override
+  void write(Object message) {
+    return testMenuPresenter.write(message);
+  }
+
+  Future runItem(TestItem item) async {
+    await testMenuPresenter.preProcessItem(item);
+    await super.runItem(item);
+  }
+}
 
 abstract class TestMenuManager {
   TestMenu displayedMenu;
@@ -35,6 +96,7 @@ abstract class TestMenuManager {
   }
 
   TestMenuManager() {
+    // unique?
     testMenuManager = this;
   }
 
@@ -46,18 +108,54 @@ abstract class TestMenuManager {
   }
   */
 
-  void push(TestMenu menu) {
-    if (stackMenus.contains(menu)) {
-      return;
+  Future pushMenu(TestMenu menu) async {
+    if (_push(menu)) {
+      await presentMenu(menu);
+      await runEnters(menu);
     }
-    stackMenus.add(menu);
-    showMenu(menu);
+    return true;
   }
 
+  @deprecated
+  bool push(TestMenu menu) {
+    if (_push(menu)) {
+      presentMenu(menu);
+    }
+    return true;
+  }
+
+  bool _push(TestMenu menu) {
+    if (stackMenus.contains(menu)) {
+      return false;
+    }
+    stackMenus.add(menu);
+    return true;
+  }
+
+  Future<bool> popMenu([int count = 1]) async {
+    TestMenu activeMenu = this.activeMenu;
+    bool poped = _pop(count);
+    if (poped && activeMenu != null) {
+      await runLeaves(activeMenu);
+      await presentMenu(this.activeMenu);
+    }
+    return poped;
+  }
+
+  /*
+  @deprecated
   bool pop([int count = 1]) {
+    if (_pop(count)) {
+      presentMenu(activeMenu);
+      return true;
+    }
+    return false;
+  }
+  */
+
+  bool _pop([int count = 1]) {
     if (stackMenus.length > 1) {
       stackMenus.removeRange(stackMenus.length - count, stackMenus.length);
-      showMenu(activeMenu);
       return true;
     }
     return false;
@@ -67,9 +165,37 @@ abstract class TestMenuManager {
     return stackMenus.length - 1;
   }
 
-  void showMenu(TestMenu menu);
+  // to override
+  Future presentMenu(TestMenu menu);
+
   void write(Object message);
+
   Future<String> prompt(Object message);
+
+  Future run(Runnable runnable) async {
+    if (debugTestMenuManager) {
+      print("running '$runnable'");
+    }
+    try {
+      await runnable.run();
+    } finally {
+      if (debugTestMenuManager) {
+        print("done '$runnable'");
+      }
+    }
+  }
+
+  Future runEnters(TestMenu menu) async {
+    for (var enter in menu.enters) {
+      await run(enter);
+    }
+  }
+
+  Future runLeaves(TestMenu menu) async {
+    for (var leave in menu.leaves) {
+      await run(leave);
+    }
+  }
 
   Future runItem(TestItem item) {
     if (debugTestMenuManager) {
@@ -92,16 +218,15 @@ abstract class TestMenuManager {
     // _inCommandSubscription.cancel();
   }
 
-  Future processLine(String line) {
+  // Process a command line
+  Future processLine(String line) async {
     TestMenu menu = displayedMenu;
     // print('Line: $line');
 
     int value = int.parse(line, onError: (String textValue) {
       if (textValue == '-') {
         print('pop');
-        if (!pop()) {
-          stop();
-        }
+
         return -1;
       }
       //         if (textValue == '.') {
@@ -112,19 +237,41 @@ abstract class TestMenuManager {
       //         print('- exit');
       //         print('. display menu again');
     });
-    if (value != null) {
-      if (value >= 0 && value < menu.length) {
-        return runItem(menu[value]);
-        // }
-        //        if (value == -1) {
-        //          break;
-        //        };
+    if (value == -1) {
+      if (!await popMenu()) {
+        stop();
+      }
+    } else {
+      if (value != null) {
+        if (value >= 0 && value < menu.length) {
+          return runItem(menu[value]);
+          // }
+          //        if (value == -1) {
+          //          break;
+          //        };
+        }
       }
     }
-    return new Future.value();
   }
 
   bool _initCommandHandled = false;
+
+  // Process current menu
+  // Run initial commands if needed first
+  Future processMenu(TestMenu menu) async {
+    if (!_initCommandHandled) {
+      _initCommandHandled = true;
+
+      List<String> initCommands = this.initCommands;
+      if (initCommands != null) {
+        for (String initCommand in initCommands) {
+          await processLine(initCommand);
+        }
+      }
+    }
+  }
+
+  @deprecated
   void onProcessMenu(TestMenu menu) {
     if (!_initCommandHandled) {
       _initCommandHandled = true;

@@ -1,7 +1,8 @@
 //import 'test_menu.dart';
 
-import '../../test_menu.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
+import 'package:tekartik_test_menu/src/test_menu/runner.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 //import '../common.dart';
 
 /*
@@ -43,70 +44,34 @@ abstract class Callback {
 
 */
 
-class Runner {
-  Declarer declarer;
-
-  Runner(this.declarer);
-
-  Future run() async {
-    TestMenu testMenu = declarer._testMenu;
-    if (testMenu.length == 0) {
-      write('No menu or item declared');
-      // exiting
-      return;
-    } else {
-      if (testMenu.length == 1 && (testMenu[0] is MenuTestItem)) {
-        MenuTestItem item = testMenu[0] as MenuTestItem;
-        testMenu = item.menu;
-      }
-    }
-
-    // look for solo stuff
-    bool _hasSolo = false;
-    _handleSolo(TestMenu testMenu) async {
-      for (TestItem item in testMenu.items) {
-        if (item is RunnableTestItem) {
-          if (item.solo == true) {
-            _hasSolo = true;
-            await item.run();
-          }
-        } else if (item is MenuTestItem) {
-          _handleSolo(item.menu);
-        }
-      }
-    }
-
-    await _handleSolo(testMenu);
-    if (!_hasSolo) {
-      showTestMenu(testMenu);
-    }
-  }
-
-  void write(Object message) {
-    testMenuManager.write(message);
-  }
-}
-
-// current runner
-Runner runner;
-
+// Not public
 class Declarer {
   // current test menu
-  TestMenu _testMenu = new TestMenu(null);
+  TestMenu testMenu = new TestMenu(null);
 
   void menu(String name, VoidFunc0 body, {String cmd}) {
     TestMenu newMenu = new TestMenu(name, cmd: cmd);
-    _testMenu.addMenu(newMenu);
+    testMenu.addMenu(newMenu);
 
-    TestMenu parentTestMenu = _testMenu;
-    _testMenu = newMenu;
+    TestMenu parentTestMenu = testMenu;
+    testMenu = newMenu;
     body();
-    _testMenu = parentTestMenu;
+    testMenu = parentTestMenu;
+  }
+
+  void enter(Func0 body) {
+    MenuEnter enter = new MenuEnter(body);
+    testMenu.addEnter(enter);
+  }
+
+  void leave(Func0 body) {
+    MenuLeave leave = new MenuLeave(body);
+    testMenu.addLeave(leave);
   }
 
   void item(String name, Func0 body, {String cmd, bool solo}) {
     TestItem item = new TestItem.fn(name, body, cmd: cmd, solo: solo);
-    _testMenu.addItem(item);
+    testMenu.addItem(item);
     //_testMenu.add("print hi", () => print('hi'));
   }
 

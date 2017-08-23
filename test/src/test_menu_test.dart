@@ -1,41 +1,36 @@
-library test_menu_test;
-
+import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:test/test.dart';
-import 'package:tekartik_test_menu/test_menu.dart';
 
 main() {
   group('test item', () {
-    test('solo', () async {
+    test('function', () {
       bool ran = false;
-
-      // ignore: deprecated_member_use
-      solo_item("test", () {
-        ran = true;
-      });
-
-      await testMenuRun();
-      expect(ran, isTrue);
-    });
-
-    test('enter', () async {
-      bool ran = false;
-
-      enter(() {
-        ran = true;
-      });
-
-      await testMenuRun();
-      expect(ran, isTrue);
-    });
-  });
-
-  /*
       TestItem item = new TestItem.fn("test", () {
         ran = true;
       });
       expect(item.name, "test");
       expect(ran, false);
       item.run();
+      expect(ran, true);
+    });
+
+    test('enter', () {
+      bool ran = false;
+      MenuEnter enter = new MenuEnter(() {
+        ran = true;
+      });
+      expect(ran, false);
+      enter.run();
+      expect(ran, true);
+    });
+
+    test('leave', () {
+      bool ran = false;
+      MenuLeave leave = new MenuLeave(() {
+        ran = true;
+      });
+      expect(ran, false);
+      leave.run();
       expect(ran, true);
     });
 
@@ -55,5 +50,4 @@ main() {
       expect(menu[0], item);
     });
   });
-  */
 }

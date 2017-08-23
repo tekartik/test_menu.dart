@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.0
+
+- Add enter/leave support
 ## 0.3.1
 
 - limit output to 100 lines on browser

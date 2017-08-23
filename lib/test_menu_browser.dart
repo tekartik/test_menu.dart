@@ -2,10 +2,15 @@ library tekartik_test_menu_browser;
 
 import 'dart:html';
 import 'dart:js';
+
 import 'package:tekartik_common_utils/out_buffer.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
+import 'package:tekartik_test_menu/test_menu_presenter.dart';
+
 import 'src/common_browser.dart';
+
 export 'src/common_browser.dart';
-import 'test_menu.dart';
 export 'test_menu.dart';
 
 const String CONTAINER_ID = "tekartik_test_menu_container";
@@ -15,7 +20,8 @@ js_test(String name) {
 }
 
 // can be extended
-class TestMenuManagerBrowser extends TestMenuManager {
+class TestMenuManagerBrowser extends TestMenuPresenter
+    with TestMenuPresenterMixin {
   TestMenu displayedMenu = null;
   Element container = null;
 
@@ -41,11 +47,7 @@ class TestMenuManagerBrowser extends TestMenuManager {
     return completer.future;
   }
 
-  TestMenuManagerBrowser() {
-    String hash = window.location.hash;
-
-    initCommands = TestMenuManager.initCommandsFromHash(hash);
-  }
+  TestMenuManagerBrowser() {}
 
   void findContainer() {
     if (container == null) {
@@ -73,23 +75,27 @@ class TestMenuManagerBrowser extends TestMenuManager {
     }
   }
 
-  void onProcessItem(TestItem item) {
+  // for href
+  List<String> getMenuStackNames([TestItem item]) {
     List<String> list = new List();
 
     TestMenu lastMenu = null;
-    for (int i = stackMenus.length - 1; i >= 0; i--) {
-      TestMenu menu = stackMenus[i];
+    for (int i = testMenuManager.stackMenus.length - 1; i >= 0; i--) {
+      TestMenu menu = testMenuManager.stackMenus[i];
 
       int index;
 
       if (lastMenu == null) {
-        lastMenu = activeMenu;
+        lastMenu = testMenuManager.activeMenu;
+        if (item == null) {
+          continue;
+        }
         if (item is MenuTestItem) {
           // index = stackMenus[stackMenus.length - 2].indexOfItem(item);
           // nothing
           continue;
         } else {
-          index = activeMenu.indexOfItem(item);
+          index = testMenuManager.activeMenu.indexOfItem(item);
         }
       } else {
         index = menu.indexOfMenu(lastMenu);
@@ -98,11 +104,14 @@ class TestMenuManagerBrowser extends TestMenuManager {
 
       list.insert(0, index.toString());
     }
+    return list;
+  }
 
-    window.location.hash = "#${list.join('_')}";
-
+  @override
+  Future preProcessItem(TestItem item) async {
+    window.location.hash = "#${getMenuStackNames(item).join('_')}";
     // process after setting the hash to allow reload in case of crash in processing
-    super.onProcessItem(item);
+    super.preProcessItem(item);
   }
 
   void displayMenu(TestMenu menu) {
@@ -119,13 +128,13 @@ class TestMenuManagerBrowser extends TestMenuManager {
 
       LIElement liElement;
 
-      if (activeDepth > 0) {
+      if (testMenuManager.activeDepth > 0) {
         liElement = new LIElement();
 
         liElement
           ..setInnerHtml(' - exit')
           ..onClick.listen((_) {
-            testMenuManager.pop();
+            testMenuManager.popMenu();
           });
         list.children.add(liElement);
       }
@@ -138,7 +147,7 @@ class TestMenuManagerBrowser extends TestMenuManager {
           ..setInnerHtml('$i ${item}')
           ..onClick.listen((_) {
             print("running '$index ${item}'");
-            runItem(item);
+            testMenuManager.runItem(item);
           });
         list.children.add(liElement);
         //print('$i ${item}');
@@ -151,15 +160,22 @@ class TestMenuManagerBrowser extends TestMenuManager {
     }
   }
 
-  void showMenu(TestMenu menu) {
+  @override
+  presentMenu(TestMenu menu) {
     displayMenu(menu);
-    onProcessMenu(menu);
+    processMenu(menu);
   }
 }
 
 void initTestMenuBrowser({List<String> jsFiles}) {
   testMenuLoadJs(jsFiles);
   _testMenuManagerBrowser = new TestMenuManagerBrowser();
+
+  testMenuPresenter = _testMenuManagerBrowser;
+
+  initTestMenuManager();
+  String hash = window.location.hash;
+  testMenuManager.initCommands = TestMenuManager.initCommandsFromHash(hash);
 }
 
 Future testMenuLoadJs(List<String> jsFiles) async {

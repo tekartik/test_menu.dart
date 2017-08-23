@@ -1,6 +1,7 @@
 library test_menu_console_interactive_test;
 
-import 'package:tekartik_test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
 main() async {
   TestMenu subSubMenu = new TestMenu("sub sub");
@@ -14,5 +15,5 @@ main() async {
   menu.add("print hi", () => print('hi'));
   menu.add("crash", () => print(null.length));
   menu.addMenu(subMenu);
-  showTestMenu(menu);
+  pushMenu(menu);
 }

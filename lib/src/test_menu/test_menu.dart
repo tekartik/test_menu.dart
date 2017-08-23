@@ -1,4 +1,5 @@
-part of tekartik_test_menu;
+import 'dart:async';
+import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
 abstract class TestItem {
   String get cmd;
@@ -26,14 +27,47 @@ abstract class _BaseTestItem {
   }
 }
 
-class RunnableTestItem extends _BaseTestItem implements TestItem {
-  TestItemFn fn;
-  String cmd;
-  bool solo;
-  RunnableTestItem(String name, this.fn, {this.cmd, this.solo}) : super(name);
+abstract class Runnable {
+  run();
+}
 
+class _RunnableMixin implements Runnable {
+  TestItemFn fn;
   run() {
     return fn();
+  }
+}
+
+class MenuEnter extends Object with _RunnableMixin {
+  MenuEnter(TestItemFn fn) {
+    this.fn = fn;
+  }
+
+  @override
+  String toString() {
+    return 'enter';
+  }
+}
+
+class MenuLeave extends Object with _RunnableMixin {
+  MenuLeave(TestItemFn fn) {
+    this.fn = fn;
+  }
+
+  @override
+  String toString() {
+    return 'enter';
+  }
+}
+
+class RunnableTestItem extends _BaseTestItem
+    with _RunnableMixin
+    implements TestItem {
+  String cmd;
+  bool solo;
+  RunnableTestItem(String name, TestItemFn fn, {this.cmd, this.solo})
+      : super(name) {
+    this.fn = fn;
   }
 }
 
@@ -44,8 +78,8 @@ class MenuTestItem extends _BaseTestItem implements TestItem {
     name = menu.name;
   }
 
-  void run() {
-    testMenuManager.push(menu);
+  Future run() async {
+    await testMenuManager.pushMenu(menu);
   }
 
   @override
@@ -61,7 +95,14 @@ class TestMenu {
   Iterable<TestItem> get items => _items;
   int get length => _items.length;
   TestMenu(this.name, {this.cmd});
+  List<MenuEnter> _enters = [];
+  List<MenuLeave> _leaves = [];
+
+  Iterable<MenuEnter> get enters => _enters;
+  Iterable<MenuLeave> get leaves => _leaves;
   void add(String name, TestItemFn fn) => addItem(new TestItem.fn(name, fn));
+  void addEnter(MenuEnter menuEnter) => _enters.add(menuEnter);
+  void addLeave(MenuLeave menuLeave) => _leaves.add(menuLeave);
   void addMenu(TestMenu menu) => addItem(new TestItem.menu(menu));
   void addItem(TestItem item) => _items.add(item);
   void addAll(List<TestItem> items) => items.forEach((TestItem item) {

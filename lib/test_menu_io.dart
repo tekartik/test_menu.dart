@@ -3,9 +3,11 @@ library tekartik_test_menu_console;
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
+import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
 import 'src/common_io.dart';
-import 'test_menu.dart';
 
 export 'src/common_io.dart';
 export 'test_menu.dart';
@@ -16,7 +18,8 @@ bool testMenuConsoleDebug = false;
 String _exitCommand = ".";
 String _helpCommand = "h";
 
-class _TestMenuManagerConsole extends TestMenuManager {
+class _TestMenuManagerConsole extends TestMenuPresenter
+    with TestMenuPresenterMixin {
   static final String TAG = "[test_menu_console]";
 
   List<String> arguments;
@@ -69,6 +72,7 @@ class _TestMenuManagerConsole extends TestMenuManager {
       //devPrint('readLine');
       _inCommand = stdin.transform(UTF8.decoder).transform(new LineSplitter());
 
+      // Waiting forever on stdin
       _inCommandSubscription = _inCommand.listen(handleLine);
     }
 
@@ -81,7 +85,7 @@ class _TestMenuManagerConsole extends TestMenuManager {
     });
   }
 
-  Future processLine(String line) {
+  Future processLine(String line) async {
     if (testMenuConsoleDebug) {
       print('$TAG Line: $line');
     }
@@ -98,7 +102,7 @@ class _TestMenuManagerConsole extends TestMenuManager {
     // Exit
     if (line == _exitCommand) {
       // print('pop');
-      if (!pop()) {
+      if (!await popMenu()) {
         // devPrint('should exit?');
         done = true;
         if (_inCommandSubscription != null) {
@@ -191,10 +195,11 @@ class _TestMenuManagerConsole extends TestMenuManager {
     //print(input.toUpperCase());
   }
 
-  void showMenu(TestMenu menu) {
+  @override
+  void presentMenu(TestMenu menu) {
     _handleInput(menu);
 
-    onProcessMenu(menu);
+    processMenu(menu);
   }
 
   void write(Object message) {
@@ -215,6 +220,8 @@ class _TestMenuManagerConsole extends TestMenuManager {
 
 void initTestMenuConsole(List<String> arguments) {
   _testMenuManagerConsole = new _TestMenuManagerConsole(arguments);
+  // set current
+  testMenuPresenter = _testMenuManagerConsole;
 }
 
 _TestMenuManagerConsole _testMenuManagerConsole;
