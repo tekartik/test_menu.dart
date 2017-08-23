@@ -11,6 +11,9 @@ class Runner {
 
   Future run() async {
     TestMenu testMenu = declarer.testMenu;
+    if (TestMenuManager.debug.on) {
+      print('[Runner] menu $testMenu');
+    }
     if (testMenu.length == 0 && testMenu.enters.length == 0) {
       write('No menu or item declared');
       // no longer exit, so that we handle the enter/leave

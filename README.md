@@ -9,6 +9,7 @@ Add the following to pubspec.yaml
     dependencies:
       tekartik_test_menu:
         git: git://github.com/tekartik/test_menu.dart
+        version: '>=0.4.0'
         
 
 copy `starter_xxx` to you project to get started

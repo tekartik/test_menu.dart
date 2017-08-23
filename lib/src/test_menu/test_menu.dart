@@ -56,7 +56,7 @@ class MenuLeave extends Object with _RunnableMixin {
 
   @override
   String toString() {
-    return 'enter';
+    return 'leave';
   }
 }
 

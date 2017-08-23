@@ -1,10 +1,10 @@
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 //import 'src/common.dart';
-
-bool debugTestMenuManager = false;
+bool get debugTestMenuManager => TestMenuManager.debug.on;
 
 initTestMenuManager() {
   if (testMenuManager == null) {
@@ -62,7 +62,8 @@ class TestMenuManagerDefault extends TestMenuManager {
 }
 
 abstract class TestMenuManager {
-  TestMenu displayedMenu;
+  static final DevFlag debug = new DevFlag("TestMenuManager");
+  //TestMenu displayedMenu;
 
   TestMenu get activeMenu {
     if (stackMenus.length > 0) {
@@ -174,13 +175,16 @@ abstract class TestMenuManager {
 
   Future run(Runnable runnable) async {
     if (debugTestMenuManager) {
-      print("running '$runnable'");
+      print("[run] running '$runnable'");
     }
     try {
       await runnable.run();
+    } catch (e, st) {
+      write("ERROR CAUGHT $e ${Trace.format(st)}");
+      rethrow;
     } finally {
       if (debugTestMenuManager) {
-        print("done '$runnable'");
+        print("[run] done '$runnable'");
       }
     }
   }
@@ -197,16 +201,21 @@ abstract class TestMenuManager {
     }
   }
 
-  Future runItem(TestItem item) {
+  Future runItem(TestItem item) async {
     if (debugTestMenuManager) {
-      print("running '$item'");
+      print("[runItem] running '$item'");
     }
-    onProcessItem(item);
-    return new Future.sync(item.run).then((_) {
+    //onProcessItem(item);
+    try {
+      await item.run();
+    } catch (e, st) {
+      write("ERROR CAUGHT $e ${Trace.format(st)}");
+      rethrow;
+    } finally {
       if (debugTestMenuManager) {
-        print("done '$item'");
+        print("[runItem] '$item'");
       }
-    });
+    }
   }
 
   /**
@@ -220,8 +229,8 @@ abstract class TestMenuManager {
 
   // Process a command line
   Future processLine(String line) async {
-    TestMenu menu = displayedMenu;
-    // print('Line: $line');
+    TestMenu menu = activeMenu;
+    //devPrint('Line: $line / Menu $menu');
 
     int value = int.parse(line, onError: (String textValue) {
       if (textValue == '-') {
@@ -271,6 +280,7 @@ abstract class TestMenuManager {
     }
   }
 
+  /*
   @deprecated
   void onProcessMenu(TestMenu menu) {
     if (!_initCommandHandled) {
@@ -289,8 +299,9 @@ abstract class TestMenuManager {
       _processLine(0);
     }
   }
+  */
 
-  void onProcessItem(TestItem item) {}
+  //void onProcessItem(TestItem item) {}
 }
 
 TestMenuManager testMenuManager;
