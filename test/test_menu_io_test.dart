@@ -10,7 +10,7 @@ main() {
       int a;
       int b;
       int c;
-      var declarer = testMenuNewDeclarer();
+      //testMenuNewDeclarer();
       menu('main', () {
         // ignore: deprecated_member_use
         solo_item("1", () async {
@@ -26,7 +26,7 @@ main() {
           });
         });
       });
-      await declarer.run();
+      await testMenuRun();
       expect(a, 1);
       expect(b, isNull);
       expect(c, 3);

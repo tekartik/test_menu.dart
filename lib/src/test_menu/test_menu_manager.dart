@@ -189,14 +189,15 @@ class TestMenuManager {
   Future<bool> popMenu([int count = 1]) async {
     TestMenuRunner activeMenuRunner = this.activeMenuRunner;
     if (TestMenuManager.debug.on) {
-      write("[mgr] poping $activeMenuRunner from ${testMenuManager.stackMenus}");
+      write(
+          "[mgr] poping $activeMenuRunner from ${testMenuManager.stackMenus}");
     }
     bool poped = _pop(count);
     if (poped && activeMenuRunner != null) {
       await activeMenuRunner.leave();
       if (TestMenuManager.debug.on) {
-      write("[mgr] presenting ${this.activeMenuRunner.menu}");
-          }
+        write("[mgr] presenting ${this.activeMenuRunner.menu}");
+      }
       await presenter.presentMenu(this.activeMenuRunner.menu);
     }
     return poped;
@@ -261,18 +262,32 @@ class TestMenuManager {
   }
   */
 
+  // Enter if not done yet
+  _enterMenu(TestMenu menu) async {
+    if (menu.parent != null) {
+      await _enterMenu(menu.parent);
+    }
+    TestMenuRunner runner = menuRunners[menu];
+    if (runner == null) {
+      await _push(menu);
+    } else {
+      await runner.enter();
+    }
+  }
+
+  // make sure the menu is entered first
   Future runItem(TestItem item) async {
+    await _enterMenu(item.parent);
     TestMenuRunner runner = menuRunners[item.parent];
-    await runner.enter();
+    //await runner.enter();
     if (item is MenuTestItem) {
-     await pushMenu(item.menu);
+      await pushMenu(item.menu);
     } else {
       // Update hash in browser for example
       testMenuPresenter.preProcessItem(item);
       await runner._run(item);
     }
   }
-
 
   /**
    * Commands executed on startup

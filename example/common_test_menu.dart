@@ -10,6 +10,11 @@ main() async {
     item("write hola", () async {
       write('Hola');
     });
+    item("write lorem lipsum", () async {
+      write(
+          "Sed gravida iaculis lectus, vel suscipit turpis malesuada sit amet. In maximus rutrum libero, eu porta nulla vehicula eu. Donec vel dictum neque, vitae aliquet velit. Fusce nec orci non diam dignissim tristique non sed est. Quisque venenatis a orci et venenatis.\n"
+          "Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.");
+    });
     item("prompt", () async {
       write('RESULT prompt: ${await prompt()}');
     });
