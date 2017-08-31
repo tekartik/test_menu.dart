@@ -47,7 +47,7 @@ abstract class Callback {
 // Not public
 class Declarer {
   // current test menu
-  TestMenu testMenu = new TestMenu(null);
+  TestMenu testMenu = new RootTestMenu();
 
   void menu(String name, VoidFunc0 body, {String cmd}) {
     TestMenu parentTestMenu = testMenu;

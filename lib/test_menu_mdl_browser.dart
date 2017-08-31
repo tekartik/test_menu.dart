@@ -9,6 +9,7 @@ import 'package:tekartik_mdl_js/mdl_list.dart';
 import 'package:tekartik_mdl_js/mdl_textfield.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu_runner.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
 import 'src/common_browser.dart';
@@ -212,7 +213,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
               ..appendText('$i'))
             ..appendText("${item}"))
           ..onClick.listen((_) {
-            // print("running '$index ${item}'");
+            print("running '$i ${item}'");
             testMenuManager.runItem(item).then((_) {
               initInputForMenu();
             });

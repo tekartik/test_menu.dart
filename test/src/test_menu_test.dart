@@ -2,7 +2,7 @@ import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:test/test.dart';
 
 main() {
-  group('test item', () {
+  group('src_test_menu', () {
     test('function', () {
       bool ran = false;
       TestItem item = new TestItem.fn("test", () {

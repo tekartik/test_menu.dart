@@ -1,8 +1,8 @@
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu_runner.dart';
 import 'package:tekartik_test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
-import 'package:stack_trace/stack_trace.dart';
 
 bool get debugTestMenuManager => TestMenuManager.debug.on;
 
@@ -35,52 +35,6 @@ Future popMenu() async {
 
 Future processMenu(TestMenu menu) async {
   return await testMenuManager.processMenu(menu);
-}
-
-class TestMenuRunner {
-  final TestMenu menu;
-  final TestMenuRunner parent;
-
-  toString() => menu.toString();
-
-  bool entered = false;
-
-  TestMenuRunner(this.parent, this.menu);
-
-  Future enter() async {
-    if (!entered) {
-      entered = true;
-      await parent?.enter();
-      for (var enter_ in menu.enters) {
-        await _run(enter_);
-      }
-    }
-  }
-
-  Future _run(Runnable runnable) async {
-    if (debugTestMenuManager) {
-      write("[run] running '$runnable'");
-    }
-    try {
-      await runnable.run();
-    } catch (e, st) {
-      testMenuPresenter.write("ERROR CAUGHT $e ${Trace.format(st)}");
-      rethrow;
-    } finally {
-      if (debugTestMenuManager) {
-        write("[run] done '$runnable'");
-      }
-    }
-  }
-
-  Future leave() async {
-    if (!entered) {
-      entered = false;
-      for (var leave in menu.leaves) {
-        await _run(leave);
-      }
-    }
-  }
 }
 
 class TestMenuManager {
@@ -138,9 +92,6 @@ class TestMenuManager {
   */
 
   Future pushMenu(TestMenu menu) async {
-    if (TestMenuManager.debug.on) {
-      write("[mgr] pushMenu $menu to ${testMenuManager.stackMenus}");
-    }
     if (_push(menu)) {
       if (TestMenuManager.debug.on) {
         write("[mgr] presenting $menu");
@@ -173,6 +124,18 @@ class TestMenuManager {
     if (stackContainsMenu(menu)) {
       return false;
     }
+    if (menu.parent != null) {
+      if (!stackContainsMenu(menu.parent)) {
+        if (!_push(menu.parent)) {
+          print('cant push ${menu.parent}');
+          return false;
+        }
+      }
+    }
+    if (TestMenuManager.debug.on) {
+      write("[mgr] pushMenu $menu to ${testMenuManager.stackMenus}");
+    }
+    // Make sure parent runner exists
     TestMenuRunner runner = new TestMenuRunner(activeMenuRunner, menu);
     return _pushMenuRunner(runner);
   }
@@ -244,48 +207,32 @@ class TestMenuManager {
     return stackMenus.length - 1;
   }
 
-  /*
-  Future _run(Runnable runnable) async {
-    if (debugTestMenuManager) {
-      print("[run] running '$runnable'");
+  // Get or create the runner for a given item
+  TestMenuRunner getRunner(WithParent item) {
+    if (!(item.parent is RootTestMenu)) {
+      getRunner(item.parent);
     }
-    try {
-      await runnable.run();
-    } catch (e, st) {
-      write("ERROR CAUGHT $e ${Trace.format(st)}");
-      rethrow;
-    } finally {
-      if (debugTestMenuManager) {
-        print("[run] done '$runnable'");
-      }
-    }
-  }
-  */
-
-  // Enter if not done yet
-  _enterMenu(TestMenu menu) async {
-    if (menu.parent != null) {
-      await _enterMenu(menu.parent);
-    }
-    TestMenuRunner runner = menuRunners[menu];
+    TestMenuRunner runner = menuRunners[item.parent];
     if (runner == null) {
-      await _push(menu);
-    } else {
-      await runner.enter();
+      //devPrint('getRunner $item');
+
+      _push(item.parent);
+      runner = menuRunners[item.parent];
     }
+    return runner;
   }
 
   // make sure the menu is entered first
   Future runItem(TestItem item) async {
-    await _enterMenu(item.parent);
-    TestMenuRunner runner = menuRunners[item.parent];
+    // await _enterMenu(item.parent);
+    TestMenuRunner runner = getRunner(item);
     //await runner.enter();
     if (item is MenuTestItem) {
       await pushMenu(item.menu);
     } else {
       // Update hash in browser for example
       testMenuPresenter.preProcessItem(item);
-      await runner._run(item);
+      await runner.run(item);
     }
   }
 

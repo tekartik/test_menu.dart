@@ -4,7 +4,8 @@ import 'package:dev_test/test.dart';
 import 'package:tekartik_test_menu/test_menu.dart';
 
 main() {
-  group('test item', () {
+  group('test_menu', () {
+    //TestMenuManager.debug.on
     test('solo', () async {
       bool ran = false;
 

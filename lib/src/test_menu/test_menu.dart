@@ -97,6 +97,10 @@ class MenuTestItem extends _BaseTestItem
   }
 }
 
+class RootTestMenu extends TestMenu {
+  RootTestMenu() : super(null);
+}
+
 class TestMenu extends Object with _WithParentMixin {
   String cmd;
   String name;

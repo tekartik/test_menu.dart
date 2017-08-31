@@ -6,6 +6,7 @@ import 'dart:js';
 import 'package:tekartik_common_utils/out_buffer.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu_runner.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'package:tekartik_browser_utils/location_info_utils.dart';
 import 'src/common_browser.dart';
@@ -89,6 +90,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     List<String> list = new List();
 
     TestMenu lastMenu = null;
+    //devPrint(testMenuManager.stackMenus);
     for (int i = testMenuManager.stackMenus.length - 1; i >= 0; i--) {
       TestMenu menu = testMenuManager.stackMenus[i].menu;
 

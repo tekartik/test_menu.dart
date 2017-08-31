@@ -68,8 +68,10 @@ void solo_item(String name, Func0 body, {String cmd}) {
 
 void write(Object message) {
   testMenuPresenter.write(message);
-  //testMenuManager.write(message);
 }
+
+@deprecated
+devWrite(Object message) => write(message);
 
 Future<String> prompt([Object message]) {
   //return testMenuManager.prompt(message);
