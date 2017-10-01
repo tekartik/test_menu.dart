@@ -141,7 +141,8 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
   }
 
   void _updateMenuHash() {
-    window.location.hash = "#${getMenuStackNames().join('_')}";
+    List<String> menuNames = getMenuStackNames();
+    window.location.hash = "#${menuNames.join('_')}";
   }
 
   void displayMenu(TestMenu menu) {

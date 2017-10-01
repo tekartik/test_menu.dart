@@ -72,6 +72,7 @@ class TestMenuManager {
       hash = hash.substring(0, firstHash);
     }
     List<String> commands = hash.split('_');
+
     if (debugTestMenuManager) {
       print("hash: $hash commands: $commands");
     }
@@ -94,7 +95,7 @@ class TestMenuManager {
   Future pushMenu(TestMenu menu) async {
     if (_push(menu)) {
       if (TestMenuManager.debug.on) {
-        write("[mgr] presenting $menu");
+        write("[mgr] push presenting $menu");
       }
       await presenter.presentMenu(menu);
 
@@ -159,7 +160,7 @@ class TestMenuManager {
     if (poped && activeMenuRunner != null) {
       await activeMenuRunner.leave();
       if (TestMenuManager.debug.on) {
-        write("[mgr] presenting ${this.activeMenuRunner.menu}");
+        write("[mgr] pop presenting ${this.activeMenuRunner.menu}");
       }
       await presenter.presentMenu(this.activeMenuRunner.menu);
     }

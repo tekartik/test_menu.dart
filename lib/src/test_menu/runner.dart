@@ -19,10 +19,15 @@ class Runner {
       // no longer exit, so that we handle the enter/leave
       //return;
     } else {
+      /*
       if (testMenu.length == 1 && (testMenu[0] is MenuTestItem)) {
+        if (TestMenuManager.debug.on) {
+          print('[Runner] single main menu');
+        }
         MenuTestItem item = testMenu[0] as MenuTestItem;
         testMenu = item.menu;
       }
+      */
     }
 
     // look for solo stuff
