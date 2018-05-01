@@ -12,8 +12,6 @@ dependencies:
     git: git://github.com/tekartik/mdl_js.dart
     version: '>=0.4.0'
   dart_to_js_script_rewriter: any
-  yacht:
-    git: git://github.com/tekartik/yacht.dart
   platform_context:
     git: git://github.com/tekartik/platform_context.dart
   tekartik_common_utils:
@@ -36,7 +34,6 @@ dev_dependencies:
     version: '>=0.1.3'
 transformers:
   - dart_to_js_script_rewriter
-  - yacht
 
 # try ddc
 web:
