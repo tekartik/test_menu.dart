@@ -79,8 +79,8 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     //return _inCommand.
   }
 
-  Future handleLine(String line) {
-    return processLine(line).then((_) {
+  void handleLine(String line) {
+    processLine(line).then((_) {
       stdout.write('> ');
     });
   }
