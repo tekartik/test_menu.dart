@@ -244,7 +244,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
     write("$message >");
     var completer = new Completer<String>.sync();
     promptCompleter = completer;
-    input.label = message;
+    input.label = message as String;
     input.focus();
     return completer.future;
   }

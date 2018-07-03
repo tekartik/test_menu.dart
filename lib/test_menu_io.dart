@@ -32,11 +32,11 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     parser.addFlag('verbose', abbr: 'v');
 
     var results = parser.parse(arguments);
-    verbose = results['verbose'] || testMenuConsoleDebug;
+    verbose = results['verbose'] as bool || testMenuConsoleDebug;
     if (verbose) {
       stdout.writeln("args: $arguments");
     }
-    if (results['help']) {
+    if (results['help'] as bool) {
       stdout.writeln("Add arguments at the end separated by spaces");
       stdout.writeln("Example to run item 0 and exit");
       stdout.writeln("  dart test_menu.dart 0 -");
@@ -102,7 +102,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     // Exit
     if (line == _exitCommand) {
       // print('pop');
-      if (!await popMenu()) {
+      if (!(await popMenu() as bool)) {
         // devPrint('should exit?');
         done = true;
         if (_inCommandSubscription != null) {
@@ -210,7 +210,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     //print('$TAG Prompt: $message');
     message ??= "Enter text";
     stdout.write('$message > ');
-    Completer completer = new Completer.sync();
+    var completer = new Completer<String>.sync();
     promptCompleter = completer;
     // read the next line
     _nextLine();

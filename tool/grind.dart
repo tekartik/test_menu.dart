@@ -6,7 +6,7 @@ import 'package:tekartik_deploy/gs_deploy.dart';
 
 //import 'package:tekartik_pub/script.dart';
 
-main(args) async {
+main(List<String>args) async {
 //   pkg = new IoFsPubPackage(   await getPubPackageDir(new File(binScriptPath).parent));
   await grind(args);
 }

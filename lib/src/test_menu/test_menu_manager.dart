@@ -39,7 +39,7 @@ Future processMenu(TestMenu menu) async {
 
 class TestMenuManager {
   final TestMenuPresenter presenter;
-  SynchronizedLock lock = new SynchronizedLock();
+  //SynchronizedLock lock = new SynchronizedLock();
   static final DevFlag debug = new DevFlag("TestMenuManager");
   //TestMenu displayedMenu;
   Map<TestMenu, TestMenuRunner> menuRunners = {};
