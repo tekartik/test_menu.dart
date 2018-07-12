@@ -1,0 +1,29 @@
+name: tekartik_test_menu_example
+version: 0.4.5
+homepage: https://github.com/tekartik/test_menu.dart
+# git://github.com/tekartik/tekartik_test_menu.dart
+description: Simple test menu example
+author: Alexandre Roux <alex@tekartik.com>
+environment:
+  sdk: '>=2.0.0-dev.63 <2.0.0'
+
+dependencies:
+  tekartik_platform_browser:
+    git:
+      url: git://github.com/tekartik/platform.dart
+      path: platform_browser
+      ref: dart2
+
+dependency_overrides:
+  tekartik_test_menu_io:
+    path: ../test_menu_io
+  tekartik_test_menu_browser:
+    path: ../test_menu_browser
+  tekartik_test_menu:
+      path: ../test_menu
+
+#  tekartik_mdl_js:
+#    path: /opt/devx/git/github.com/alextekartik/mdl_js.dart
+#  platform_context:
+#    # path: /opt/devx/git/github.com/tekartik/platform_context.dart
+#    path: /opt/devx/git/github.com/alextekartik/platform_context.dart
