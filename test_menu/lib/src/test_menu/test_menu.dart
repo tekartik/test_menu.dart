@@ -105,7 +105,7 @@ class TestMenu extends Object with _WithParentMixin {
   String cmd;
   String name;
   List<TestItem> _items = [];
-  Iterable<TestItem> get items => _items;
+  List<TestItem> get items => _items;
   int get length => _items.length;
   TestMenu(this.name, {this.cmd});
   List<MenuEnter> _enters = [];

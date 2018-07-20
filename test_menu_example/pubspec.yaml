@@ -13,7 +13,6 @@ dependencies:
       url: git://github.com/tekartik/platform.dart
       path: platform_browser
       ref: dart2
-
 dependency_overrides:
   tekartik_test_menu_io:
     path: ../test_menu_io

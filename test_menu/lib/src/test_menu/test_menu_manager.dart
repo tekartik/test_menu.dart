@@ -150,6 +150,10 @@ class TestMenuManager {
     return true;
   }
 
+  bool canPop([int count = 1]) {
+    return activeDepth >= count;
+  }
+
   Future<bool> popMenu([int count = 1]) async {
     TestMenuRunner activeMenuRunner = this.activeMenuRunner;
     if (TestMenuManager.debug.on) {
