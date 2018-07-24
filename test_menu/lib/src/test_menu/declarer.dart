@@ -49,7 +49,7 @@ class Declarer {
   // current test menu
   TestMenu testMenu = new RootTestMenu();
 
-  void menu(String name, VoidFunc0 body, {String cmd}) {
+  void menu(String name, void body(), {String cmd}) {
     TestMenu parentTestMenu = testMenu;
 
     TestMenu newMenu = new TestMenu(name, cmd: cmd);
@@ -60,17 +60,17 @@ class Declarer {
     testMenu = parentTestMenu;
   }
 
-  void enter(Func0 body) {
+  void enter(body()) {
     MenuEnter enter = new MenuEnter(body);
     testMenu.addEnter(enter);
   }
 
-  void leave(Func0 body) {
+  void leave(body()) {
     MenuLeave leave = new MenuLeave(body);
     testMenu.addLeave(leave);
   }
 
-  void item(String name, Func0 body, {String cmd, bool solo}) {
+  void item(String name, body(), {String cmd, bool solo}) {
     TestItem item = new TestItem.fn(name, body, cmd: cmd, solo: solo);
     testMenu.addItem(item);
     //_testMenu.add("print hi", () => print('hi'));

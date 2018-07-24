@@ -226,7 +226,7 @@ void initTestMenuConsole(List<String> arguments) {
 
 _TestMenuManagerConsole _testMenuManagerConsole;
 
-void mainMenu(List<String> arguments, VoidFunc0 body) {
+void mainMenu(List<String> arguments, void body()) {
   initTestMenuConsole(arguments);
   body();
 }
