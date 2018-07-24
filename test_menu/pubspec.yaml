@@ -7,7 +7,6 @@ author: Alexandre Roux <alex@tekartik.com>
 environment:
   sdk: '>=2.0.0-dev.58 <3.0.0'
 dependencies:
-  func: any
   tekartik_common_utils:
     git:
       url: git://github.com/tekartik/common_utils.dart

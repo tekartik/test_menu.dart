@@ -2,8 +2,6 @@ library tekartik_test_menu;
 
 import 'dart:async';
 
-import 'package:func/func.dart';
-
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'src/test_menu/declarer.dart';
 
@@ -33,7 +31,7 @@ Declarer testMenuNewDeclarer() {
 ///
 /// declaration must be sync
 ///
-void menu(String name, VoidFunc0 body, {String cmd}) {
+void menu(String name, void body(), {String cmd}) {
   _declarer.menu(name, body, cmd: cmd);
 }
 
@@ -43,26 +41,26 @@ void menu(String name, VoidFunc0 body, {String cmd}) {
 /// can return a future
 ///
 /// @param cmd command shortcut (instead of incremental number)
-void item(String name, Func0 body, {String cmd}) {
+void item(String name, body(), {String cmd}) {
   _declarer.item(name, body, cmd: cmd);
 }
 
 ///
 /// Declare function called when we enter a menu
 ///
-void enter(Func0 body) {
+void enter(body()) {
   _declarer.enter(body);
 }
 
 ///
 /// Declare function called when we leave a menu
 ///
-void leave(Func0 body) {
+void leave(body()) {
   _declarer.leave(body);
 }
 
 @deprecated
-void solo_item(String name, Func0 body, {String cmd}) {
+void solo_item(String name, body(), {String cmd}) {
   _declarer.item(name, body, cmd: cmd, solo: true);
 }
 
