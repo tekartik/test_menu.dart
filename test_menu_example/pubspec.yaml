@@ -5,7 +5,7 @@ homepage: https://github.com/tekartik/test_menu.dart
 description: Simple test menu example
 author: Alexandre Roux <alex@tekartik.com>
 environment:
-  sdk: '>=2.0.0-dev.63 <2.0.0'
+  sdk: '>=2.0.0-dev.58 <3.0.0'
 
 dependencies:
   tekartik_platform_browser:
