@@ -13,8 +13,9 @@ class _WithParentMixin implements WithParent {
 abstract class TestItem implements Runnable, WithParent {
   String get cmd;
   String get name;
-  factory TestItem.fn(String name, TestItemFn fn, {String cmd, bool solo}) {
-    return new RunnableTestItem(name, fn, cmd: cmd, solo: solo);
+  factory TestItem.fn(String name, TestItemFn fn,
+      {String cmd, bool solo, bool test}) {
+    return new RunnableTestItem(name, fn, cmd: cmd, solo: solo, test: test);
   }
   factory TestItem.menu(TestMenu menu) {
     return new MenuTestItem(menu);
@@ -24,9 +25,10 @@ abstract class TestItem implements Runnable, WithParent {
 typedef R TestItemFn<R>();
 
 abstract class _BaseTestItem {
+  final bool solo;
   String name;
   String get cmd;
-  _BaseTestItem(this.name);
+  _BaseTestItem(this.name, this.solo);
 
   @override
   String toString() {
@@ -71,9 +73,9 @@ class RunnableTestItem extends _BaseTestItem
     with _RunnableMixin, _WithParentMixin
     implements TestItem {
   String cmd;
-  bool solo;
-  RunnableTestItem(String name, TestItemFn fn, {this.cmd, this.solo})
-      : super(name) {
+  final bool test;
+  RunnableTestItem(String name, TestItemFn fn, {this.cmd, this.test, bool solo})
+      : super(name, solo) {
     this.fn = fn;
   }
 }
@@ -83,7 +85,7 @@ class MenuTestItem extends _BaseTestItem
     implements TestItem {
   TestMenu menu;
   String get cmd => menu.cmd;
-  MenuTestItem(this.menu) : super(null) {
+  MenuTestItem(this.menu) : super(null, menu.solo) {
     name = menu.name;
   }
 
@@ -101,13 +103,17 @@ class RootTestMenu extends TestMenu {
   RootTestMenu() : super(null);
 }
 
-class TestMenu extends Object with _WithParentMixin {
+abstract class TestObject {}
+
+class TestMenu extends Object with _WithParentMixin implements TestObject {
   String cmd;
   String name;
+  final bool group;
+  final bool solo;
   List<TestItem> _items = [];
   List<TestItem> get items => _items;
   int get length => _items.length;
-  TestMenu(this.name, {this.cmd});
+  TestMenu(this.name, {this.cmd, this.group, this.solo});
   List<MenuEnter> _enters = [];
   List<MenuLeave> _leaves = [];
 

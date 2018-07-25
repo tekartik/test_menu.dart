@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:stack_trace/stack_trace.dart';
 import 'package:tekartik_test_menu/src/common_import.dart';
+import 'package:tekartik_test_menu/src/expect.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
@@ -33,7 +34,11 @@ class TestMenuRunner {
     try {
       await runnable.run();
     } catch (e, st) {
-      testMenuPresenter.write("ERROR CAUGHT $e ${Trace.format(st)}");
+      if (e is TestFailure) {
+        testMenuPresenter.write("ERROR CAUGHT $e");
+      } else {
+        testMenuPresenter.write("ERROR CAUGHT $e ${Trace.format(st)}");
+      }
       rethrow;
     } finally {
       if (debugTestMenuManager) {

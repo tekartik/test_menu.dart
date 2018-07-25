@@ -124,7 +124,9 @@ class _TestMenuManagerConsole extends TestMenuPresenter
         print("$TAG running '$item'");
       }
 
-      await testMenuManager.runItem(item);
+      try {
+        await testMenuManager.runItem(item);
+      } catch (e) {}
       // return new Future.sync(item.run).then((_) {
       if (verbose) {
         print("$TAG done '$item'");

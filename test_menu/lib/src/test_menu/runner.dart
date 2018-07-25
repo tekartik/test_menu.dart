@@ -30,17 +30,26 @@ class Runner {
       */
     }
 
-    // look for solo stuff
-    bool _hasSolo = false;
-
+    //List<List<TestItem> >
     List<TestMenu> tree = [];
+    List<TestMenu> soloTree;
+    RunnableTestItem soloTestItem;
     _handleSolo(TestMenu testMenu) async {
       tree.add(testMenu);
+
+      // handle solo_menu
+      if (testMenu.solo == true) {
+        soloTree = new List.from(tree);
+      }
+
       for (TestItem item in testMenu.items) {
         if (item is RunnableTestItem) {
+          // handle solo_item
           if (item.solo == true) {
-            _hasSolo = true;
-            await testMenuManager.runItem(item);
+            soloTestItem = item;
+            soloTree = new List.from(tree);
+            //        await testMenuManager.runItem(item);
+
             //await item.run();
           }
         } else if (item is MenuTestItem) {
@@ -50,9 +59,24 @@ class Runner {
       tree.remove(testMenu);
     }
 
+    // look for solo stuff
     await _handleSolo(testMenu);
+
+    bool _hasSolo = soloTree != null;
     if (!_hasSolo) {
       await pushMenu(testMenu);
+    } else {
+      for (var testMenu in soloTree) {
+        await pushMenu(testMenu);
+      }
+      try {
+        if (soloTestItem != null) {
+          await testMenuManager.runItem(soloTestItem);
+        }
+      } catch (e, st) {
+        print(e);
+        print(st);
+      }
     }
   }
 

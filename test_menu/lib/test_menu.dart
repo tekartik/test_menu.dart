@@ -31,8 +31,8 @@ Declarer testMenuNewDeclarer() {
 ///
 /// declaration must be sync
 ///
-void menu(String name, void body(), {String cmd}) {
-  _declarer.menu(name, body, cmd: cmd);
+void menu(String name, void body(), {String cmd, bool group, bool solo}) {
+  _declarer.menu(name, body, cmd: cmd, group: group, solo: solo);
 }
 
 ///
@@ -41,8 +41,8 @@ void menu(String name, void body(), {String cmd}) {
 /// can return a future
 ///
 /// @param cmd command shortcut (instead of incremental number)
-void item(String name, body(), {String cmd}) {
-  _declarer.item(name, body, cmd: cmd);
+void item(String name, body(), {String cmd, bool solo, bool test}) {
+  _declarer.item(name, body, cmd: cmd, solo: solo, test: test);
 }
 
 ///
@@ -61,7 +61,12 @@ void leave(body()) {
 
 @deprecated
 void solo_item(String name, body(), {String cmd}) {
-  _declarer.item(name, body, cmd: cmd, solo: true);
+  item(name, body, cmd: cmd, solo: true);
+}
+
+@deprecated
+void solo_menu(String name, void body(), {String cmd}) {
+  menu(name, body, cmd: cmd, solo: true);
 }
 
 void write(Object message) {
