@@ -34,7 +34,7 @@ main() {
       });
 
       await _.testMenuRun();
-      //expect(ran, isTrue);
+      expect(ran, isTrue);
     });
 
     test('success', () async {

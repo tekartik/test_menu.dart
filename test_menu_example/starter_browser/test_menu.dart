@@ -4,7 +4,7 @@ import 'package:tekartik_test_menu_browser/test_menu_browser.dart';
 //import '
 
 main() async {
-  await initTestMenuBrowser(jsFiles: ['test_menu.js']);
+  initTestMenuBrowser(jsFiles: ['test_menu.js']);
 
   menu('main', () {
     item("write hola", () async {
