@@ -59,11 +59,13 @@ void leave(body()) {
   _declarer.leave(body);
 }
 
+// deprecated for temp usafe only
 @deprecated
 void solo_item(String name, body(), {String cmd}) {
   item(name, body, cmd: cmd, solo: true);
 }
 
+// deprecated for temp usafe only
 @deprecated
 void solo_menu(String name, void body(), {String cmd}) {
   menu(name, body, cmd: cmd, solo: true);

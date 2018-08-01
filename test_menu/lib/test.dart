@@ -13,20 +13,22 @@ void test(String name, body(), {String cmd}) {
   item(name, body, cmd: cmd, test: true);
 }
 
-///
-/// Declare a test item
-///
-/// can return a future
-///
-/// @param cmd command shortcut (instead of incremental number)
+// deprecated for temp usafe only
+@deprecated
 void solo_test(String name, body(), {String cmd}) {
   item(name, body, cmd: cmd, test: true, solo: true);
 }
 
+///
+/// Declare a test group
+///
+/// @param cmd command shortcut (instead of incremental number)
 void group(String name, void body(), {String cmd, bool solo}) {
   menu(name, body, group: true, solo: solo);
 }
 
+// deprecated for temp usafe only
+@deprecated
 void solo_group(String name, void body(), {String cmd}) {
   group(name, body, solo: true);
 }
