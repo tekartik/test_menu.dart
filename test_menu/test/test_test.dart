@@ -11,6 +11,8 @@ main() {
       bool ran = false;
 
       _.group("group", () {
+
+        // ignore: deprecated_member_use
         _.solo_test("test", () {
           ran = true;
         });
@@ -27,6 +29,7 @@ main() {
       bool ran = false;
 
       _.group("group", () {
+        // ignore: deprecated_member_use
         _.solo_test("test", () {
           ran = true;
           _.expect(true, isFalse);
@@ -41,6 +44,7 @@ main() {
       bool ran = false;
 
       _.group("group", () {
+        // ignore: deprecated_member_use
         _.solo_test("test", () {
           _.expect(true, isTrue);
           ran = true;

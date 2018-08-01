@@ -3,6 +3,7 @@ import 'package:tekartik_test_menu/test.dart';
 
 main(List<String> args) async {
   mainMenu(args, () {
+    // ignore: deprecated_member_use
     solo_test('root test', () {
       expect(true, isFalse);
     });
