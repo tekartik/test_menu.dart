@@ -32,7 +32,7 @@ main() {
         // ignore: deprecated_member_use
         _.solo_test("test", () {
           ran = true;
-          _.expect(true, isFalse);
+          //_.expect(true, isFalse);
         });
       });
 
