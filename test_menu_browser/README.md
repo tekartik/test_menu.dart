@@ -6,11 +6,14 @@ Console and Browser simple test menu for dart test applications
 
 Add the following to pubspec.yaml
 
-    dependencies:
-      tekartik_test_menu:
-        git: git://github.com/tekartik/test_menu.dart
-        version: '>=0.4.0'
-        
+```yaml
+dependencies:
+  tekartik_test_menu_browser:
+    git:
+      url: git://github.com/tekartik/test_menu.dart
+      path: test_menu_browser
+      ref: dart2
+```        
 
 copy `starter_xxx` to you project to get started
 
@@ -18,4 +21,4 @@ copy `starter_xxx` to you project to get started
 
 ## Browser
 
-Simply reloade after executing a test. The same last test will be executed
+Simply reload after executing a test. The same last test will be executed

@@ -256,7 +256,7 @@ Future initTestMenuBrowser({List<String> js}) async {
     loadMdlJs(),
     loadMdlCss(),
     loadMaterialIconsCss(),
-    loadStylesheet("packages/tekartik_test_menu/css/test_menu_mdl.css")
+    loadStylesheet("packages/tekartik_test_menu_browser/css/test_menu_mdl.css")
   ];
   if (debugTestMenuManager) {
     print("loading js: $js");

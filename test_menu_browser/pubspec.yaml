@@ -1,5 +1,5 @@
 name: tekartik_test_menu_browser
-version: 0.4.5
+version: 0.4.6
 homepage: https://github.com/tekartik/test_menu.dart
 # git://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
@@ -22,7 +22,11 @@ dependencies:
       url: git://github.com/tekartik/browser_utils.dart
       ref: dart2
     version: '>=0.5.0'
-
+  tekartik_platform_browser:
+    git:
+      url: git://github.com/tekartik/platform.dart
+      path: platform_browser
+      ref: dart2
 
 dev_dependencies:
   grinder: any
@@ -48,8 +52,6 @@ dev_dependencies:
 dependency_overrides:
   tekartik_test_menu:
     path: ../test_menu
-  tekartik_test_menu_example:
-      path: ../test_menu_example
 #  tekartik_mdl_js:
 #    path: /opt/devx/git/github.com/alextekartik/mdl_js.dart
 #  platform_context:

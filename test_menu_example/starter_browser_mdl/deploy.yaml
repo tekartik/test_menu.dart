@@ -1,6 +1,6 @@
 # list of files needed for web deployment
 files:
-  - test_menu.html
+  - index.html
   - test_menu.dart.js
   - test_menu.js
   - packages/tekartik_test_menu/css/test_menu_mdl.css

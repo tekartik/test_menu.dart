@@ -11,3 +11,9 @@ pushd test_menu_io
 pub get
 tool/travis.sh
 popd
+
+
+pushd test_menu_browser
+pub get
+tool/travis.sh
+popd

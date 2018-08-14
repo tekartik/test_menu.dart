@@ -11,7 +11,6 @@ main() {
       bool ran = false;
 
       _.group("group", () {
-
         // ignore: deprecated_member_use
         _.solo_test("test", () {
           ran = true;
