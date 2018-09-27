@@ -1,11 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Fast fail the script on failures.
-set -e
+set -xe
 
-# for debugging
-pub run chrome_travis:show_env
+pushd test_menu
+pub get
+tool/travis.sh
+popd
 
-dartanalyzer --fatal-warnings lib
+pushd test_menu_io
+pub get
+tool/travis.sh
+popd
 
-pub run test -p vm,firefox,chrome
+
+pushd test_menu_browser
+pub get
+tool/travis.sh
+popd
