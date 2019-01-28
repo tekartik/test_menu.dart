@@ -11,7 +11,7 @@ TestMenuManager _testMenuManager;
 TestMenuManager get testMenuManager {
   if (_testMenuManager == null) {
     if (testMenuPresenter != null) {
-      _testMenuManager = new TestMenuManager(testMenuPresenter);
+      _testMenuManager = TestMenuManager(testMenuPresenter);
     } else {
       throw ('Cannot tell whether you\'re running from io or browser. Please include the proper header');
     }
@@ -22,7 +22,7 @@ TestMenuManager get testMenuManager {
 set testMenuManager(TestMenuManager testMenuManager) =>
     _testMenuManager = testMenuManager;
 
-initTestMenuManager() {}
+void initTestMenuManager() {}
 
 Future pushMenu(TestMenu menu) async {
   initTestMenuManager();
@@ -39,13 +39,13 @@ Future processMenu(TestMenu menu) async {
 
 class TestMenuManager {
   final TestMenuPresenter presenter;
-  var lock = new Lock(reentrant: true);
-  static final DevFlag debug = new DevFlag("TestMenuManager");
+  var lock = Lock(reentrant: true);
+  static final DevFlag debug = DevFlag("TestMenuManager");
   //TestMenu displayedMenu;
   Map<TestMenu, TestMenuRunner> menuRunners = {};
 
   TestMenuRunner get activeMenuRunner {
-    if (stackMenus.length > 0) {
+    if (stackMenus.isNotEmpty) {
       return stackMenus.last;
     }
     return null;
@@ -97,7 +97,7 @@ class TestMenuManager {
       if (TestMenuManager.debug.on) {
         write("[mgr] push presenting $menu");
       }
-      await presenter.presentMenu(menu);
+      presenter.presentMenu(menu);
 
       //eventually process init items
       await menuRunners[menu]?.enter();
@@ -137,7 +137,7 @@ class TestMenuManager {
       write("[mgr] pushMenu $menu to ${testMenuManager.stackMenus}");
     }
     // Make sure parent runner exists
-    TestMenuRunner runner = new TestMenuRunner(activeMenuRunner, menu);
+    TestMenuRunner runner = TestMenuRunner(activeMenuRunner, menu);
     return _pushMenuRunner(runner);
   }
 
@@ -166,7 +166,7 @@ class TestMenuManager {
       if (TestMenuManager.debug.on) {
         write("[mgr] pop presenting ${this.activeMenuRunner.menu}");
       }
-      await presenter.presentMenu(this.activeMenuRunner.menu);
+      presenter.presentMenu(this.activeMenuRunner.menu);
     }
     return poped;
   }
@@ -241,9 +241,7 @@ class TestMenuManager {
     }
   }
 
-  /**
-   * Commands executed on startup
-   */
+  /// Commands executed on startup
   List<String> initCommands;
 
   void stop() {

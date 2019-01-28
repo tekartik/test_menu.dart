@@ -1,5 +1,5 @@
 name: tekartik_test_menu_io
-version: 0.4.5
+version: 0.4.6
 homepage: https://github.com/tekartik/test_menu.dart
 # git://github.com/tekartik/tekartik_test_menu.dart
 description: Simple io test menu
@@ -12,6 +12,7 @@ dependencies:
       url: git://github.com/tekartik/test_menu.dart
       ref: dart2
       path: test_menu
+    version: '>=0.5.2'
 #  tekartik_pub:
 #    git:
 #      url: git://github.com/tekartik/pub.dart

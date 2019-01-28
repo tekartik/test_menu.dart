@@ -11,7 +11,8 @@ class TestMenuRunner {
   final TestMenu menu;
   final TestMenuRunner parent;
 
-  toString() => menu.toString();
+  @override
+  String toString() => menu.toString();
 
   bool entered = false;
 

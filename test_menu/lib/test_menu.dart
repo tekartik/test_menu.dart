@@ -12,7 +12,7 @@ Declarer __declarer;
 
 Declarer get _declarer {
   if (__declarer == null) {
-    __declarer = new Declarer();
+    __declarer = Declarer();
     scheduleMicrotask(() {
       // An automatic microtask is run after the menu is declarer
       testMenuRun();
@@ -22,7 +22,7 @@ Declarer get _declarer {
 }
 
 Declarer testMenuNewDeclarer() {
-  __declarer = new Declarer();
+  __declarer = Declarer();
   return __declarer;
 }
 
@@ -59,14 +59,16 @@ void leave(body()) {
   _declarer.leave(body);
 }
 
-// deprecated for temp usafe only
+// deprecated for temp usage only
 @deprecated
+// ignore: non_constant_identifier_names
 void solo_item(String name, body(), {String cmd}) {
   item(name, body, cmd: cmd, solo: true);
 }
 
-// deprecated for temp usafe only
+// deprecated for temp usage only
 @deprecated
+// ignore: non_constant_identifier_names
 void solo_menu(String name, void body(), {String cmd}) {
   menu(name, body, cmd: cmd, solo: true);
 }
@@ -76,7 +78,7 @@ void write(Object message) {
 }
 
 @deprecated
-devWrite(Object message) => write(message);
+void devWrite(Object message) => write(message);
 
 Future<String> prompt([Object message]) {
   //return testMenuManager.prompt(message);

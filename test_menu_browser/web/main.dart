@@ -1,6 +1,6 @@
 import 'package:tekartik_test_menu_browser/test_menu_mdl_browser.dart';
 
-main() async {
+Future main() async {
   await initTestMenuBrowser();
 
   item("write hola", () async {

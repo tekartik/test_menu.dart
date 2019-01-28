@@ -15,7 +15,7 @@ main() async {
       write('RESULT prompt: ${await prompt('Some text please then [ENTER]')}');
     });
     item("js console.log", () {
-      js_test('testConsoleLog');
+      jsTest('testConsoleLog');
     });
     item("print hi", () {
       print('hi');

@@ -1,11 +1,11 @@
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   group('src_test_menu', () {
     test('function', () {
       bool ran = false;
-      TestItem item = new TestItem.fn("test", () {
+      TestItem item = TestItem.fn("test", () {
         ran = true;
       });
       expect(item.name, "test");
@@ -16,7 +16,7 @@ main() {
 
     test('enter', () {
       bool ran = false;
-      MenuEnter enter = new MenuEnter(() {
+      MenuEnter enter = MenuEnter(() {
         ran = true;
       });
       expect(ran, false);
@@ -26,7 +26,7 @@ main() {
 
     test('leave', () {
       bool ran = false;
-      MenuLeave leave = new MenuLeave(() {
+      MenuLeave leave = MenuLeave(() {
         ran = true;
       });
       expect(ran, false);
@@ -35,17 +35,17 @@ main() {
     });
 
     test('menu', () {
-      TestMenu menu = new TestMenu("menu");
-      TestItem item = new TestItem.menu(menu);
+      TestMenu menu = TestMenu("menu");
+      TestItem item = TestItem.menu(menu);
       expect(item.name, "menu");
     });
   });
 
   group('test menu', () {
     test('list', () {
-      TestMenu menu = new TestMenu("menu");
+      TestMenu menu = TestMenu("menu");
       expect(menu.name, "menu");
-      TestItem item = new TestItem.fn("test", () => null);
+      TestItem item = TestItem.fn("test", () => null);
       menu.addItem(item);
       expect(menu[0], item);
     });

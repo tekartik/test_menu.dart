@@ -3,34 +3,40 @@ library tekartik_test_menu_browser;
 import 'dart:html';
 import 'dart:js';
 
+// ignore_for_file: implementation_imports
+
+import 'package:tekartik_browser_utils/location_info_utils.dart';
 import 'package:tekartik_common_utils/out_buffer.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_runner.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
-import 'package:tekartik_browser_utils/location_info_utils.dart';
+
 import 'src/common_browser.dart';
 
-export 'src/common_browser.dart';
 export 'package:tekartik_test_menu/test_menu.dart';
 
-const String CONTAINER_ID = "tekartik_test_menu_container";
+export 'src/common_browser.dart';
 
-js_test(String name) {
+@deprecated
+const String CONTAINER_ID = "tekartik_test_menu_container";
+const String testMenuBrowserContainerId = "tekartik_test_menu_container";
+
+void jsTest(String name) {
   context.callMethod(name);
 }
 
 // can be extended
 class TestMenuManagerBrowser extends TestMenuPresenter
     with TestMenuPresenterMixin {
-  TestMenu displayedMenu = null;
-  Element container = null;
+  TestMenu displayedMenu;
+  Element container;
 
-  Element menuContainer = null;
-  Element output = null;
+  Element menuContainer;
+  Element output;
   InputElement basicInput;
 
-  var outBuffer = new OutBuffer(100);
+  var outBuffer = OutBuffer(100);
 
   @override
   void write(Object message) {
@@ -47,7 +53,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   @override
   Future<String> prompt(Object message) {
     write(message ?? "Enter text");
-    var completer = new Completer<String>.sync();
+    var completer = Completer<String>.sync();
     promptCompleter = completer;
     return completer.future;
   }
@@ -61,13 +67,13 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
   void findContainer() {
     if (container == null) {
-      container = document.getElementById(CONTAINER_ID);
+      container = document.getElementById(testMenuBrowserContainerId);
       if (container == null) {
-        container = new DivElement();
+        container = DivElement();
         document.body.children.add(container);
       }
 
-      basicInput = new InputElement();
+      basicInput = InputElement();
 
       basicInput.onChange.listen((_) {
         // devPrint("on change: ${basicInput.value}");
@@ -77,9 +83,9 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         }
       });
 
-      menuContainer = new DivElement();
+      menuContainer = DivElement();
 
-      output = new PreElement();
+      output = PreElement();
 
       container.children.addAll([output, menuContainer, basicInput]);
     }
@@ -87,9 +93,9 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
   // for href
   List<String> getMenuStackNames([TestItem item]) {
-    List<String> list = new List();
+    List<String> list = [];
 
-    TestMenu lastMenu = null;
+    TestMenu lastMenu;
     //devPrint(testMenuManager.stackMenus);
     for (int i = testMenuManager.stackMenus.length - 1; i >= 0; i--) {
       TestMenu menu = testMenuManager.stackMenus[i].menu;
@@ -129,18 +135,18 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     findContainer();
 
     if (displayedMenu != menu) {
-      Element header = new HeadingElement.h3();
-      StringBuffer sb = new StringBuffer();
+      Element header = HeadingElement.h3();
+      StringBuffer sb = StringBuffer();
       for (TestMenuRunner runner in testMenuManager.stackMenus) {
         sb.write(' > ${runner.menu.name}');
       }
       header.setInnerHtml(sb.toString());
-      Element list = new UListElement();
+      Element list = UListElement();
 
       LIElement liElement;
 
       if (testMenuManager.activeDepth > 0) {
-        liElement = new LIElement();
+        liElement = LIElement();
 
         liElement
           ..setInnerHtml(' - exit')
@@ -153,7 +159,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       for (int i = 0; i < menu.length; i++) {
         int index = i;
         TestItem item = menu[i];
-        liElement = new LIElement();
+        liElement = LIElement();
         liElement
           ..setInnerHtml('$i ${item}')
           ..onClick.listen((_) {
@@ -172,14 +178,14 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   }
 
   @override
-  presentMenu(TestMenu menu) {
+  void presentMenu(TestMenu menu) {
     displayMenu(menu);
   }
 }
 
 void initTestMenuBrowser({List<String> jsFiles}) {
   testMenuLoadJs(jsFiles);
-  _testMenuManagerBrowser = new TestMenuManagerBrowser();
+  _testMenuManagerBrowser = TestMenuManagerBrowser();
 
   testMenuPresenter = _testMenuManagerBrowser;
 

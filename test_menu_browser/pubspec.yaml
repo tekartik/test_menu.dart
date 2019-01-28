@@ -12,6 +12,7 @@ dependencies:
       url: git://github.com/tekartik/test_menu.dart
       ref: dart2
       path: test_menu
+    version: '>=0.5.2'
   tekartik_mdl_js:
     git:
       url: git://github.com/tekartik/mdl_js.dart

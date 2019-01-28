@@ -13,6 +13,7 @@ class TestFailure {
 
   TestFailure(this.message);
 
+  @override
   String toString() => message;
 }
 
@@ -69,6 +70,15 @@ void expect(
 Future expectLater(actual, matcher, {String reason, skip}) =>
     _expect(actual, matcher, reason: reason, skip: skip);
 
+String _formatFailure(Matcher expected, actual, String which, {String reason}) {
+  var buffer = StringBuffer();
+  buffer.writeln(indent(prettyPrint(expected), first: 'Expected: '));
+  buffer.writeln(indent(prettyPrint(actual), first: '  Actual: '));
+  if (which.isNotEmpty) buffer.writeln(indent(which, first: '   Which: '));
+  if (reason != null) buffer.writeln(reason);
+  return buffer.toString();
+}
+
 /// The implementation of [expect] and [expectLater].
 Future _expect(actual, matcher,
     {String reason,
@@ -77,11 +87,11 @@ Future _expect(actual, matcher,
     // ignore: deprecated_member_use
     ErrorFormatter formatter}) {
   formatter ??= (actual, matcher, reason, matchState, verbose) {
-    var mismatchDescription = new StringDescription();
+    var mismatchDescription = StringDescription();
     matcher.describeMismatch(actual, mismatchDescription, matchState, verbose);
 
     // ignore: deprecated_member_use
-    return formatFailure(matcher, actual, mismatchDescription.toString(),
+    return _formatFailure(matcher, actual, mismatchDescription.toString(),
         reason: reason);
   };
 
@@ -94,7 +104,7 @@ Future _expect(actual, matcher,
   */
 
   if (skip != null && skip is! bool && skip is! String) {
-    throw new ArgumentError.value(skip, "skip", "must be a bool or a String");
+    throw ArgumentError.value(skip, "skip", "must be a bool or a String");
   }
 
   matcher = wrapMatcher(matcher);
@@ -152,7 +162,7 @@ Future _expect(actual, matcher,
   var matchState = {};
   try {
     if ((matcher as Matcher).matches(actual, matchState))
-      return new Future.sync(() {});
+      return Future.sync(() {});
   } catch (e, trace) {
     reason ??= '$e at $trace';
   }
@@ -162,7 +172,7 @@ Future _expect(actual, matcher,
 /// Convenience method for throwing a new [TestFailure] with the provided
 /// [message].
 @alwaysThrows
-Null fail(String message) => throw new TestFailure(message);
+void fail(String message) => throw TestFailure(message);
 
 String indent(String text, {String first}) {
   if (first != null) {
@@ -181,7 +191,7 @@ String prettyPrint(dynamic text, {String first}) {
 // The default error formatter.
 @Deprecated("Will be removed in 0.13.0.")
 String formatFailure(Matcher expected, actual, String which, {String reason}) {
-  var buffer = new StringBuffer();
+  var buffer = StringBuffer();
   buffer.writeln(indent(prettyPrint(expected), first: 'Expected: '));
   buffer.writeln(indent(prettyPrint(actual), first: '  Actual: '));
   if (which.isNotEmpty) buffer.writeln(indent(which, first: '   Which: '));

@@ -1,23 +1,23 @@
 library test_menu_test;
 
 import 'package:dev_test/test.dart';
-import 'package:tekartik_test_menu/test_menu.dart' as _;
-import 'package:tekartik_test_menu/test.dart' as _;
+import 'package:tekartik_test_menu/test_menu.dart' as common_test;
+import 'package:tekartik_test_menu/test.dart' as common_test;
 
-main() {
+void main() {
   group('test', () {
     //TestMenuManager.debug.on
     test('auto_run', () async {
       bool ran = false;
 
-      _.group("group", () {
+      common_test.group("group", () {
         // ignore: deprecated_member_use
-        _.solo_test("test", () {
+        common_test.solo_test("test", () {
           ran = true;
         });
       });
 
-      await _.testMenuRun();
+      await common_test.testMenuRun();
       expect(ran, isTrue);
     });
   });
@@ -27,30 +27,30 @@ main() {
     test('fail', () async {
       bool ran = false;
 
-      _.group("group", () {
+      common_test.group("group", () {
         // ignore: deprecated_member_use
-        _.solo_test("test", () {
+        common_test.solo_test("test", () {
           ran = true;
           //_.expect(true, isFalse);
         });
       });
 
-      await _.testMenuRun();
+      await common_test.testMenuRun();
       expect(ran, isTrue);
     });
 
     test('success', () async {
       bool ran = false;
 
-      _.group("group", () {
+      common_test.group("group", () {
         // ignore: deprecated_member_use
-        _.solo_test("test", () {
-          _.expect(true, isTrue);
+        common_test.solo_test("test", () {
+          common_test.expect(true, isTrue);
           ran = true;
         });
       });
 
-      await _.testMenuRun();
+      await common_test.testMenuRun();
       expect(ran, isTrue);
     });
   });
