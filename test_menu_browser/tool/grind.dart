@@ -52,7 +52,7 @@ deploy() {
 @Task('Fs Deploy built app.')
 fs_deploy_starter() async {
 //...
-  ProcessCmd cmd = processCmd("fsdeploy",
+  ProcessCmd cmd = ProcessCmd("fsdeploy",
       [join("build", "example", "starter_browser_mdl", "deploy.yaml")]);
 
   await runCmd(cmd);

@@ -22,10 +22,20 @@ export 'src/common_browser.dart';
 export 'test_menu_browser.dart' show js_test;
 //import 'package:tekartik_mdl_js/mdl_js.dart';
 
+// 2019-01 deprecated
+@deprecated
 const String CONTAINER_ID = "tekartik_test_menu_container";
+@deprecated
 const String MENU_ID = "test_menu";
+@deprecated
 const String OUTPUT_ID = "output";
+@deprecated
 const String INPUT_ID = "input";
+
+const String testMenuBrowserContainerId = "tekartik_test_menu_container";
+const String testMenuBrowserMenuId = "test_menu";
+const String testMenuBrowserOutputId = "output";
+const String testMenuBrowserInputId = "input";
 
 // can be extended
 class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
@@ -65,27 +75,19 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
   void findContainer() {
     if (container == null) {
-      //devPrint(browserPlatformContext);
-      /*
-      devPrint(platformContext);
-      devPrint(platformContext.browser);
-      devPrint(platformContext.browser.isMobile);
-      */
-      //devPrint(isMobile);
-
-      container = document.getElementById(CONTAINER_ID);
+      container = document.getElementById(testMenuBrowserContainerId);
       if (container == null) {
-        container = new DivElement()..id = CONTAINER_ID;
+        container = new DivElement()..id = testMenuBrowserContainerId;
         document.body.children.add(container);
 
-        menuContainer = new DivElement()..id = MENU_ID;
+        menuContainer = new DivElement()..id = testMenuBrowserMenuId;
 
-        output = new PreElement()..id = OUTPUT_ID;
+        output = new PreElement()..id = testMenuBrowserOutputId;
 
         var form = new FormElement();
         form.setAttribute("action", "#");
 
-        input = new TextField(id: INPUT_ID, floatingLabel: true);
+        input = new TextField(id: testMenuBrowserInputId, floatingLabel: true);
         form.append(input.element);
         form.onSubmit.listen((Event e) {
           //print("on submit: ${input.value}");
@@ -113,6 +115,9 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
         });
 
         container.children.addAll([output, menuContainer, form]);
+      } else {
+        output = container.querySelector('#${testMenuBrowserOutputId}');
+        menuContainer = container.querySelector('#${testMenuBrowserMenuId}');
       }
     }
   }
@@ -138,6 +143,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
   //@override
   void init() {
+    // devPrint("output: $output");
     findContainer();
   }
 

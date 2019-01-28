@@ -13,6 +13,7 @@ dependencies:
       url: git://github.com/tekartik/test_menu.dart
       path: test_menu_browser
       ref: dart2
+    version: '>=0.4.7'
 ```        
 
 copy `starter_xxx` to you project to get started
