@@ -38,13 +38,17 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
   var outBuffer = OutBuffer(100);
 
+  void commonLog(Object message) {
+    print("[w] $message");
+  }
+
   @override
   void write(Object message) {
     outBuffer.add("$message");
     if (debugTestMenuManager) {
       print("[bwsr writ] $message");
     }
-    //print("writing $text");
+    commonLog(message);
     output.text = outBuffer.toString();
   }
 
@@ -164,7 +168,9 @@ class TestMenuManagerBrowser extends TestMenuPresenter
           ..setInnerHtml('$i ${item}')
           ..onClick.listen((_) {
             print("running '$index ${item}'");
-            testMenuManager.runItem(item);
+            testMenuManager.runItem(item).then((_) {
+              print("done '$index ${item}'");
+            });
           });
         list.children.add(liElement);
         //print('$i ${item}');

@@ -53,7 +53,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
     if (debugTestMenuManager) {
       print("writing $text");
     }
-
+    commonLog(message);
     outBuffer.add(text);
     output.text = outBuffer.toString();
     autoScroll();
@@ -218,8 +218,9 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
               ..appendText('$i'))
             ..appendText("${item}"))
           ..onClick.listen((_) {
-            print("running '$i ${item}'");
+            print("[i] running '$i ${item}'");
             testMenuManager.runItem(item).then((_) {
+              print("[i] done '$i ${item}'");
               initInputForMenu();
             });
           });

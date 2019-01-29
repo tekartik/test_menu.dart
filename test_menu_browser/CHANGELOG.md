@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.8
+
+- console.log all writes
+
 ## 0.4.0
 
 - Add enter/leave support
