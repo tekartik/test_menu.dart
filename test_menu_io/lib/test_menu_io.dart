@@ -72,7 +72,8 @@ class _TestMenuManagerConsole extends TestMenuPresenter
   void readLine() {
     if (_inCommand == null) {
       //devPrint('readLine');
-      _inCommand = stdin.transform(utf8.decoder).transform(const LineSplitter());
+      _inCommand =
+          stdin.transform(utf8.decoder).transform(const LineSplitter());
 
       // Waiting forever on stdin
       _inCommandSubscription = _inCommand.listen(handleLine);
@@ -108,7 +109,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
         // devPrint('should exit?');
         done = true;
         if (_inCommandSubscription != null) {
-          _inCommandSubscription.cancel();
+          await _inCommandSubscription.cancel();
         }
       }
       return Future.value();

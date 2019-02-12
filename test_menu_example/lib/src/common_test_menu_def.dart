@@ -1,9 +1,13 @@
 library test_menu_console_interactive_test;
 
+// ignore_for_file: implementation_imports
+
+import 'dart:async';
+
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
-main() async {
+Future main() async {
   TestMenu subSubMenu = TestMenu("sub sub");
   subSubMenu.add("print hi", () => print('hi'));
 
@@ -15,5 +19,5 @@ main() async {
   menu.add("print hi", () => print('hi'));
   menu.add("crash", () => print(null.length));
   menu.addMenu(subMenu);
-  pushMenu(menu);
+  await pushMenu(menu);
 }

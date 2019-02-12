@@ -21,6 +21,7 @@ export 'package:tekartik_test_menu/test_menu.dart';
 export 'src/common_browser.dart';
 export 'test_menu_browser.dart' show jsTest;
 // ignore_for_file: implementation_imports
+// ignore_for_file: constant_identifier_names
 
 //import 'package:tekartik_mdl_js/mdl_js.dart';
 

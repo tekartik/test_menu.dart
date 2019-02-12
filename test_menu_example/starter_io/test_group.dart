@@ -1,7 +1,7 @@
 import 'package:tekartik_test_menu_io/test_menu_io.dart';
 import 'package:tekartik_test_menu/test.dart';
 
-main(List<String> args) async {
+void main(List<String> args) {
   mainMenu(args, () {
     // ignore: deprecated_member_use
     solo_test('root test', () {

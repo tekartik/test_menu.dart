@@ -3,7 +3,7 @@ library test_menu;
 import 'package:tekartik_test_menu_browser/test_menu_browser.dart';
 //import '
 
-main() async {
+void main() {
   initTestMenuBrowser(jsFiles: ['test_menu.js']);
 
   menu('main', () {

@@ -236,7 +236,7 @@ class TestMenuManager {
       await pushMenu(item.menu);
     } else {
       // Update hash in browser for example
-      testMenuPresenter.preProcessItem(item);
+      await testMenuPresenter.preProcessItem(item);
       await runner.run(item);
     }
   }

@@ -19,6 +19,7 @@ export 'package:tekartik_test_menu/test_menu.dart';
 export 'src/common_browser.dart';
 
 @deprecated
+// ignore: constant_identifier_names
 const String CONTAINER_ID = "tekartik_test_menu_container";
 const String testMenuBrowserContainerId = "tekartik_test_menu_container";
 
@@ -132,7 +133,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   Future preProcessItem(TestItem item) async {
     window.location.hash = "#${getMenuStackNames(item).join('_')}";
     // process after setting the hash to allow reload in case of crash in processing
-    super.preProcessItem(item);
+    await super.preProcessItem(item);
   }
 
   void displayMenu(TestMenu menu) {

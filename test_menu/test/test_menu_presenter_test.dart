@@ -69,7 +69,7 @@ void main() {
       // We always need a presenter
       NullTestMenuPresenter();
       enter(() async {
-        sleep(1);
+        await sleep(1);
         ranEnter = true;
       });
       item("test", () {
