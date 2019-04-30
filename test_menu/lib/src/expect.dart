@@ -95,69 +95,11 @@ Future _expect(actual, matcher,
         reason: reason);
   };
 
-  /*
-  if (Invoker.current == null) {
-    throw new StateError("expect() may only be called within a test.");
-  }
-
-  if (Invoker.current.closed) throw new ClosedException();
-  */
-
   if (skip != null && skip is! bool && skip is! String) {
     throw ArgumentError.value(skip, "skip", "must be a bool or a String");
   }
 
   matcher = wrapMatcher(matcher);
-  /*
-  if (skip != null && skip != false) {
-    String message;
-    if (skip is String) {
-      message = "Skip expect: $skip";
-    } else if (reason != null) {
-      message = "Skip expect ($reason).";
-    } else {
-      var description = new StringDescription().addDescriptionOf(matcher);
-      message = "Skip expect ($description).";
-    }
-
-    // Invoker.current.skip(message);
-    return new Future.sync(() {});
-  }
-  */
-
-  /*
-  if (matcher is AsyncMatcher) {
-    // Avoid async/await so that expect() throws synchronously when possible.
-    var result = matcher.matchAsync(actual);
-    expect(
-        result,
-        anyOf([
-          equals(null),
-          new TypeMatcher<Future>(),
-          new TypeMatcher<String>()
-        ]),
-        reason: "matchAsync() may only return a String, a Future, or null.");
-
-    if (result is String) {
-      // ignore: deprecated_member_use
-      fail(formatFailure(matcher as Matcher, actual, result, reason: reason));
-    } else if (result is Future) {
-      Invoker.current.addOutstandingCallback();
-      return result.then((realResult) {
-        if (realResult == null) return;
-        // ignore: deprecated_member_use
-        fail(formatFailure(matcher as Matcher, actual, realResult as String,
-            reason: reason));
-      }).whenComplete(() {
-        // Always remove this, in case the failure is caught and handled
-        // gracefully.
-        Invoker.current.removeOutstandingCallback();
-      });
-    }
-
-    return new Future.sync(() {});
-  }
-  */
 
   var matchState = {};
   try {
