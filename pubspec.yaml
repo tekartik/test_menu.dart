@@ -1,13 +1,15 @@
-name: tekartik_firebase_repo
-description: Firebase repo (tools)
+name: tekartik_test_menu_repo
+description: Test menu repo (tools)
 version: 0.0.1
+publish_to: none
 #homepage: https://www.example.com
 #author: alex <email@example.com>
 
 environment:
-  sdk: '>=2.0.0-dev.54 <3.0.0'
+  sdk: '>=2.3.0-dev.54 <3.0.0'
 
 dev_dependencies:
+  process_run: '>=0.10.0+1'
   chrome_travis:
     git:
       url: git://github.com/tekartik/chrome_travis.dart

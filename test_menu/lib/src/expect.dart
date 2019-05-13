@@ -84,7 +84,7 @@ Future _expect(actual, matcher,
     {String reason,
     skip,
     bool verbose = false,
-    // ignore: deprecated_member_use
+    // ignore: deprecated_member_use, deprecated_member_use_from_same_package
     ErrorFormatter formatter}) {
   formatter ??= (actual, matcher, reason, matchState, verbose) {
     var mismatchDescription = StringDescription();
@@ -103,8 +103,9 @@ Future _expect(actual, matcher,
 
   var matchState = {};
   try {
-    if ((matcher as Matcher).matches(actual, matchState))
-      return Future.sync(() {});
+    if ((matcher as Matcher).matches(actual, matchState)) {
+      return Future.value(null);
+    }
   } catch (e, trace) {
     reason ??= '$e at $trace';
   }

@@ -4,8 +4,10 @@ homepage: https://github.com/tekartik/test_menu.dart
 # git://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
 author: Alexandre Roux <alex@tekartik.com>
+publish_to: none
+
 environment:
-  sdk: '>=2.0.0-dev.58 <3.0.0'
+  sdk: '>=2.3.0-dev <3.0.0'
 dependencies:
   tekartik_test_menu:
     git:
@@ -30,6 +32,7 @@ dependencies:
       ref: dart2
 
 dev_dependencies:
+  process_run: '>=0.10.0+1'
   grinder: any
   dev_test: any
   test: any

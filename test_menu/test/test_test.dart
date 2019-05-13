@@ -11,7 +11,7 @@ void main() {
       bool ran = false;
 
       common_test.group("group", () {
-        // ignore: deprecated_member_use
+        // ignore: deprecated_member_use, deprecated_member_use_from_same_package
         common_test.solo_test("test", () {
           ran = true;
         });
@@ -28,7 +28,7 @@ void main() {
       bool ran = false;
 
       common_test.group("group", () {
-        // ignore: deprecated_member_use
+        // ignore: deprecated_member_use, deprecated_member_use_from_same_package
         common_test.solo_test("test", () {
           ran = true;
           //_.expect(true, isFalse);
@@ -43,7 +43,7 @@ void main() {
       bool ran = false;
 
       common_test.group("group", () {
-        // ignore: deprecated_member_use
+        // ignore: deprecated_member_use, deprecated_member_use_from_same_package
         common_test.solo_test("test", () {
           common_test.expect(true, isTrue);
           ran = true;

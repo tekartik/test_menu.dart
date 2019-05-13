@@ -9,7 +9,7 @@ void main() {
     test('solo', () async {
       bool ran = false;
 
-      // ignore: deprecated_member_use
+      // ignore: deprecated_member_use, deprecated_member_use_from_same_package
       solo_item("test", () {
         ran = true;
       });
