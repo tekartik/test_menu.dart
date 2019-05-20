@@ -19,7 +19,7 @@ class TestMenuPresenter1 extends Object
   }
   TestMenu menu;
   @override
-  presentMenu(TestMenu menu) {
+  void presentMenu(TestMenu menu) {
     this.menu = menu;
   }
 
@@ -34,10 +34,10 @@ class TestMenuPresenter1 extends Object
   }
 }
 
-main() {
+void main() {
   group('test_menu_presenter', () {
     test('test_menu', () async {
-      var presenter = new TestMenuPresenter1();
+      var presenter = TestMenuPresenter1();
       //menu('test', () {});
       await testMenuRun();
       write("some text");
@@ -53,7 +53,7 @@ main() {
       bool ran = false;
 
       // We always need a presenter
-      new NullTestMenuPresenter();
+      NullTestMenuPresenter();
       enter(() {
         ran = true;
       });
@@ -67,9 +67,9 @@ main() {
       bool ranEnter = false;
 
       // We always need a presenter
-      new NullTestMenuPresenter();
+      NullTestMenuPresenter();
       enter(() async {
-        sleep(1);
+        await sleep(1);
         ranEnter = true;
       });
       item("test", () {

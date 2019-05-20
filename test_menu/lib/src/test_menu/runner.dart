@@ -14,7 +14,7 @@ class Runner {
     if (TestMenuManager.debug.on) {
       print('[Runner] menu $testMenu');
     }
-    if (testMenu.length == 0 && testMenu.enters.length == 0) {
+    if (testMenu.length == 0 && testMenu.enters.isEmpty) {
       write('No menu or item declared');
       // no longer exit, so that we handle the enter/leave
       //return;
@@ -34,12 +34,12 @@ class Runner {
     List<TestMenu> tree = [];
     List<TestMenu> soloTree;
     RunnableTestItem soloTestItem;
-    _handleSolo(TestMenu testMenu) async {
+    Future _handleSolo(TestMenu testMenu) async {
       tree.add(testMenu);
 
       // handle solo_menu
       if (testMenu.solo == true) {
-        soloTree = new List.from(tree);
+        soloTree = List.from(tree);
       }
 
       for (TestItem item in testMenu.items) {
@@ -47,7 +47,7 @@ class Runner {
           // handle solo_item
           if (item.solo == true) {
             soloTestItem = item;
-            soloTree = new List.from(tree);
+            soloTree = List.from(tree);
             //        await testMenuManager.runItem(item);
 
             //await item.run();

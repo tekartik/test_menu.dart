@@ -13,6 +13,7 @@ class TestFailure {
 
   TestFailure(this.message);
 
+  @override
   String toString() => message;
 }
 
@@ -69,90 +70,42 @@ void expect(
 Future expectLater(actual, matcher, {String reason, skip}) =>
     _expect(actual, matcher, reason: reason, skip: skip);
 
+String _formatFailure(Matcher expected, actual, String which, {String reason}) {
+  var buffer = StringBuffer();
+  buffer.writeln(indent(prettyPrint(expected), first: 'Expected: '));
+  buffer.writeln(indent(prettyPrint(actual), first: '  Actual: '));
+  if (which.isNotEmpty) buffer.writeln(indent(which, first: '   Which: '));
+  if (reason != null) buffer.writeln(reason);
+  return buffer.toString();
+}
+
 /// The implementation of [expect] and [expectLater].
 Future _expect(actual, matcher,
     {String reason,
     skip,
     bool verbose = false,
-    // ignore: deprecated_member_use
+    // ignore: deprecated_member_use, deprecated_member_use_from_same_package
     ErrorFormatter formatter}) {
   formatter ??= (actual, matcher, reason, matchState, verbose) {
-    var mismatchDescription = new StringDescription();
+    var mismatchDescription = StringDescription();
     matcher.describeMismatch(actual, mismatchDescription, matchState, verbose);
 
     // ignore: deprecated_member_use
-    return formatFailure(matcher, actual, mismatchDescription.toString(),
+    return _formatFailure(matcher, actual, mismatchDescription.toString(),
         reason: reason);
   };
 
-  /*
-  if (Invoker.current == null) {
-    throw new StateError("expect() may only be called within a test.");
-  }
-
-  if (Invoker.current.closed) throw new ClosedException();
-  */
-
   if (skip != null && skip is! bool && skip is! String) {
-    throw new ArgumentError.value(skip, "skip", "must be a bool or a String");
+    throw ArgumentError.value(skip, "skip", "must be a bool or a String");
   }
 
   matcher = wrapMatcher(matcher);
-  /*
-  if (skip != null && skip != false) {
-    String message;
-    if (skip is String) {
-      message = "Skip expect: $skip";
-    } else if (reason != null) {
-      message = "Skip expect ($reason).";
-    } else {
-      var description = new StringDescription().addDescriptionOf(matcher);
-      message = "Skip expect ($description).";
-    }
-
-    // Invoker.current.skip(message);
-    return new Future.sync(() {});
-  }
-  */
-
-  /*
-  if (matcher is AsyncMatcher) {
-    // Avoid async/await so that expect() throws synchronously when possible.
-    var result = matcher.matchAsync(actual);
-    expect(
-        result,
-        anyOf([
-          equals(null),
-          new TypeMatcher<Future>(),
-          new TypeMatcher<String>()
-        ]),
-        reason: "matchAsync() may only return a String, a Future, or null.");
-
-    if (result is String) {
-      // ignore: deprecated_member_use
-      fail(formatFailure(matcher as Matcher, actual, result, reason: reason));
-    } else if (result is Future) {
-      Invoker.current.addOutstandingCallback();
-      return result.then((realResult) {
-        if (realResult == null) return;
-        // ignore: deprecated_member_use
-        fail(formatFailure(matcher as Matcher, actual, realResult as String,
-            reason: reason));
-      }).whenComplete(() {
-        // Always remove this, in case the failure is caught and handled
-        // gracefully.
-        Invoker.current.removeOutstandingCallback();
-      });
-    }
-
-    return new Future.sync(() {});
-  }
-  */
 
   var matchState = {};
   try {
-    if ((matcher as Matcher).matches(actual, matchState))
-      return new Future.sync(() {});
+    if ((matcher as Matcher).matches(actual, matchState)) {
+      return Future.value(null);
+    }
   } catch (e, trace) {
     reason ??= '$e at $trace';
   }
@@ -162,7 +115,7 @@ Future _expect(actual, matcher,
 /// Convenience method for throwing a new [TestFailure] with the provided
 /// [message].
 @alwaysThrows
-Null fail(String message) => throw new TestFailure(message);
+void fail(String message) => throw TestFailure(message);
 
 String indent(String text, {String first}) {
   if (first != null) {
@@ -181,7 +134,7 @@ String prettyPrint(dynamic text, {String first}) {
 // The default error formatter.
 @Deprecated("Will be removed in 0.13.0.")
 String formatFailure(Matcher expected, actual, String which, {String reason}) {
-  var buffer = new StringBuffer();
+  var buffer = StringBuffer();
   buffer.writeln(indent(prettyPrint(expected), first: 'Expected: '));
   buffer.writeln(indent(prettyPrint(actual), first: '  Actual: '));
   if (which.isNotEmpty) buffer.writeln(indent(which, first: '   Which: '));

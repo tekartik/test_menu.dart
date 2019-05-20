@@ -47,12 +47,12 @@ abstract class Callback {
 // Not public
 class Declarer {
   // current test menu
-  TestMenu testMenu = new RootTestMenu();
+  TestMenu testMenu = RootTestMenu();
 
   void menu(String name, void body(), {String cmd, bool group, bool solo}) {
     TestMenu parentTestMenu = testMenu;
 
-    TestMenu newMenu = new TestMenu(name, cmd: cmd, group: group, solo: solo);
+    TestMenu newMenu = TestMenu(name, cmd: cmd, group: group, solo: solo);
     parentTestMenu.addMenu(newMenu);
 
     testMenu = newMenu;
@@ -61,18 +61,17 @@ class Declarer {
   }
 
   void enter(body()) {
-    MenuEnter enter = new MenuEnter(body);
+    MenuEnter enter = MenuEnter(body);
     testMenu.addEnter(enter);
   }
 
   void leave(body()) {
-    MenuLeave leave = new MenuLeave(body);
+    MenuLeave leave = MenuLeave(body);
     testMenu.addLeave(leave);
   }
 
   void item(String name, body(), {String cmd, bool solo, bool test}) {
-    TestItem item =
-        new TestItem.fn(name, body, cmd: cmd, solo: solo, test: test);
+    TestItem item = TestItem.fn(name, body, cmd: cmd, solo: solo, test: test);
     testMenu.addItem(item);
     //_testMenu.add("print hi", () => print('hi'));
   }
@@ -81,10 +80,10 @@ class Declarer {
     // simply show top menu, if empty exit, other go directly in sub menu
     //_testMenu.length
 
-    runner = new Runner(this);
+    runner = Runner(this);
     await runner.run();
 
     //TODO wait for completion
-    return new Future.value(runner);
+    return Future.value(runner);
   }
 }

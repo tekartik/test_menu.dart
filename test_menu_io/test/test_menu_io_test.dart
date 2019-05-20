@@ -4,7 +4,7 @@ library test_menu_test;
 import 'package:tekartik_test_menu_io/test_menu_io.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   group('io', () {
     test('solo', () async {
       int a;

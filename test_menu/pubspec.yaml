@@ -1,21 +1,24 @@
 name: tekartik_test_menu
-version: 0.5.1
+version: 0.5.2
 homepage: https://github.com/tekartik/test_menu.dart
 # git://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
 author: Alexandre Roux <alex@tekartik.com>
+publish_to: none
+
 environment:
-  sdk: '>=2.0.0-dev.58 <3.0.0'
+  sdk: '>=2.3.0-dev <3.0.0'
 dependencies:
   tekartik_common_utils:
     git:
       url: git://github.com/tekartik/common_utils.dart
       ref: dart2
-    version: '>=0.6.0'
+    version: '>=0.10.3'
   matcher: any
   meta: any
 
 dev_dependencies:
+  process_run: '>=0.10.0+1'
   grinder: any
   dev_test: any
   test: any

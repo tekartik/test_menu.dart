@@ -5,7 +5,7 @@ import 'package:tekartik_test_menu/test_menu.dart';
 //import 'package:tekartik_test_menu/src/common.dart';
 
 // basic "0;-"
-main() async {
+void main() {
   menu('main', () {
     item("write hola", () async {
       write('Hola');

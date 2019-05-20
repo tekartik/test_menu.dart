@@ -9,8 +9,10 @@ import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
 import 'src/common_io.dart';
 
-export 'src/common_io.dart';
 export 'package:tekartik_test_menu/test_menu.dart';
+
+export 'src/common_io.dart';
+// ignore_for_file: implementation_imports
 
 // set to false before checkin
 bool testMenuConsoleDebug = false;
@@ -20,14 +22,14 @@ String _helpCommand = "h";
 
 class _TestMenuManagerConsole extends TestMenuPresenter
     with TestMenuPresenterMixin {
-  static final String TAG = "[test_menu_console]";
+  static final String tag = "[test_menu_console]";
 
   List<String> arguments;
 
   bool verbose;
 
   _TestMenuManagerConsole(this.arguments) {
-    var parser = new ArgParser();
+    var parser = ArgParser();
     parser.addFlag('help', abbr: 'h');
     parser.addFlag('verbose', abbr: 'v');
 
@@ -49,7 +51,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
   // Not null if currently prompting
   Completer<String> promptCompleter;
 
-  TestMenu displayedMenu = null;
+  TestMenu displayedMenu;
   bool _argumentsHandled = false;
 
   void _displayMenu(TestMenu menu) {
@@ -67,10 +69,11 @@ class _TestMenuManagerConsole extends TestMenuPresenter
 
   bool done = false;
 
-  readLine() {
+  void readLine() {
     if (_inCommand == null) {
       //devPrint('readLine');
-      _inCommand = stdin.transform(utf8.decoder).transform(new LineSplitter());
+      _inCommand =
+          stdin.transform(utf8.decoder).transform(const LineSplitter());
 
       // Waiting forever on stdin
       _inCommandSubscription = _inCommand.listen(handleLine);
@@ -87,7 +90,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
 
   Future processLine(String line) async {
     if (testMenuConsoleDebug) {
-      print('$TAG Line: $line');
+      print('$tag Line: $line');
     }
 
     if (promptCompleter != null) {
@@ -95,7 +98,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
       //Future done = promptCompleter.future;
       promptCompleter = null;
       //return done;
-      return new Future.value();
+      return Future.value();
     }
     TestMenu menu = displayedMenu;
 
@@ -106,30 +109,30 @@ class _TestMenuManagerConsole extends TestMenuPresenter
         // devPrint('should exit?');
         done = true;
         if (_inCommandSubscription != null) {
-          _inCommandSubscription.cancel();
+          await _inCommandSubscription.cancel();
         }
       }
-      return new Future.value();
+      return Future.value();
     }
 
     // Help
     if (line == _helpCommand) {
       _displayMenu(menu);
-      return new Future.value();
+      return Future.value();
     }
 
     TestItem item = menu.byCmd(line);
     if (item != null) {
       if (verbose) {
-        print("$TAG running '$item'");
+        print("$tag running '$item'");
       }
 
       try {
         await testMenuManager.runItem(item);
-      } catch (e) {}
+      } catch (_) {}
       // return new Future.sync(item.run).then((_) {
       if (verbose) {
-        print("$TAG done '$item'");
+        print("$tag done '$item'");
       }
     } else {
       print('errorValue: $line');
@@ -137,7 +140,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
       print('$_helpCommand display menu again');
     }
 
-    return new Future.value();
+    return Future.value();
   }
 
 //void main() {
@@ -154,7 +157,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
         return processLine(commandLine).then(_nextLine);
       }
     }
-    return new Future.value();
+    return Future.value();
   }
 
   void _handleInput(TestMenu menu) {
@@ -204,15 +207,17 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     processMenu(menu);
   }
 
+  @override
   void write(Object message) {
     stdout.writeln("$message");
   }
 
+  @override
   Future<String> prompt(Object message) {
     //print('$TAG Prompt: $message');
     message ??= "Enter text";
     stdout.write('$message > ');
-    var completer = new Completer<String>.sync();
+    var completer = Completer<String>.sync();
     promptCompleter = completer;
     // read the next line
     _nextLine();
@@ -221,7 +226,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
 }
 
 void initTestMenuConsole(List<String> arguments) {
-  _testMenuManagerConsole = new _TestMenuManagerConsole(arguments);
+  _testMenuManagerConsole = _TestMenuManagerConsole(arguments);
   // set current
   testMenuPresenter = _testMenuManagerConsole;
 }

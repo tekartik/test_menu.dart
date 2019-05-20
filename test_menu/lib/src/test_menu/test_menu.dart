@@ -7,6 +7,7 @@ abstract class WithParent {
 }
 
 class _WithParentMixin implements WithParent {
+  @override
   TestMenu parent;
 }
 
@@ -15,10 +16,10 @@ abstract class TestItem implements Runnable, WithParent {
   String get name;
   factory TestItem.fn(String name, TestItemFn fn,
       {String cmd, bool solo, bool test}) {
-    return new RunnableTestItem(name, fn, cmd: cmd, solo: solo, test: test);
+    return RunnableTestItem(name, fn, cmd: cmd, solo: solo, test: test);
   }
   factory TestItem.menu(TestMenu menu) {
-    return new MenuTestItem(menu);
+    return MenuTestItem(menu);
   }
 }
 
@@ -37,12 +38,13 @@ abstract class _BaseTestItem {
 }
 
 abstract class Runnable {
-  run();
+  dynamic run();
 }
 
 class _RunnableMixin implements Runnable {
   TestItemFn fn;
-  run() {
+  @override
+  dynamic run() {
     return fn();
   }
 }
@@ -72,6 +74,7 @@ class MenuLeave extends Object with _RunnableMixin, _WithParentMixin {
 class RunnableTestItem extends _BaseTestItem
     with _RunnableMixin, _WithParentMixin
     implements TestItem {
+  @override
   String cmd;
   final bool test;
   RunnableTestItem(String name, TestItemFn fn, {this.cmd, this.test, bool solo})
@@ -84,11 +87,13 @@ class MenuTestItem extends _BaseTestItem
     with _WithParentMixin
     implements TestItem {
   TestMenu menu;
+  @override
   String get cmd => menu.cmd;
   MenuTestItem(this.menu) : super(null, menu.solo) {
     name = menu.name;
   }
 
+  @override
   Future run() async {
     await testMenuManager.pushMenu(menu);
   }
@@ -119,8 +124,8 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
 
   Iterable<MenuEnter> get enters => _enters;
   Iterable<MenuLeave> get leaves => _leaves;
-  void add(String name, TestItemFn fn) => addItem(new TestItem.fn(name, fn));
-  fixParent(WithParent child) {
+  void add(String name, TestItemFn fn) => addItem(TestItem.fn(name, fn));
+  void fixParent(WithParent child) {
     child.parent = this;
   }
 
@@ -136,7 +141,7 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
 
   void addMenu(TestMenu menu) {
     fixParent(menu);
-    addItem(new TestItem.menu(menu));
+    addItem(TestItem.menu(menu));
   }
 
   void addItem(TestItem item) {

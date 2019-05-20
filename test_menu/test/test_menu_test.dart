@@ -3,13 +3,13 @@ library test_menu_test;
 import 'package:dev_test/test.dart';
 import 'package:tekartik_test_menu/test_menu.dart';
 
-main() {
+void main() {
   group('test_menu', () {
     //TestMenuManager.debug.on
     test('solo', () async {
       bool ran = false;
 
-      // ignore: deprecated_member_use
+      // ignore: deprecated_member_use, deprecated_member_use_from_same_package
       solo_item("test", () {
         ran = true;
       });

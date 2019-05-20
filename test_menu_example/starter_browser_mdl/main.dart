@@ -3,7 +3,7 @@ library test_menu;
 import 'package:tekartik_test_menu_browser/test_menu_mdl_browser.dart';
 //import '
 
-main() async {
+Future main() async {
   await initTestMenuBrowser(js: ['test_menu.js']);
 
   item("write hola", () async {
@@ -14,7 +14,7 @@ main() async {
     write('RESULT prompt: ${await prompt('Some text please then [ENTER]')}');
   });
   item("js console.log", () {
-    js_test('testConsoleLog');
+    jsTest('testConsoleLog');
   });
   item("crash", () {
     throw "Hi";

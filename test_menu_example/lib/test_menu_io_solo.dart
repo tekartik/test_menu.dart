@@ -1,7 +1,8 @@
-import 'package:tekartik_test_menu_io/test_menu_io.dart';
 import 'dart:io';
 
-main(List<String> args) async {
+import 'package:tekartik_test_menu_io/test_menu_io.dart';
+
+void main(List<String> args) {
   mainMenu(args, () {
     menu('main', () {
       item("write hola", () async {

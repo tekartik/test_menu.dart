@@ -1,14 +1,12 @@
 library tekartik_test_menu_mdl_browser;
 
-export 'package:tekartik_test_menu/test_menu.dart';
-import 'package:tekartik_platform_browser/context_browser.dart';
-import 'package:tekartik_platform/context.dart';
-import 'package:tekartik_common_utils/out_buffer.dart';
 import 'package:tekartik_mdl_js/mdl_button.dart';
 import 'package:tekartik_mdl_js/mdl_classes.dart';
 import 'package:tekartik_mdl_js/mdl_js_loader.dart';
 import 'package:tekartik_mdl_js/mdl_list.dart';
 import 'package:tekartik_mdl_js/mdl_textfield.dart';
+import 'package:tekartik_platform/context.dart';
+import 'package:tekartik_platform_browser/context_browser.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_runner.dart';
@@ -18,29 +16,37 @@ import 'src/common_browser.dart';
 import 'test_menu_browser.dart' as browser;
 import 'test_menu_browser.dart' as common_browser;
 
+export 'package:tekartik_test_menu/test_menu.dart';
+
 export 'src/common_browser.dart';
-export 'test_menu_browser.dart' show js_test;
+export 'test_menu_browser.dart' show jsTest;
+// ignore_for_file: implementation_imports
+// ignore_for_file: constant_identifier_names
+
 //import 'package:tekartik_mdl_js/mdl_js.dart';
 
+// 2019-01 deprecated
+@deprecated
 const String CONTAINER_ID = "tekartik_test_menu_container";
+@deprecated
 const String MENU_ID = "test_menu";
+@deprecated
 const String OUTPUT_ID = "output";
+@deprecated
 const String INPUT_ID = "input";
+
+const String testMenuBrowserContainerId = "tekartik_test_menu_container";
+const String testMenuBrowserMenuId = "test_menu";
+const String testMenuBrowserOutputId = "output";
+const String testMenuBrowserInputId = "input";
 
 // can be extended
 class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
-  TestMenu displayedMenu = null;
-  Element container = null;
-  Element output = null;
-  Element menuContainer = null;
-
-  TextField input = null;
+  TextField input;
 
   PlatformContext platformContext = platformContextBrowser;
 
   bool get isMobile => platformContext.browser.isMobile;
-
-  var outBuffer = new OutBuffer(100);
 
   @override
   void write(Object message) {
@@ -48,7 +54,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
     if (debugTestMenuManager) {
       print("writing $text");
     }
-
+    commonLog(message);
     outBuffer.add(text);
     output.text = outBuffer.toString();
     autoScroll();
@@ -63,29 +69,22 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
     }
   }
 
+  @override
   void findContainer() {
     if (container == null) {
-      //devPrint(browserPlatformContext);
-      /*
-      devPrint(platformContext);
-      devPrint(platformContext.browser);
-      devPrint(platformContext.browser.isMobile);
-      */
-      //devPrint(isMobile);
-
-      container = document.getElementById(CONTAINER_ID);
+      container = document.getElementById(testMenuBrowserContainerId);
       if (container == null) {
-        container = new DivElement()..id = CONTAINER_ID;
+        container = DivElement()..id = testMenuBrowserContainerId;
         document.body.children.add(container);
 
-        menuContainer = new DivElement()..id = MENU_ID;
+        menuContainer = DivElement()..id = testMenuBrowserMenuId;
 
-        output = new PreElement()..id = OUTPUT_ID;
+        output = PreElement()..id = testMenuBrowserOutputId;
 
-        var form = new FormElement();
+        var form = FormElement();
         form.setAttribute("action", "#");
 
-        input = new TextField(id: INPUT_ID, floatingLabel: true);
+        input = TextField(id: testMenuBrowserInputId, floatingLabel: true);
         form.append(input.element);
         form.onSubmit.listen((Event e) {
           //print("on submit: ${input.value}");
@@ -113,6 +112,9 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
         });
 
         container.children.addAll([output, menuContainer, form]);
+      } else {
+        output = container.querySelector('#${testMenuBrowserOutputId}');
+        menuContainer = container.querySelector('#${testMenuBrowserMenuId}');
       }
     }
   }
@@ -138,6 +140,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
   //@override
   void init() {
+    // devPrint("output: $output");
     findContainer();
   }
 
@@ -146,12 +149,13 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
     window.location.hash = "#${menuNames.join('_')}";
   }
 
+  @override
   void displayMenu(TestMenu menu) {
     findContainer();
 
     if (displayedMenu != menu) {
       //Element header = new HeadingElement.h4();
-      Element header = new DivElement();
+      Element header = DivElement();
 
       _updateMenuHash();
 
@@ -160,7 +164,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       for (TestMenuRunner runner in testMenuManager.stackMenus) {
         TestMenu testMenu = runner.menu;
         int menuPopCount = popCount--;
-        _clickOnMenu([_]) {
+        void _clickOnMenu([_]) {
           //devPrint("Click on menu");
           if (menuPopCount <= testMenuManager.activeDepth && menuPopCount > 0) {
             testMenuManager.popMenu(menuPopCount);
@@ -192,7 +196,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       if (testMenuManager.activeDepth > 0) {
         liElement = listItemCreate()
           ..append(listItemPrimaryContentCreate()
-            ..append(new SpanElement()
+            ..append(SpanElement()
               ..className = listItemIcon
               ..appendText('-'))
             ..appendText("exit"))
@@ -210,13 +214,14 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
         TestItem item = menu[i];
         liElement = listItemCreate()
           ..append(listItemPrimaryContentCreate()
-            ..append(new SpanElement()
+            ..append(SpanElement()
               ..className = listItemIcon
               ..appendText('$i'))
             ..appendText("${item}"))
           ..onClick.listen((_) {
-            print("running '$i ${item}'");
+            print("[i] running '$i ${item}'");
             testMenuManager.runItem(item).then((_) {
+              print("[i] done '$i ${item}'");
               initInputForMenu();
             });
           });
@@ -235,15 +240,13 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
     }
   }
 
-  Completer<String> promptCompleter;
-
   @override
   Future<String> prompt(Object message) {
     //String message = (message == null || message.length == 0)
     message = message == null ? "Enter text" : "$message";
     input.value = null;
     write("$message >");
-    var completer = new Completer<String>.sync();
+    var completer = Completer<String>.sync();
     promptCompleter = completer;
     input.label = message as String;
     input.focus();
@@ -264,12 +267,12 @@ Future initTestMenuBrowser({List<String> js}) async {
   await Future.wait(futures);
   await browser.testMenuLoadJs(js);
 
-  _testMenuManagerBrowser = new TestMenuManagerBrowser();
+  _testMenuManagerBrowser = TestMenuManagerBrowser();
   _testMenuManagerBrowser.init();
 
   testMenuPresenter = _testMenuManagerBrowser;
 
-  await initTestMenuManager();
+  initTestMenuManager();
   String hash = window.location.hash;
   testMenuManager.initCommands = TestMenuManager.initCommandsFromHash(hash);
 }
