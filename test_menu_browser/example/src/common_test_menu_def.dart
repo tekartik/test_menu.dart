@@ -13,7 +13,8 @@ void main() {
 
   TestMenu menu = TestMenu("main");
   menu.add("print hi", () => print('hi'));
-  menu.add("crash", () => print(null.length));
+  String nullText;
+  menu.add("crash", () => print(nullText.length));
   menu.addMenu(subMenu);
   pushMenu(menu);
 }

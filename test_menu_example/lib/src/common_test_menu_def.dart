@@ -17,7 +17,9 @@ Future main() async {
 
   TestMenu menu = TestMenu("main");
   menu.add("print hi", () => print('hi'));
-  menu.add("crash", () => print(null.length));
+
+  String text;
+  menu.add("crash", () => print(text.length));
   menu.addMenu(subMenu);
   await pushMenu(menu);
 }
