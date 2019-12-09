@@ -3,13 +3,11 @@ library tekartik_test_menu_browser;
 import 'dart:html';
 import 'dart:js';
 
-// ignore_for_file: implementation_imports
-
 import 'package:tekartik_browser_utils/location_info_utils.dart';
 import 'package:tekartik_common_utils/out_buffer.dart';
-import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
-import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
-import 'package:tekartik_test_menu/src/test_menu/test_menu_runner.dart';
+import 'package:tekartik_test_menu/src/test_menu/test_menu.dart'; // ignore: implementation_imports
+
+import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart'; // ignore: implementation_imports
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
 import 'src/common_browser.dart';
@@ -20,8 +18,8 @@ export 'src/common_browser.dart';
 
 @deprecated
 // ignore: constant_identifier_names
-const String CONTAINER_ID = "tekartik_test_menu_container";
-const String testMenuBrowserContainerId = "tekartik_test_menu_container";
+const String CONTAINER_ID = 'tekartik_test_menu_container';
+const String testMenuBrowserContainerId = 'tekartik_test_menu_container';
 
 void jsTest(String name) {
   context.callMethod(name);
@@ -40,14 +38,14 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   var outBuffer = OutBuffer(100);
 
   void commonLog(Object message) {
-    print("[w] $message");
+    print('[w] $message');
   }
 
   @override
   void write(Object message) {
-    outBuffer.add("$message");
+    outBuffer.add('$message');
     if (debugTestMenuManager) {
-      print("[bwsr writ] $message");
+      print('[bwsr writ] $message');
     }
     commonLog(message);
     output.text = outBuffer.toString();
@@ -57,14 +55,14 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
   @override
   Future<String> prompt(Object message) {
-    write(message ?? "Enter text");
+    write(message ?? 'Enter text');
     var completer = Completer<String>.sync();
     promptCompleter = completer;
     return completer.future;
   }
 
   TestMenuManagerBrowser() {
-    if (locationInfo.arguments.containsKey("debug")) {
+    if (locationInfo.arguments.containsKey('debug')) {
       // ignore: deprecated_member_use
       TestMenuManager.debug.on = true;
     }
@@ -81,7 +79,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       basicInput = InputElement();
 
       basicInput.onChange.listen((_) {
-        // devPrint("on change: ${basicInput.value}");
+        // devPrint('on change: ${basicInput.value}');
         if (promptCompleter != null) {
           promptCompleter.complete(basicInput.value);
           promptCompleter = null;
@@ -98,12 +96,12 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
   // for href
   List<String> getMenuStackNames([TestItem item]) {
-    List<String> list = [];
+    final list = <String>[];
 
     TestMenu lastMenu;
     //devPrint(testMenuManager.stackMenus);
-    for (int i = testMenuManager.stackMenus.length - 1; i >= 0; i--) {
-      TestMenu menu = testMenuManager.stackMenus[i].menu;
+    for (var i = testMenuManager.stackMenus.length - 1; i >= 0; i--) {
+      final menu = testMenuManager.stackMenus[i].menu;
 
       int index;
 
@@ -131,7 +129,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
   @override
   Future preProcessItem(TestItem item) async {
-    window.location.hash = "#${getMenuStackNames(item).join('_')}";
+    window.location.hash = '#${getMenuStackNames(item).join('_')}';
     // process after setting the hash to allow reload in case of crash in processing
     await super.preProcessItem(item);
   }
@@ -141,8 +139,8 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
     if (displayedMenu != menu) {
       Element header = HeadingElement.h3();
-      StringBuffer sb = StringBuffer();
-      for (TestMenuRunner runner in testMenuManager.stackMenus) {
+      final sb = StringBuffer();
+      for (final runner in testMenuManager.stackMenus) {
         sb.write(' > ${runner.menu.name}');
       }
       header.setInnerHtml(sb.toString());
@@ -161,9 +159,9 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         list.children.add(liElement);
       }
 
-      for (int i = 0; i < menu.length; i++) {
-        int index = i;
-        TestItem item = menu[i];
+      for (var i = 0; i < menu.length; i++) {
+        final index = i;
+        final item = menu[i];
         liElement = LIElement();
         liElement
           ..setInnerHtml('$i ${item}')
@@ -197,13 +195,13 @@ void initTestMenuBrowser({List<String> jsFiles}) {
   testMenuPresenter = _testMenuManagerBrowser;
 
   initTestMenuManager();
-  String hash = window.location.hash;
+  final hash = window.location.hash;
   testMenuManager.initCommands = TestMenuManager.initCommandsFromHash(hash);
 }
 
 Future testMenuLoadJs(List<String> jsFiles) async {
   if (jsFiles != null) {
-    for (String jsFile in jsFiles) {
+    for (final jsFile in jsFiles) {
       await loadJavascriptScript(jsFile);
     }
   }

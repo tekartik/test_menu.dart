@@ -9,7 +9,6 @@ import 'package:tekartik_platform/context.dart';
 import 'package:tekartik_platform_browser/context_browser.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
-import 'package:tekartik_test_menu/src/test_menu/test_menu_runner.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
 import 'src/common_browser.dart';
@@ -20,6 +19,7 @@ export 'package:tekartik_test_menu/test_menu.dart';
 
 export 'src/common_browser.dart';
 export 'test_menu_browser.dart' show jsTest;
+
 // ignore_for_file: implementation_imports
 // ignore_for_file: constant_identifier_names
 
@@ -27,18 +27,18 @@ export 'test_menu_browser.dart' show jsTest;
 
 // 2019-01 deprecated
 @deprecated
-const String CONTAINER_ID = "tekartik_test_menu_container";
+const String CONTAINER_ID = 'tekartik_test_menu_container';
 @deprecated
-const String MENU_ID = "test_menu";
+const String MENU_ID = 'test_menu';
 @deprecated
-const String OUTPUT_ID = "output";
+const String OUTPUT_ID = 'output';
 @deprecated
-const String INPUT_ID = "input";
+const String INPUT_ID = 'input';
 
-const String testMenuBrowserContainerId = "tekartik_test_menu_container";
-const String testMenuBrowserMenuId = "test_menu";
-const String testMenuBrowserOutputId = "output";
-const String testMenuBrowserInputId = "input";
+const String testMenuBrowserContainerId = 'tekartik_test_menu_container';
+const String testMenuBrowserMenuId = 'test_menu';
+const String testMenuBrowserOutputId = 'output';
+const String testMenuBrowserInputId = 'input';
 
 // can be extended
 class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
@@ -50,9 +50,9 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
   @override
   void write(Object message) {
-    String text = "$message";
+    final text = '$message';
     if (debugTestMenuManager) {
-      print("writing $text");
+      print('writing $text');
     }
     commonLog(message);
     outBuffer.add(text);
@@ -61,8 +61,8 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
   }
 
   void initInputForMenu() {
-    input.label = "Your choice";
-    input.value = "";
+    input.label = 'Your choice';
+    input.value = '';
 
     if (!isMobile) {
       input.focus();
@@ -82,13 +82,13 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
         output = PreElement()..id = testMenuBrowserOutputId;
 
         var form = FormElement();
-        form.setAttribute("action", "#");
+        form.setAttribute('action', '#');
 
         input = TextField(id: testMenuBrowserInputId, floatingLabel: true);
         form.append(input.element);
         form.onSubmit.listen((Event e) {
-          //print("on submit: ${input.value}");
-          String value = input.value;
+          //print('on submit: ${input.value}');
+          final value = input.value;
           input.value = null;
           e.preventDefault();
           if (promptCompleter != null) {
@@ -100,8 +100,8 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
             if (value == '-') {
               testMenuManager.popMenu();
             } else {
-              int index = int.tryParse(value) ?? -1;
-              //print("on submit: $value ${index}");
+              final index = int.tryParse(value) ?? -1;
+              //print('on submit: $value ${index}');
               if (index >= 0) {
                 if (displayedMenu != null) {
                   testMenuManager.runItem(displayedMenu[index]);
@@ -140,13 +140,13 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
   //@override
   void init() {
-    // devPrint("output: $output");
+    // devPrint('output: $output');
     findContainer();
   }
 
   void _updateMenuHash() {
-    List<String> menuNames = getMenuStackNames();
-    window.location.hash = "#${menuNames.join('_')}";
+    final menuNames = getMenuStackNames();
+    window.location.hash = '#${menuNames.join('_')}';
   }
 
   @override
@@ -160,12 +160,12 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       _updateMenuHash();
 
       //StringBuffer sb = new StringBuffer();
-      int popCount = testMenuManager.activeDepth;
-      for (TestMenuRunner runner in testMenuManager.stackMenus) {
-        TestMenu testMenu = runner.menu;
-        int menuPopCount = popCount--;
+      var popCount = testMenuManager.activeDepth;
+      for (final runner in testMenuManager.stackMenus) {
+        final testMenu = runner.menu;
+        final menuPopCount = popCount--;
         void _clickOnMenu([_]) {
-          //devPrint("Click on menu");
+          //devPrint('Click on menu');
           if (menuPopCount <= testMenuManager.activeDepth && menuPopCount > 0) {
             testMenuManager.popMenu(menuPopCount);
           } else {
@@ -189,7 +189,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
           */
       }
       //header.setInnerHtml(sb.toString());
-      Element list = listCreate();
+      final list = listCreate();
 
       Element liElement;
 
@@ -199,25 +199,25 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
             ..append(SpanElement()
               ..className = listItemIcon
               ..appendText('-'))
-            ..appendText("exit"))
+            ..appendText('exit'))
           ..onClick.listen((_) {
             if (TestMenuManager.debug.on) {
-              write("[mdl poping] ${testMenuManager.menuRunners}");
+              write('[mdl poping] ${testMenuManager.menuRunners}');
             }
             testMenuManager.popMenu();
           });
         list.children.add(liElement);
       }
 
-      for (int i = 0; i < menu.length; i++) {
+      for (var i = 0; i < menu.length; i++) {
         //int index = i;
-        TestItem item = menu[i];
+        final item = menu[i];
         liElement = listItemCreate()
           ..append(listItemPrimaryContentCreate()
             ..append(SpanElement()
               ..className = listItemIcon
               ..appendText('$i'))
-            ..appendText("${item}"))
+            ..appendText('${item}'))
           ..onClick.listen((_) {
             print("[i] running '$i ${item}'");
             testMenuManager.runItem(item).then((_) {
@@ -243,9 +243,9 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
   @override
   Future<String> prompt(Object message) {
     //String message = (message == null || message.length == 0)
-    message = message == null ? "Enter text" : "$message";
+    message = message == null ? 'Enter text' : '$message';
     input.value = null;
-    write("$message >");
+    write('$message >');
     var completer = Completer<String>.sync();
     promptCompleter = completer;
     input.label = message as String;
@@ -259,10 +259,10 @@ Future initTestMenuBrowser({List<String> js}) async {
     loadMdlJs(),
     loadMdlCss(),
     loadMaterialIconsCss(),
-    loadStylesheet("packages/tekartik_test_menu_browser/css/test_menu_mdl.css")
+    loadStylesheet('packages/tekartik_test_menu_browser/css/test_menu_mdl.css')
   ];
   if (debugTestMenuManager) {
-    print("loading js: $js");
+    print('loading js: $js');
   }
   await Future.wait(futures);
   await browser.testMenuLoadJs(js);
@@ -273,7 +273,7 @@ Future initTestMenuBrowser({List<String> js}) async {
   testMenuPresenter = _testMenuManagerBrowser;
 
   initTestMenuManager();
-  String hash = window.location.hash;
+  final hash = window.location.hash;
   testMenuManager.initCommands = TestMenuManager.initCommandsFromHash(hash);
 }
 

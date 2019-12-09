@@ -36,9 +36,9 @@ class TestMenuRunner {
       await runnable.run();
     } catch (e, st) {
       if (e is TestFailure) {
-        testMenuPresenter.write("ERROR CAUGHT $e");
+        testMenuPresenter.write('ERROR CAUGHT $e');
       } else {
-        testMenuPresenter.write("ERROR CAUGHT $e ${Trace.format(st)}");
+        testMenuPresenter.write('ERROR CAUGHT $e ${Trace.format(st)}');
       }
       rethrow;
     } finally {

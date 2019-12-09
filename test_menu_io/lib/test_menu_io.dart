@@ -17,12 +17,12 @@ export 'src/common_io.dart';
 // set to false before checkin
 bool testMenuConsoleDebug = false;
 
-String _exitCommand = ".";
-String _helpCommand = "h";
+String _exitCommand = '.';
+String _helpCommand = 'h';
 
 class _TestMenuManagerConsole extends TestMenuPresenter
     with TestMenuPresenterMixin {
-  static final String tag = "[test_menu_console]";
+  static final String tag = '[test_menu_console]';
 
   List<String> arguments;
 
@@ -36,12 +36,12 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     var results = parser.parse(arguments);
     verbose = (results['verbose'] as bool) || testMenuConsoleDebug;
     if (verbose) {
-      stdout.writeln("args: $arguments");
+      stdout.writeln('args: $arguments');
     }
     if (results['help'] as bool) {
-      stdout.writeln("Add arguments at the end separated by spaces");
-      stdout.writeln("Example to run item 0 and exit");
-      stdout.writeln("  dart test_menu.dart 0 -");
+      stdout.writeln('Add arguments at the end separated by spaces');
+      stdout.writeln('Example to run item 0 and exit');
+      stdout.writeln('  dart test_menu.dart 0 -');
       exit(0);
     }
 
@@ -57,9 +57,9 @@ class _TestMenuManagerConsole extends TestMenuPresenter
   void _displayMenu(TestMenu menu) {
     displayedMenu = menu;
     //print('- exit');
-    for (int i = 0; i < menu.length; i++) {
-      TestItem item = menu[i];
-      String cmd = item.cmd ?? '$i';
+    for (var i = 0; i < menu.length; i++) {
+      final item = menu[i];
+      final cmd = item.cmd ?? '$i';
       print('$cmd ${item}');
     }
   }
@@ -100,7 +100,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
       //return done;
       return Future.value();
     }
-    TestMenu menu = displayedMenu;
+    final menu = displayedMenu;
 
     // Exit
     if (line == _exitCommand) {
@@ -121,7 +121,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
       return Future.value();
     }
 
-    TestItem item = menu.byCmd(line);
+    final item = menu.byCmd(line);
     if (item != null) {
       if (verbose) {
         print("$tag running '$item'");
@@ -153,7 +153,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
   Future _nextLine([_]) {
     if (initialCommands != null) {
       if (initialCommandIndex < initialCommands.length) {
-        String commandLine = initialCommands[initialCommandIndex++];
+        final commandLine = initialCommands[initialCommandIndex++];
         return processLine(commandLine).then(_nextLine);
       }
     }
@@ -164,7 +164,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     if (menu != displayedMenu) {
       _displayMenu(menu);
     }
-    String name = menu.name != null ? "${menu.name} " : "";
+    final name = menu.name != null ? '${menu.name} ' : '';
     stdout.write('$name> ');
 
 //      Completer<String> completer = new Completer();
@@ -209,13 +209,13 @@ class _TestMenuManagerConsole extends TestMenuPresenter
 
   @override
   void write(Object message) {
-    stdout.writeln("$message");
+    stdout.writeln('$message');
   }
 
   @override
   Future<String> prompt(Object message) {
     //print('$TAG Prompt: $message');
-    message ??= "Enter text";
+    message ??= 'Enter text';
     stdout.write('$message > ');
     var completer = Completer<String>.sync();
     promptCompleter = completer;
@@ -233,7 +233,7 @@ void initTestMenuConsole(List<String> arguments) {
 
 _TestMenuManagerConsole _testMenuManagerConsole;
 
-void mainMenu(List<String> arguments, void body()) {
+void mainMenu(List<String> arguments, void Function() body) {
   initTestMenuConsole(arguments);
   body();
 }

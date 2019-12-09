@@ -3,11 +3,11 @@ import 'package:tekartik_test_menu_browser/test_menu_mdl_browser.dart';
 Future main() async {
   await initTestMenuBrowser();
 
-  item("write hola", () async {
+  item('write hola', () async {
     write('!Holadddr ezzllllaaaeeze');
     //write('RESULT prompt: ${await prompt()}');
   });
-  item("prompt", () async {
+  item('prompt', () async {
     write('RESULT prompt: ${await prompt('Some text please then [ENTER]')}');
   });
 }

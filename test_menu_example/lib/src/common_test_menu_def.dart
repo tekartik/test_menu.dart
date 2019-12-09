@@ -8,18 +8,18 @@ import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
 Future main() async {
-  TestMenu subSubMenu = TestMenu("sub sub");
-  subSubMenu.add("print hi", () => print('hi'));
+  final subSubMenu = TestMenu('sub sub');
+  subSubMenu.add('print hi', () => print('hi'));
 
-  TestMenu subMenu = TestMenu("sub");
-  subMenu.add("print hi", () => print('hi'));
+  final subMenu = TestMenu('sub');
+  subMenu.add('print hi', () => print('hi'));
   subMenu.addMenu(subSubMenu);
 
-  TestMenu menu = TestMenu("main");
-  menu.add("print hi", () => print('hi'));
+  final menu = TestMenu('main');
+  menu.add('print hi', () => print('hi'));
 
   String text;
-  menu.add("crash", () => print(text.length));
+  menu.add('crash', () => print(text.length));
   menu.addMenu(subMenu);
   await pushMenu(menu);
 }

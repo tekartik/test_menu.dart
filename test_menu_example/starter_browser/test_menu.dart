@@ -7,24 +7,24 @@ void main() {
   initTestMenuBrowser(jsFiles: ['test_menu.js']);
 
   menu('main', () {
-    item("write hola", () async {
+    item('write hola', () async {
       write('Hola');
       //write('RESULT prompt: ${await prompt()}');
     });
-    item("prompt", () async {
+    item('prompt', () async {
       write('RESULT prompt: ${await prompt('Some text please then [ENTER]')}');
     });
-    item("js console.log", () {
+    item('js console.log', () {
       jsTest('testConsoleLog');
     });
-    item("print hi", () {
+    item('print hi', () {
       print('hi');
     });
-    item("crash", () {
-      throw "Hi";
+    item('crash', () {
+      throw 'Hi';
     });
     menu('sub', () {
-      item("print hi", () => print('hi'));
+      item('print hi', () => print('hi'));
     });
   });
 }
