@@ -32,7 +32,7 @@ Declarer testMenuNewDeclarer() {
 /// declaration must be sync
 ///
 void menu(String name, void Function() body,
-    {String cmd, bool group, bool solo}) {
+    {String cmd, bool group, @deprecated bool solo}) {
   _declarer.menu(name, body, cmd: cmd, group: group, solo: solo);
 }
 
@@ -43,7 +43,7 @@ void menu(String name, void Function() body,
 ///
 /// @param cmd command shortcut (instead of incremental number)
 void item(String name, dynamic Function() body,
-    {String cmd, bool solo, bool test}) {
+    {String cmd, @deprecated bool solo, bool test}) {
   _declarer.item(name, body, cmd: cmd, solo: solo, test: test);
 }
 

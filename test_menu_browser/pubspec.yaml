@@ -1,5 +1,5 @@
 name: tekartik_test_menu_browser
-version: 0.4.8+1
+version: 0.6.0
 homepage: https://github.com/tekartik/test_menu.dart
 # git://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
@@ -7,14 +7,14 @@ author: Alexandre Roux <alex@tekartik.com>
 publish_to: none
 
 environment:
-  sdk: '>=2.3.0-dev <3.0.0'
+  sdk: '>=2.6.0 <3.0.0'
 dependencies:
   tekartik_test_menu:
     git:
       url: git://github.com/tekartik/test_menu.dart
       ref: dart2
       path: test_menu
-    version: '>=0.5.2'
+    version: '>=0.6.0'
   tekartik_mdl_js:
     git:
       url: git://github.com/tekartik/mdl_js.dart

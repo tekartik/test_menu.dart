@@ -4,8 +4,10 @@ Future main() async {
   var shell = Shell();
 
   await shell.run('''
-  
-dartanalyzer --fatal-warnings --fatal-infos example lib test tool
+# Analyze code
+dartanalyzer --fatal-warnings --fatal-infos .
+dartfmt -n --set-exit-if-changed .
+
 pub run test -p vm,firefox,chrome
 
 pub run build_runner test -- -p vm,chrome

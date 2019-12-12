@@ -11,8 +11,9 @@ export 'test_menu.dart';
 /// can return a future
 ///
 /// @param cmd command shortcut (instead of incremental number)
-void test(String name, Function() body, {String cmd}) {
-  item(name, body, cmd: cmd, test: true);
+void test(String name, Function() body, {String cmd, @deprecated bool solo}) {
+  // ignore: deprecated_member_use_from_same_package
+  item(name, body, cmd: cmd, test: true, solo: solo);
 }
 
 // deprecated for temp usage only
@@ -27,6 +28,7 @@ void solo_test(String name, Function() body, {String cmd}) {
 ///
 /// @param cmd command shortcut (instead of incremental number)
 void group(String name, void Function() body, {String cmd, bool solo}) {
+  // ignore: deprecated_member_use_from_same_package
   menu(name, body, group: true, solo: solo);
 }
 
