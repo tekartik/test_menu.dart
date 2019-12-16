@@ -12,8 +12,8 @@ Future main(List<String> args) async {
 
 @Task('Fs Deploy built app.')
 Future fs_deploy_starter() async {
-  ProcessCmd cmd = ProcessCmd("fsdeploy",
-      [join("build", "example", "starter_browser_mdl", "deploy.yaml")]);
+  final cmd = ProcessCmd('fsdeploy',
+      [join('build', 'example', 'starter_browser_mdl', 'deploy.yaml')]);
 
   await runCmd(cmd);
 }
@@ -24,12 +24,12 @@ void build_starter() {
 }
 
 Future gsDeploy(String ioInPath, String gsOut) async {
-  ProcessCmd cmd = gsDeployCmd(ioInPath, gsOut);
+  final cmd = gsDeployCmd(ioInPath, gsOut);
   await runCmd(cmd);
 }
 
 @Task('Test deploy.')
 Future gstestdeploy() async {
   await gsDeploy(join('build', 'example', 'deploy', 'starter_browser_mdl'),
-      "gs://gstest.tekartik.com/test_menu");
+      'gs://gstest.tekartik.com/test_menu');
 }

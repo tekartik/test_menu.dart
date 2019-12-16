@@ -40,17 +40,17 @@ void main() {
       var presenter = TestMenuPresenter1();
       //menu('test', () {});
       await testMenuRun();
-      write("some text");
+      write('some text');
 
       // presenter is still null
       expect(presenter.menu.name, null);
-      expect(presenter.text, "some text");
-      //expect(presenter.menu.name, "test");
-      //expect(presenter.text, "some text");
+      expect(presenter.text, 'some text');
+      //expect(presenter.menu.name, 'test');
+      //expect(presenter.text, 'some text');
     });
 
     test('enter_only', () async {
-      bool ran = false;
+      var ran = false;
 
       // We always need a presenter
       NullTestMenuPresenter();
@@ -63,8 +63,8 @@ void main() {
     });
 
     test('enter_then_item', () async {
-      bool ran = false;
-      bool ranEnter = false;
+      var ran = false;
+      var ranEnter = false;
 
       // We always need a presenter
       NullTestMenuPresenter();
@@ -72,39 +72,39 @@ void main() {
         await sleep(1);
         ranEnter = true;
       });
-      item("test", () {
+      item('test', () {
         expect(ranEnter, isTrue);
         ran = true;
       });
 
-      testMenuManager.initCommands = ["0"];
+      testMenuManager.initCommands = ['0'];
       await testMenuRun();
       expect(ran, isTrue);
     });
   });
 
   /*
-      TestItem item = new TestItem.fn("test", () {
+      TestItem item = new TestItem.fn('test', () {
         ran = true;
       });
-      expect(item.name, "test");
+      expect(item.name, 'test');
       expect(ran, false);
       item.run();
       expect(ran, true);
     });
 
     test('menu', () {
-      TestMenu menu = new TestMenu("menu");
+      TestMenu menu = new TestMenu('menu');
       TestItem item = new TestItem.menu(menu);
-      expect(item.name, "menu");
+      expect(item.name, 'menu');
     });
   });
 
   group('test menu', () {
     test('list', () {
-      TestMenu menu = new TestMenu("menu");
-      expect(menu.name, "menu");
-      TestItem item = new TestItem.fn("test", () => null);
+      TestMenu menu = new TestMenu('menu');
+      expect(menu.name, 'menu');
+      TestItem item = new TestItem.fn('test', () => null);
       menu.addItem(item);
       expect(menu[0], item);
     });

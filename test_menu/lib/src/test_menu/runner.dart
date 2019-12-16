@@ -10,7 +10,7 @@ class Runner {
   Runner(this.declarer);
 
   Future run() async {
-    TestMenu testMenu = declarer.testMenu;
+    final testMenu = declarer.testMenu;
     if (TestMenuManager.debug.on) {
       print('[Runner] menu $testMenu');
     }
@@ -31,7 +31,7 @@ class Runner {
     }
 
     //List<List<TestItem> >
-    List<TestMenu> tree = [];
+    final tree = <TestMenu>[];
     List<TestMenu> soloTree;
     RunnableTestItem soloTestItem;
     Future _handleSolo(TestMenu testMenu) async {
@@ -42,7 +42,7 @@ class Runner {
         soloTree = List.from(tree);
       }
 
-      for (TestItem item in testMenu.items) {
+      for (final item in testMenu.items) {
         if (item is RunnableTestItem) {
           // handle solo_item
           if (item.solo == true) {
@@ -62,7 +62,7 @@ class Runner {
     // look for solo stuff
     await _handleSolo(testMenu);
 
-    bool _hasSolo = soloTree != null;
+    final _hasSolo = soloTree != null;
     if (!_hasSolo) {
       await pushMenu(testMenu);
     } else {

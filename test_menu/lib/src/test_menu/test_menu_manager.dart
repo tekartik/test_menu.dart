@@ -40,7 +40,7 @@ Future processMenu(TestMenu menu) async {
 class TestMenuManager {
   final TestMenuPresenter presenter;
   var lock = Lock(reentrant: true);
-  static final DevFlag debug = DevFlag("TestMenuManager");
+  static final DevFlag debug = DevFlag('TestMenuManager');
   //TestMenu displayedMenu;
   Map<TestMenu, TestMenuRunner> menuRunners = {};
 
@@ -54,15 +54,15 @@ class TestMenuManager {
   TestMenu get activeMenu => activeMenuRunner?.menu;
 
   List<TestMenuRunner> get stackMenus => _stackMenus;
-  List<TestMenuRunner> _stackMenus = [];
+  final _stackMenus = <TestMenuRunner>[];
 
   static List<String> initCommandsFromHash(String hash) {
     if (debugTestMenuManager) {
-      print("hash: $hash");
+      print('hash: $hash');
     }
-    int firstHash = hash.indexOf('#');
+    final firstHash = hash.indexOf('#');
     if (firstHash == 0) {
-      int nextHash = hash.indexOf('#', 1);
+      final nextHash = hash.indexOf('#', 1);
       if (nextHash < 0) {
         hash = hash.substring(1);
       } else {
@@ -71,10 +71,10 @@ class TestMenuManager {
     } else if (firstHash > 0) {
       hash = hash.substring(0, firstHash);
     }
-    List<String> commands = hash.split('_');
+    final commands = hash.split('_');
 
     if (debugTestMenuManager) {
-      print("hash: $hash commands: $commands");
+      print('hash: $hash commands: $commands');
     }
     return commands;
   }
@@ -95,7 +95,7 @@ class TestMenuManager {
   Future pushMenu(TestMenu menu) async {
     if (_push(menu)) {
       if (TestMenuManager.debug.on) {
-        write("[mgr] push presenting $menu");
+        write('[mgr] push presenting $menu');
       }
       presenter.presentMenu(menu);
 
@@ -134,10 +134,10 @@ class TestMenuManager {
       }
     }
     if (TestMenuManager.debug.on) {
-      write("[mgr] pushMenu $menu to ${testMenuManager.stackMenus}");
+      write('[mgr] pushMenu $menu to ${testMenuManager.stackMenus}');
     }
     // Make sure parent runner exists
-    TestMenuRunner runner = TestMenuRunner(activeMenuRunner, menu);
+    final runner = TestMenuRunner(activeMenuRunner, menu);
     return _pushMenuRunner(runner);
   }
 
@@ -155,16 +155,16 @@ class TestMenuManager {
   }
 
   Future<bool> popMenu([int count = 1]) async {
-    TestMenuRunner activeMenuRunner = this.activeMenuRunner;
+    final activeMenuRunner = this.activeMenuRunner;
     if (TestMenuManager.debug.on) {
       write(
-          "[mgr] poping $activeMenuRunner from ${testMenuManager.stackMenus}");
+          '[mgr] poping $activeMenuRunner from ${testMenuManager.stackMenus}');
     }
-    bool poped = _pop(count);
+    final poped = _pop(count);
     if (poped && activeMenuRunner != null) {
       await activeMenuRunner.leave();
       if (TestMenuManager.debug.on) {
-        write("[mgr] pop presenting ${this.activeMenuRunner.menu}");
+        write('[mgr] pop presenting ${this.activeMenuRunner.menu}');
       }
       presenter.presentMenu(this.activeMenuRunner.menu);
     }
@@ -184,24 +184,24 @@ class TestMenuManager {
 
   bool _pop([int count = 1]) {
     if (TestMenuManager.debug.on) {
-      write("${stackMenus} poping $count");
+      write('${stackMenus} poping $count');
     }
 
     if (stackMenus.length > count) {
       if (TestMenuManager.debug.on) {
-        write("${stackMenus} after poping $count");
+        write('${stackMenus} after poping $count');
       }
       // Remove and clear menuRunners
-      int start = stackMenus.length - count;
-      int end = stackMenus.length;
-      List<TestMenuRunner> removedRunner = stackMenus.sublist(start, end);
-      for (TestMenuRunner menuRunner in removedRunner) {
+      final start = stackMenus.length - count;
+      final end = stackMenus.length;
+      final removedRunner = stackMenus.sublist(start, end);
+      for (final menuRunner in removedRunner) {
         menuRunners.remove(menuRunner.menu);
       }
       stackMenus.removeRange(start, end);
 
       if (TestMenuManager.debug.on) {
-        write("${stackMenus} after poping $count");
+        write('${stackMenus} after poping $count');
       }
       return true;
     }
@@ -217,7 +217,7 @@ class TestMenuManager {
     if (!(item.parent is RootTestMenu)) {
       getRunner(item.parent);
     }
-    TestMenuRunner runner = menuRunners[item.parent];
+    var runner = menuRunners[item.parent];
     if (runner == null) {
       //devPrint('getRunner $item');
 
@@ -230,7 +230,7 @@ class TestMenuManager {
   // make sure the menu is entered first
   Future runItem(TestItem item) async {
     // await _enterMenu(item.parent);
-    TestMenuRunner runner = getRunner(item);
+    final runner = getRunner(item);
     //await runner.enter();
     if (item is MenuTestItem) {
       await pushMenu(item.menu);
@@ -250,10 +250,10 @@ class TestMenuManager {
 
   // Process a command line
   Future processLine(String line) async {
-    TestMenu menu = activeMenu;
+    final menu = activeMenu;
     //devPrint('Line: $line / Menu $menu');
 
-    int value = int.tryParse(line);
+    var value = int.tryParse(line);
     if (value == null) {
       if (line == '-') {
         print('pop');
@@ -293,9 +293,9 @@ class TestMenuManager {
     if (!_initCommandHandled) {
       _initCommandHandled = true;
 
-      List<String> initCommands = this.initCommands;
+      final initCommands = this.initCommands;
       if (initCommands != null) {
-        for (String initCommand in initCommands) {
+        for (final initCommand in initCommands) {
           await processLine(initCommand);
         }
       }

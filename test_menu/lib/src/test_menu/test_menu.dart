@@ -23,7 +23,7 @@ abstract class TestItem implements Runnable, WithParent {
   }
 }
 
-typedef R TestItemFn<R>();
+typedef TestItemFn<R> = R Function();
 
 abstract class _BaseTestItem {
   final bool solo;
@@ -115,12 +115,12 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
   String name;
   final bool group;
   final bool solo;
-  List<TestItem> _items = [];
+  final _items = <TestItem>[];
   List<TestItem> get items => _items;
   int get length => _items.length;
   TestMenu(this.name, {this.cmd, this.group, this.solo});
-  List<MenuEnter> _enters = [];
-  List<MenuLeave> _leaves = [];
+  final _enters = <MenuEnter>[];
+  final _leaves = <MenuLeave>[];
 
   Iterable<MenuEnter> get enters => _enters;
   Iterable<MenuLeave> get leaves => _leaves;
@@ -154,12 +154,12 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
       });
   TestItem operator [](int index) => _items[index];
   TestItem byCmd(String cmd) {
-    for (TestItem item in _items) {
+    for (final item in _items) {
       if (item.cmd == cmd) {
         return item;
       }
     }
-    int value = int.tryParse(cmd) ?? -1;
+    final value = int.tryParse(cmd) ?? -1;
 
     if (value != null && (value >= 0 && value < length)) {
       return _items[value];
@@ -177,8 +177,8 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
   }
 
   int indexOfMenu(TestMenu menu) {
-    for (int i = 0; i < _items.length; i++) {
-      TestItem item = _items[i];
+    for (var i = 0; i < _items.length; i++) {
+      final item = _items[i];
       if (item is MenuTestItem) {
         if (item.menu == menu) {
           return i;

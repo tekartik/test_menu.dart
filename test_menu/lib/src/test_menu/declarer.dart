@@ -49,10 +49,11 @@ class Declarer {
   // current test menu
   TestMenu testMenu = RootTestMenu();
 
-  void menu(String name, void body(), {String cmd, bool group, bool solo}) {
-    TestMenu parentTestMenu = testMenu;
+  void menu(String name, void Function() body,
+      {String cmd, bool group, bool solo}) {
+    final parentTestMenu = testMenu;
 
-    TestMenu newMenu = TestMenu(name, cmd: cmd, group: group, solo: solo);
+    final newMenu = TestMenu(name, cmd: cmd, group: group, solo: solo);
     parentTestMenu.addMenu(newMenu);
 
     testMenu = newMenu;
@@ -60,18 +61,18 @@ class Declarer {
     testMenu = parentTestMenu;
   }
 
-  void enter(body()) {
-    MenuEnter enter = MenuEnter(body);
+  void enter(Function() body) {
+    final enter = MenuEnter(body);
     testMenu.addEnter(enter);
   }
 
-  void leave(body()) {
-    MenuLeave leave = MenuLeave(body);
+  void leave(Function() body) {
+    final leave = MenuLeave(body);
     testMenu.addLeave(leave);
   }
 
-  void item(String name, body(), {String cmd, bool solo, bool test}) {
-    TestItem item = TestItem.fn(name, body, cmd: cmd, solo: solo, test: test);
+  void item(String name, Function() body, {String cmd, bool solo, bool test}) {
+    final item = TestItem.fn(name, body, cmd: cmd, solo: solo, test: test);
     testMenu.addItem(item);
     //_testMenu.add("print hi", () => print('hi'));
   }

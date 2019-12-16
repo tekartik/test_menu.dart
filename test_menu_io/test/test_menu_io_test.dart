@@ -1,4 +1,4 @@
-@TestOn("vm")
+@TestOn('vm')
 library test_menu_test;
 
 import 'package:tekartik_test_menu_io/test_menu_io.dart';
@@ -13,16 +13,16 @@ void main() {
       //testMenuNewDeclarer();
       menu('main', () {
         // ignore: deprecated_member_use
-        solo_item("1", () async {
+        solo_item('1', () async {
           a = 1;
         });
-        item("2", () {
+        item('2', () {
           b = 2;
         });
 
         menu('sub', () {
           // ignore: deprecated_member_use
-          solo_item("3", () {
+          solo_item('3', () {
             c = 3;
           });
         });

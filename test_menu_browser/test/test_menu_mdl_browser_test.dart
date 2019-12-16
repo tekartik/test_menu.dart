@@ -1,4 +1,4 @@
-@TestOn("browser")
+@TestOn('browser')
 library test_menu_browser.test_menu_mdl_browser_test;
 
 import 'package:tekartik_test_menu_browser/test_menu_mdl_browser.dart';
