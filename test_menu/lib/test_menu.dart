@@ -2,6 +2,7 @@ library tekartik_test_menu;
 
 import 'dart:async';
 
+import 'package:tekartik_test_menu/src/test_menu/test_menu_controller.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'src/test_menu/declarer.dart';
 
@@ -55,6 +56,13 @@ void enter(dynamic Function() body) {
 }
 
 ///
+/// Declare function called when we enter a non handled command
+///
+void command(dynamic Function(String command) body) {
+  _declarer.command(body);
+}
+
+///
 /// Declare function called when we leave a menu
 ///
 void leave(dynamic Function() body) {
@@ -77,6 +85,14 @@ void solo_menu(String name, void Function() body, {String cmd}) {
 
 void write(Object message) {
   testMenuPresenter.write(message);
+}
+
+/// Show a new menu.
+///
+/// wait for completion?
+Future<void> showMenu(void Function() declare) async {
+  var controller = TestMenuController(declare);
+  testMenuPresenter.presentMenu(controller.testMenu);
 }
 
 @deprecated

@@ -7,7 +7,7 @@ author: Alexandre Roux <alex@tekartik.com>
 publish_to: none
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
+  sdk: '>=2.10.0-0 <3.0.0'
 dependencies:
   tekartik_common_utils:
     git:

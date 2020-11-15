@@ -25,6 +25,8 @@ abstract class TestItem implements Runnable, WithParent {
 
 typedef TestItemFn<R> = R Function();
 
+typedef TestCommandFn<R> = R Function(String command);
+
 abstract class _BaseTestItem {
   final bool solo;
   String name;
@@ -57,6 +59,17 @@ class MenuEnter extends Object with _RunnableMixin, _WithParentMixin {
   @override
   String toString() {
     return 'enter';
+  }
+}
+
+// Unhandled command (?, ., -)
+class MenuCommand extends Object with _WithParentMixin {
+  final TestCommandFn fn;
+  MenuCommand(this.fn);
+
+  @override
+  String toString() {
+    return 'command';
   }
 }
 
@@ -121,9 +134,13 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
   TestMenu(this.name, {this.cmd, this.group, this.solo});
   final _enters = <MenuEnter>[];
   final _leaves = <MenuLeave>[];
-
+  MenuCommand _command;
   Iterable<MenuEnter> get enters => _enters;
   Iterable<MenuLeave> get leaves => _leaves;
+
+  /// The default command handlers.
+  MenuCommand get command => _command;
+
   void add(String name, TestItemFn fn) => addItem(TestItem.fn(name, fn));
   void fixParent(WithParent child) {
     child.parent = this;
@@ -147,6 +164,11 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
   void addItem(TestItem item) {
     fixParent(item);
     _items.add(item);
+  }
+
+  void setCommand(MenuCommand menuCommand) {
+    fixParent(menuCommand);
+    _command = menuCommand;
   }
 
   void addAll(List<TestItem> items) => items.forEach((TestItem item) {

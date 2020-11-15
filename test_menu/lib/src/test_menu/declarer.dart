@@ -61,6 +61,11 @@ class Declarer {
     testMenu = parentTestMenu;
   }
 
+  void command(dynamic Function(String command) body) {
+    final command = MenuCommand(body);
+    testMenu.setCommand(command);
+  }
+
   void enter(Function() body) {
     final enter = MenuEnter(body);
     testMenu.addEnter(enter);

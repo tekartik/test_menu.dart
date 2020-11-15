@@ -15,10 +15,10 @@ export 'src/common_io.dart';
 // ignore_for_file: implementation_imports
 
 // set to false before checkin
-bool testMenuConsoleDebug = false;
+bool testMenuConsoleDebug = false; //devWarning(true); // false;
 
 String _exitCommand = '.';
-String _helpCommand = 'h';
+String _helpCommand = '?';
 
 class _TestMenuManagerConsole extends TestMenuPresenter
     with TestMenuPresenterMixin {
@@ -122,9 +122,24 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     }
 
     final item = menu.byCmd(line);
+
+    var command = menu.command;
+    // devPrint('menu.command $command');
     if (item != null) {
       if (verbose) {
         print("$tag running '$item'");
+      }
+
+      try {
+        await testMenuManager.runItem(item);
+      } catch (_) {}
+      // return new Future.sync(item.run).then((_) {
+      if (verbose) {
+        print("$tag done '$item'");
+      }
+    } else if (command != null) {
+      if (verbose) {
+        print("$tag running command '$line'");
       }
 
       try {
@@ -233,7 +248,8 @@ void initTestMenuConsole(List<String> arguments) {
 
 _TestMenuManagerConsole _testMenuManagerConsole;
 
-void mainMenu(List<String> arguments, void Function() body) {
+/// Main menu declaration
+void mainMenu(List<String> arguments, void Function() declare) {
   initTestMenuConsole(arguments);
-  body();
+  declare();
 }
