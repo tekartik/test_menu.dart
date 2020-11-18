@@ -1,7 +1,8 @@
 library tekartik_test_menu_console;
 
-import 'dart:io';
+import 'dart:io' hide stdin;
 
+import 'package:process_run/shell.dart';
 import 'package:args/args.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
@@ -71,15 +72,21 @@ class _TestMenuManagerConsole extends TestMenuPresenter
 
   void readLine() {
     if (_inCommand == null) {
-      //devPrint('readLine');
+      // devPrint('readLine setup');
       _inCommand =
-          stdin.transform(utf8.decoder).transform(const LineSplitter());
+          sharedStdIn.transform(utf8.decoder).transform(const LineSplitter());
 
       // Waiting forever on stdin
       _inCommandSubscription = _inCommand.listen(handleLine);
     }
 
     //return _inCommand.
+  }
+
+  /// Needed when spawning with a process with sharedStdIn
+  void freeSharedStdIn() {
+    _inCommandSubscription?.cancel();
+    _inCommand = null;
   }
 
   void handleLine(String line) {
@@ -106,11 +113,14 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     if (line == _exitCommand) {
       // print('pop');
       if (!await popMenu()) {
+        // New 2020/11/19
+        exit(0);
+        /*
         // devPrint('should exit?');
         done = true;
         if (_inCommandSubscription != null) {
           await _inCommandSubscription.cancel();
-        }
+        }*/
       }
       return Future.value();
     }
@@ -238,12 +248,29 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     _nextLine();
     return completer.future;
   }
+
+  final _interactiveLock = Lock();
+  Future<T> subInteractive<T>(Future<T> Function() action) async {
+    return await _interactiveLock.synchronized(() async {
+      try {
+        freeSharedStdIn();
+        return await action();
+      } finally {
+        readLine();
+      }
+    });
+  }
 }
 
 void initTestMenuConsole(List<String> arguments) {
   _testMenuManagerConsole = _TestMenuManagerConsole(arguments);
   // set current
   testMenuPresenter = _testMenuManagerConsole;
+}
+
+/// To use when releasing stdin is needed
+Future<T> usingSharedStdIn<T>(Future<T> Function() action) {
+  return _testMenuManagerConsole.subInteractive<T>(action);
 }
 
 _TestMenuManagerConsole _testMenuManagerConsole;
