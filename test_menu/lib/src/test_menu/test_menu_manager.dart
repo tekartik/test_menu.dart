@@ -6,6 +6,7 @@ import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
 bool get debugTestMenuManager => TestMenuManager.debug.on;
 
+// There is only one test menu manager
 TestMenuManager _testMenuManager;
 
 TestMenuManager get testMenuManager {
@@ -107,15 +108,11 @@ class TestMenuManager {
     return true;
   }
 
-  /*
-  @deprecated
-  bool push(TestMenu menu) {
-    if (_push(menu)) {
-      presenter.presentMenu(menu);
-    }
-    return true;
+  /// Return when closed!
+  Future showMenu(TestMenu menu) async {
+    await pushMenu(menu);
+    await menuRunners[menu].done;
   }
-  */
 
   bool stackContainsMenu(TestMenu menu) {
     return menuRunners[menu] != null;

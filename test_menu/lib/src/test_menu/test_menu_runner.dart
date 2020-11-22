@@ -10,6 +10,16 @@ import 'package:tekartik_test_menu/test_menu_presenter.dart';
 class TestMenuRunner {
   final TestMenu menu;
   final TestMenuRunner parent;
+  final _doneCompleter = Completer.sync();
+
+  /// Completed when poped
+  Future<void> get done => _doneCompleter.future;
+
+  void _complete() {
+    if (!_doneCompleter.isCompleted) {
+      _doneCompleter.complete();
+    }
+  }
 
   @override
   String toString() => menu.toString();
@@ -49,12 +59,16 @@ class TestMenuRunner {
   }
 
   Future leave() async {
-    //devWrite('leave ${menu.leaves} $entered');
+    if (debugTestMenuManager) {
+      write('[leave]  ${menu.leaves} $entered');
+    }
+    //devWrite('leave');
     if (entered) {
       entered = false;
       for (var leave in menu.leaves) {
         await run(leave);
       }
+      _complete();
     }
   }
 }

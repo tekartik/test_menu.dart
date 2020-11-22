@@ -4,7 +4,11 @@ import 'dart:async';
 
 import 'package:tekartik_test_menu/src/test_menu/test_menu_controller.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
+
 import 'src/test_menu/declarer.dart';
+import 'src/test_menu/test_menu_manager.dart';
+
+export 'src/test_menu/test_menu_manager.dart' show TestMenuManager;
 
 ///
 /// The declarer class handling the logic
@@ -89,10 +93,10 @@ void write(Object message) {
 
 /// Show a new menu.
 ///
-/// wait for completion?
+/// wait for completion.
 Future<void> showMenu(void Function() declare) async {
   var controller = TestMenuController(declare);
-  testMenuPresenter.presentMenu(controller.testMenu);
+  await testMenuManager.showMenu(controller.testMenu);
 }
 
 @deprecated
