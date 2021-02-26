@@ -6,5 +6,5 @@ dependencies:
     git:
       url: git://github.com/tekartik/test_menu.dart
       path: test_menu_browser
-      ref: dart2
+      ref: null_safety
 ````
