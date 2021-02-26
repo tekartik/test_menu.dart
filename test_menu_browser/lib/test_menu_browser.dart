@@ -28,12 +28,12 @@ void jsTest(String name) {
 // can be extended
 class TestMenuManagerBrowser extends TestMenuPresenter
     with TestMenuPresenterMixin {
-  TestMenu displayedMenu;
-  Element container;
+  TestMenu? displayedMenu;
+  Element? container;
 
-  Element menuContainer;
-  Element output;
-  InputElement basicInput;
+  Element? menuContainer;
+  Element? output;
+  InputElement? basicInput;
 
   var outBuffer = OutBuffer(100);
 
@@ -48,13 +48,13 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       print('[bwsr writ] $message');
     }
     commonLog(message);
-    output.text = outBuffer.toString();
+    output!.text = outBuffer.toString();
   }
 
-  Completer<String> promptCompleter;
+  Completer<String>? promptCompleter;
 
   @override
-  Future<String> prompt(Object message) {
+  Future<String> prompt(Object? message) {
     write(message ?? 'Enter text');
     var completer = Completer<String>.sync();
     promptCompleter = completer;
@@ -62,7 +62,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   }
 
   TestMenuManagerBrowser() {
-    if (locationInfo.arguments.containsKey('debug')) {
+    if (locationInfo!.arguments.containsKey('debug')) {
       // ignore: deprecated_member_use
       TestMenuManager.debug.on = true;
     }
@@ -73,15 +73,15 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       container = document.getElementById(testMenuBrowserContainerId);
       if (container == null) {
         container = DivElement();
-        document.body.children.add(container);
+        document.body!.children.add(container!);
       }
 
       basicInput = InputElement();
 
-      basicInput.onChange.listen((_) {
+      basicInput!.onChange.listen((_) {
         // devPrint('on change: ${basicInput.value}');
         if (promptCompleter != null) {
-          promptCompleter.complete(basicInput.value);
+          promptCompleter!.complete(basicInput!.value);
           promptCompleter = null;
         }
       });
@@ -90,23 +90,23 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
       output = PreElement();
 
-      container.children.addAll([output, menuContainer, basicInput]);
+      container!.children.addAll([output!, menuContainer!, basicInput!]);
     }
   }
 
   // for href
-  List<String> getMenuStackNames([TestItem item]) {
+  List<String> getMenuStackNames([TestItem? item]) {
     final list = <String>[];
 
-    TestMenu lastMenu;
+    TestMenu? lastMenu;
     //devPrint(testMenuManager.stackMenus);
-    for (var i = testMenuManager.stackMenus.length - 1; i >= 0; i--) {
-      final menu = testMenuManager.stackMenus[i].menu;
+    for (var i = testMenuManager!.stackMenus.length - 1; i >= 0; i--) {
+      final menu = testMenuManager!.stackMenus[i].menu;
 
       int index;
 
       if (lastMenu == null) {
-        lastMenu = testMenuManager.activeMenu;
+        lastMenu = testMenuManager!.activeMenu;
         if (item == null) {
           continue;
         }
@@ -115,7 +115,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
           // nothing
           continue;
         } else {
-          index = testMenuManager.activeMenu.indexOfItem(item);
+          index = testMenuManager!.activeMenu!.indexOfItem(item);
         }
       } else {
         index = menu.indexOfMenu(lastMenu);
@@ -140,7 +140,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     if (displayedMenu != menu) {
       Element header = HeadingElement.h3();
       final sb = StringBuffer();
-      for (final runner in testMenuManager.stackMenus) {
+      for (final runner in testMenuManager!.stackMenus) {
         sb.write(' > ${runner.menu.name}');
       }
       header.setInnerHtml(sb.toString());
@@ -148,13 +148,13 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
       LIElement liElement;
 
-      if (testMenuManager.activeDepth > 0) {
+      if (testMenuManager!.activeDepth > 0) {
         liElement = LIElement();
 
         liElement
           ..setInnerHtml(' - exit')
           ..onClick.listen((_) {
-            testMenuManager.popMenu();
+            testMenuManager!.popMenu();
           });
         list.children.add(liElement);
       }
@@ -167,7 +167,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
           ..setInnerHtml('$i ${item}')
           ..onClick.listen((_) {
             print("running '$index ${item}'");
-            testMenuManager.runItem(item).then((_) {
+            testMenuManager!.runItem(item).then((_) {
               print("done '$index ${item}'");
             });
           });
@@ -176,7 +176,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       }
 
       displayedMenu = menu;
-      menuContainer.children
+      menuContainer!.children
         ..clear()
         ..addAll([header, list]);
     }
@@ -188,18 +188,18 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   }
 }
 
-void initTestMenuBrowser({List<String> jsFiles}) {
+void initTestMenuBrowser({List<String>? jsFiles}) {
   testMenuLoadJs(jsFiles);
   _testMenuManagerBrowser = TestMenuManagerBrowser();
 
-  testMenuPresenter = _testMenuManagerBrowser;
+  testMenuPresenter = _testMenuManagerBrowser!;
 
   initTestMenuManager();
   final hash = window.location.hash;
-  testMenuManager.initCommands = TestMenuManager.initCommandsFromHash(hash);
+  testMenuManager!.initCommands = TestMenuManager.initCommandsFromHash(hash);
 }
 
-Future testMenuLoadJs(List<String> jsFiles) async {
+Future testMenuLoadJs(List<String>? jsFiles) async {
   if (jsFiles != null) {
     for (final jsFile in jsFiles) {
       await loadJavascriptScript(jsFile);
@@ -207,4 +207,4 @@ Future testMenuLoadJs(List<String> jsFiles) async {
   }
 }
 
-TestMenuManagerBrowser _testMenuManagerBrowser;
+TestMenuManagerBrowser? _testMenuManagerBrowser;

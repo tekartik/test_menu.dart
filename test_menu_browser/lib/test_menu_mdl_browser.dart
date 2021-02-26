@@ -42,11 +42,11 @@ const String testMenuBrowserInputId = 'input';
 
 // can be extended
 class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
-  TextField input;
+  late TextField input;
 
   PlatformContext platformContext = platformContextBrowser;
 
-  bool get isMobile => platformContext.browser.isMobile;
+  bool get isMobile => platformContext.browser!.isMobile;
 
   @override
   void write(Object message) {
@@ -56,7 +56,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
     }
     commonLog(message);
     outBuffer.add(text);
-    output.text = outBuffer.toString();
+    output!.text = outBuffer.toString();
     autoScroll();
   }
 
@@ -75,7 +75,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       container = document.getElementById(testMenuBrowserContainerId);
       if (container == null) {
         container = DivElement()..id = testMenuBrowserContainerId;
-        document.body.children.add(container);
+        document.body!.children.add(container!);
 
         menuContainer = DivElement()..id = testMenuBrowserMenuId;
 
@@ -85,36 +85,36 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
         form.setAttribute('action', '#');
 
         input = TextField(id: testMenuBrowserInputId, floatingLabel: true);
-        form.append(input.element);
+        form.append(input.element!);
         form.onSubmit.listen((Event e) {
           //print('on submit: ${input.value}');
           final value = input.value;
           input.value = null;
           e.preventDefault();
           if (promptCompleter != null) {
-            promptCompleter.complete(value);
+            promptCompleter!.complete(value);
             promptCompleter = null;
 
             initInputForMenu();
           } else {
             if (value == '-') {
-              testMenuManager.popMenu();
+              testMenuManager!.popMenu();
             } else {
-              final index = int.tryParse(value) ?? -1;
+              final index = int.tryParse(value!) ?? -1;
               //print('on submit: $value ${index}');
               if (index >= 0) {
                 if (displayedMenu != null) {
-                  testMenuManager.runItem(displayedMenu[index]);
+                  testMenuManager!.runItem(displayedMenu![index]);
                 }
               }
             }
           }
         });
 
-        container.children.addAll([output, menuContainer, form]);
+        container!.children.addAll([output!, menuContainer!, form]);
       } else {
-        output = container.querySelector('#${testMenuBrowserOutputId}');
-        menuContainer = container.querySelector('#${testMenuBrowserMenuId}');
+        output = container!.querySelector('#${testMenuBrowserOutputId}');
+        menuContainer = container!.querySelector('#${testMenuBrowserMenuId}');
       }
     }
   }
@@ -135,7 +135,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
   */
 
   void autoScroll() {
-    window.scrollTo(0, document.body.scrollHeight);
+    window.scrollTo(0, document.body!.scrollHeight);
   }
 
   //@override
@@ -160,14 +160,14 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       _updateMenuHash();
 
       //StringBuffer sb = new StringBuffer();
-      var popCount = testMenuManager.activeDepth;
-      for (final runner in testMenuManager.stackMenus) {
+      var popCount = testMenuManager!.activeDepth;
+      for (final runner in testMenuManager!.stackMenus) {
         final testMenu = runner.menu;
         final menuPopCount = popCount--;
         void _clickOnMenu([_]) {
           //devPrint('Click on menu');
-          if (menuPopCount <= testMenuManager.activeDepth && menuPopCount > 0) {
-            testMenuManager.popMenu(menuPopCount);
+          if (menuPopCount <= testMenuManager!.activeDepth && menuPopCount > 0) {
+            testMenuManager!.popMenu(menuPopCount);
           } else {
             // Make the href is updated
             _updateMenuHash();
@@ -193,7 +193,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
       Element liElement;
 
-      if (testMenuManager.activeDepth > 0) {
+      if (testMenuManager!.activeDepth > 0) {
         liElement = listItemCreate()
           ..append(listItemPrimaryContentCreate()
             ..append(SpanElement()
@@ -202,9 +202,9 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
             ..appendText('exit'))
           ..onClick.listen((_) {
             if (TestMenuManager.debug.on) {
-              write('[mdl poping] ${testMenuManager.menuRunners}');
+              write('[mdl poping] ${testMenuManager!.menuRunners}');
             }
-            testMenuManager.popMenu();
+            testMenuManager!.popMenu();
           });
         list.children.add(liElement);
       }
@@ -220,7 +220,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
             ..appendText('${item}'))
           ..onClick.listen((_) {
             print("[i] running '$i ${item}'");
-            testMenuManager.runItem(item).then((_) {
+            testMenuManager!.runItem(item).then((_) {
               print("[i] done '$i ${item}'");
               initInputForMenu();
             });
@@ -232,7 +232,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       }
 
       displayedMenu = menu;
-      menuContainer.children
+      menuContainer!.children
         ..clear()
         ..addAll([header, list]);
 
@@ -241,7 +241,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
   }
 
   @override
-  Future<String> prompt(Object message) {
+  Future<String> prompt(Object? message) {
     //String message = (message == null || message.length == 0)
     message = message == null ? 'Enter text' : '$message';
     input.value = null;
@@ -254,7 +254,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
   }
 }
 
-Future initTestMenuBrowser({List<String> js}) async {
+Future initTestMenuBrowser({List<String>? js}) async {
   var futures = [
     loadMdlJs(),
     loadMdlCss(),
@@ -268,13 +268,13 @@ Future initTestMenuBrowser({List<String> js}) async {
   await browser.testMenuLoadJs(js);
 
   _testMenuManagerBrowser = TestMenuManagerBrowser();
-  _testMenuManagerBrowser.init();
+  _testMenuManagerBrowser!.init();
 
-  testMenuPresenter = _testMenuManagerBrowser;
+  testMenuPresenter = _testMenuManagerBrowser!;
 
   initTestMenuManager();
   final hash = window.location.hash;
-  testMenuManager.initCommands = TestMenuManager.initCommandsFromHash(hash);
+  testMenuManager!.initCommands = TestMenuManager.initCommandsFromHash(hash);
 }
 
-TestMenuManagerBrowser _testMenuManagerBrowser;
+TestMenuManagerBrowser? _testMenuManagerBrowser;
