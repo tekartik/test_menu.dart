@@ -8,11 +8,11 @@ class TestMenuController {
   /// [declare your menu using item/menu
   TestMenuController(this.declare);
 
-  TestMenu _testMenu;
+  TestMenu? _testMenu;
 
   /// Resulting testMenu
   TestMenu get testMenu => _testMenu ??= () {
-        var declarer = testMenuNewDeclarer();
+        var declarer = testMenuNewDeclarer()!;
         declare();
         return declarer.testMenu;
       }();

@@ -2,20 +2,20 @@ import 'dart:async';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
 abstract class WithParent {
-  TestMenu get parent;
-  set parent(TestMenu parent);
+  TestMenu? get parent;
+  set parent(TestMenu? parent);
 }
 
 class _WithParentMixin implements WithParent {
   @override
-  TestMenu parent;
+  TestMenu? parent;
 }
 
 abstract class TestItem implements Runnable, WithParent {
-  String get cmd;
+  String? get cmd;
   String get name;
   factory TestItem.fn(String name, TestItemFn fn,
-      {String cmd, bool solo, bool test}) {
+      {String? cmd, bool? solo, bool? test}) {
     return RunnableTestItem(name, fn, cmd: cmd, solo: solo, test: test);
   }
   factory TestItem.menu(TestMenu menu) {
@@ -23,14 +23,14 @@ abstract class TestItem implements Runnable, WithParent {
   }
 }
 
-typedef TestItemFn<R> = R Function();
+typedef TestItemFn<R> = R? Function();
 
 typedef TestCommandFn<R> = R Function(String command);
 
 abstract class _BaseTestItem {
-  final bool solo;
+  final bool? solo;
   String name;
-  String get cmd;
+  String? get cmd;
   _BaseTestItem(this.name, this.solo);
 
   @override
@@ -44,7 +44,7 @@ abstract class Runnable {
 }
 
 class _RunnableMixin implements Runnable {
-  TestItemFn fn;
+  late TestItemFn fn;
   @override
   dynamic run() {
     return fn();
@@ -88,9 +88,10 @@ class RunnableTestItem extends _BaseTestItem
     with _RunnableMixin, _WithParentMixin
     implements TestItem {
   @override
-  String cmd;
-  final bool test;
-  RunnableTestItem(String name, TestItemFn fn, {this.cmd, this.test, bool solo})
+  String? cmd;
+  final bool? test;
+  RunnableTestItem(String name, TestItemFn fn,
+      {this.cmd, this.test, bool? solo})
       : super(name, solo) {
     this.fn = fn;
   }
@@ -101,14 +102,12 @@ class MenuTestItem extends _BaseTestItem
     implements TestItem {
   TestMenu menu;
   @override
-  String get cmd => menu.cmd;
-  MenuTestItem(this.menu) : super(null, menu.solo) {
-    name = menu.name;
-  }
+  String? get cmd => menu.cmd;
+  MenuTestItem(this.menu) : super(menu.name, menu.solo);
 
   @override
   Future run() async {
-    await testMenuManager.pushMenu(menu);
+    await testMenuManager!.pushMenu(menu);
   }
 
   @override
@@ -118,28 +117,28 @@ class MenuTestItem extends _BaseTestItem
 }
 
 class RootTestMenu extends TestMenu {
-  RootTestMenu() : super(null);
+  RootTestMenu() : super('_root_');
 }
 
 abstract class TestObject {}
 
 class TestMenu extends Object with _WithParentMixin implements TestObject {
-  String cmd;
+  String? cmd;
   String name;
-  final bool group;
-  final bool solo;
+  final bool? group;
+  final bool? solo;
   final _items = <TestItem>[];
   List<TestItem> get items => _items;
   int get length => _items.length;
   TestMenu(this.name, {this.cmd, this.group, this.solo});
   final _enters = <MenuEnter>[];
   final _leaves = <MenuLeave>[];
-  MenuCommand _command;
+  MenuCommand? _command;
   Iterable<MenuEnter> get enters => _enters;
   Iterable<MenuLeave> get leaves => _leaves;
 
   /// The default command handlers.
-  MenuCommand get command => _command;
+  MenuCommand? get command => _command;
 
   void add(String name, TestItemFn fn) => addItem(TestItem.fn(name, fn));
   void fixParent(WithParent child) {
@@ -175,7 +174,7 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
         addItem(item);
       });
   TestItem operator [](int index) => _items[index];
-  TestItem byCmd(String cmd) {
+  TestItem? byCmd(String cmd) {
     for (final item in _items) {
       if (item.cmd == cmd) {
         return item;
@@ -183,7 +182,7 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
     }
     final value = int.tryParse(cmd) ?? -1;
 
-    if (value != null && (value >= 0 && value < length)) {
+    if (value >= 0 && value < length) {
       return _items[value];
     }
     return null;

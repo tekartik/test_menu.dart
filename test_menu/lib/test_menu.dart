@@ -13,9 +13,9 @@ export 'src/test_menu/test_menu_manager.dart' show TestMenuManager;
 ///
 /// The declarer class handling the logic
 ///
-Declarer __declarer;
+Declarer? __declarer;
 
-Declarer get _declarer {
+Declarer? get _declarer {
   if (__declarer == null) {
     __declarer = Declarer();
     scheduleMicrotask(() {
@@ -26,7 +26,7 @@ Declarer get _declarer {
   return __declarer;
 }
 
-Declarer testMenuNewDeclarer() {
+Declarer? testMenuNewDeclarer() {
   __declarer = Declarer();
   return __declarer;
 }
@@ -37,8 +37,8 @@ Declarer testMenuNewDeclarer() {
 /// declaration must be sync
 ///
 void menu(String name, void Function() body,
-    {String cmd, bool group, @deprecated bool solo}) {
-  _declarer.menu(name, body, cmd: cmd, group: group, solo: solo);
+    {String? cmd, bool? group, @deprecated bool? solo}) {
+  _declarer!.menu(name, body, cmd: cmd, group: group, solo: solo);
 }
 
 ///
@@ -48,42 +48,42 @@ void menu(String name, void Function() body,
 ///
 /// @param cmd command shortcut (instead of incremental number)
 void item(String name, dynamic Function() body,
-    {String cmd, @deprecated bool solo, bool test}) {
-  _declarer.item(name, body, cmd: cmd, solo: solo, test: test);
+    {String? cmd, @deprecated bool? solo, bool? test}) {
+  _declarer!.item(name, body, cmd: cmd, solo: solo, test: test);
 }
 
 ///
 /// Declare function called when we enter a menu
 ///
 void enter(dynamic Function() body) {
-  _declarer.enter(body);
+  _declarer!.enter(body);
 }
 
 ///
 /// Declare function called when we enter a non handled command
 ///
 void command(dynamic Function(String command) body) {
-  _declarer.command(body);
+  _declarer!.command(body);
 }
 
 ///
 /// Declare function called when we leave a menu
 ///
 void leave(dynamic Function() body) {
-  _declarer.leave(body);
+  _declarer!.leave(body);
 }
 
 // deprecated for temp usage only
 @deprecated
 // ignore: non_constant_identifier_names
-void solo_item(String name, dynamic Function() body, {String cmd}) {
+void solo_item(String name, dynamic Function() body, {String? cmd}) {
   item(name, body, cmd: cmd, solo: true);
 }
 
 // deprecated for temp usage only
 @deprecated
 // ignore: non_constant_identifier_names
-void solo_menu(String name, void Function() body, {String cmd}) {
+void solo_menu(String name, void Function() body, {String? cmd}) {
   menu(name, body, cmd: cmd, solo: true);
 }
 
@@ -96,13 +96,13 @@ void write(Object message) {
 /// wait for completion.
 Future<void> showMenu(void Function() declare) async {
   var controller = TestMenuController(declare);
-  await testMenuManager.showMenu(controller.testMenu);
+  await testMenuManager!.showMenu(controller.testMenu);
 }
 
 @deprecated
 void devWrite(Object message) => write(message);
 
-Future<String> prompt([Object message]) {
+Future<String?>? prompt([Object? message]) {
   //return testMenuManager.prompt(message);
   return testMenuPresenter.prompt(message);
 }
@@ -112,7 +112,7 @@ Future<String> prompt([Object message]) {
 //
 Future testMenuRun() async {
   if (_declarer != null) {
-    await _declarer.run();
+    await _declarer!.run();
     __declarer = null;
   }
 }

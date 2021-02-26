@@ -11,20 +11,20 @@ import 'package:tekartik_test_menu/test_menu.dart';
 class TestMenuPresenter1 extends Object
     with TestMenuPresenterMixin
     implements TestMenuPresenter {
-  String text;
+  String? text;
 
   TestMenuPresenter1() {
     // set as presenter
     testMenuPresenter = this;
   }
-  TestMenu menu;
+  late TestMenu menu;
   @override
   void presentMenu(TestMenu menu) {
     this.menu = menu;
   }
 
   @override
-  Future<String> prompt(Object message) async {
+  Future<String?> prompt(Object? message) async {
     return null;
   }
 
@@ -43,7 +43,7 @@ void main() {
       write('some text');
 
       // presenter is still null
-      expect(presenter.menu.name, null);
+      expect(presenter.menu.name, '_root_');
       expect(presenter.text, 'some text');
       //expect(presenter.menu.name, 'test');
       //expect(presenter.text, 'some text');
@@ -77,7 +77,7 @@ void main() {
         ran = true;
       });
 
-      testMenuManager.initCommands = ['0'];
+      testMenuManager!.initCommands = ['0'];
       await testMenuRun();
       expect(ran, isTrue);
     });

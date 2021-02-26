@@ -9,7 +9,7 @@ import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
 class TestMenuRunner {
   final TestMenu menu;
-  final TestMenuRunner parent;
+  final TestMenuRunner? parent;
   final _doneCompleter = Completer.sync();
 
   /// Completed when poped

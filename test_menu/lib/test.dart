@@ -11,7 +11,7 @@ export 'test_menu.dart';
 /// can return a future
 ///
 /// @param cmd command shortcut (instead of incremental number)
-void test(String name, Function() body, {String cmd, @deprecated bool solo}) {
+void test(String name, Function() body, {String? cmd, @deprecated bool? solo}) {
   // ignore: deprecated_member_use_from_same_package
   item(name, body, cmd: cmd, test: true, solo: solo);
 }
@@ -19,7 +19,7 @@ void test(String name, Function() body, {String cmd, @deprecated bool solo}) {
 // deprecated for temp usage only
 @deprecated
 // ignore: non_constant_identifier_names
-void solo_test(String name, Function() body, {String cmd}) {
+void solo_test(String name, Function() body, {String? cmd}) {
   item(name, body, cmd: cmd, test: true, solo: true);
 }
 
@@ -27,7 +27,7 @@ void solo_test(String name, Function() body, {String cmd}) {
 /// Declare a test group
 ///
 /// @param cmd command shortcut (instead of incremental number)
-void group(String name, void Function() body, {String cmd, bool solo}) {
+void group(String name, void Function() body, {String? cmd, bool? solo}) {
   // ignore: deprecated_member_use_from_same_package
   menu(name, body, group: true, solo: solo);
 }
@@ -35,6 +35,6 @@ void group(String name, void Function() body, {String cmd, bool solo}) {
 // deprecated for temp usage only
 @deprecated
 // ignore: non_constant_identifier_names
-void solo_group(String name, void Function() body, {String cmd}) {
+void solo_group(String name, void Function() body, {String? cmd}) {
   group(name, body, solo: true);
 }

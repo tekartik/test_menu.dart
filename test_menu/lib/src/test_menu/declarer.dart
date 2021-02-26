@@ -50,7 +50,7 @@ class Declarer {
   TestMenu testMenu = RootTestMenu();
 
   void menu(String name, void Function() body,
-      {String cmd, bool group, bool solo}) {
+      {String? cmd, bool? group, bool? solo}) {
     final parentTestMenu = testMenu;
 
     final newMenu = TestMenu(name, cmd: cmd, group: group, solo: solo);
@@ -76,7 +76,7 @@ class Declarer {
     testMenu.addLeave(leave);
   }
 
-  void item(String name, Function() body, {String cmd, bool solo, bool test}) {
+  void item(String name, Function() body, {String? cmd, bool? solo, bool? test}) {
     final item = TestItem.fn(name, body, cmd: cmd, solo: solo, test: test);
     testMenu.addItem(item);
     //_testMenu.add("print hi", () => print('hi'));
@@ -87,7 +87,7 @@ class Declarer {
     //_testMenu.length
 
     runner = Runner(this);
-    await runner.run();
+    await runner!.run();
 
     //TODO wait for completion
     return Future.value(runner);

@@ -10,7 +10,7 @@ abstract class TestMenuPresenter {
   void presentMenu(TestMenu menu);
 
   // prompt
-  Future<String> prompt(Object message);
+  Future<String?>? prompt(Object? message);
 
   // write the console
   void write(Object message);
@@ -33,7 +33,7 @@ class _NullTestMenuPresenter extends Object
   void presentMenu(TestMenu menu) {}
 
   @override
-  Future<String> prompt(Object message) {
+  Future<String>? prompt(Object? message) {
     return null;
   }
 
@@ -50,7 +50,7 @@ class NullTestMenuPresenter extends _NullTestMenuPresenter {
 }
 
 NullTestMenuPresenter nullTestMenuPresenter = NullTestMenuPresenter();
-TestMenuPresenter _testMenuPresenter;
+TestMenuPresenter? _testMenuPresenter;
 TestMenuPresenter get testMenuPresenter =>
     _testMenuPresenter ?? nullTestMenuPresenter;
 set testMenuPresenter(TestMenuPresenter testMenuPresenter) =>

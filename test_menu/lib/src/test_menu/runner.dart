@@ -32,8 +32,8 @@ class Runner {
 
     //List<List<TestItem> >
     final tree = <TestMenu>[];
-    List<TestMenu> soloTree;
-    RunnableTestItem soloTestItem;
+    List<TestMenu>? soloTree;
+    RunnableTestItem? soloTestItem;
     Future _handleSolo(TestMenu testMenu) async {
       tree.add(testMenu);
 
@@ -66,12 +66,12 @@ class Runner {
     if (!_hasSolo) {
       await pushMenu(testMenu);
     } else {
-      for (var testMenu in soloTree) {
+      for (var testMenu in soloTree!) {
         await pushMenu(testMenu);
       }
       try {
         if (soloTestItem != null) {
-          await testMenuManager.runItem(soloTestItem);
+          await testMenuManager!.runItem(soloTestItem!);
         }
       } catch (e, st) {
         print(e);
@@ -81,9 +81,9 @@ class Runner {
   }
 
   void write(Object message) {
-    testMenuPresenter?.write(message);
+    testMenuPresenter.write(message);
   }
 }
 
 // current runner
-Runner runner;
+Runner? runner;

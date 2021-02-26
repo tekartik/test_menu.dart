@@ -7,35 +7,30 @@ import 'package:tekartik_test_menu/test_menu_presenter.dart';
 bool get debugTestMenuManager => TestMenuManager.debug.on;
 
 // There is only one test menu manager
-TestMenuManager _testMenuManager;
+TestMenuManager? _testMenuManager;
 
-TestMenuManager get testMenuManager {
-  if (_testMenuManager == null) {
-    if (testMenuPresenter != null) {
-      _testMenuManager = TestMenuManager(testMenuPresenter);
-    } else {
-      throw ('Cannot tell whether you\'re running from io or browser. Please include the proper header');
-    }
-  }
+TestMenuManager? get testMenuManager {
+  _testMenuManager ??= TestMenuManager(testMenuPresenter);
+
   return _testMenuManager;
 }
 
-set testMenuManager(TestMenuManager testMenuManager) =>
+set testMenuManager(TestMenuManager? testMenuManager) =>
     _testMenuManager = testMenuManager;
 
 void initTestMenuManager() {}
 
 Future pushMenu(TestMenu menu) async {
   initTestMenuManager();
-  return await testMenuManager.pushMenu(menu);
+  return await testMenuManager!.pushMenu(menu);
 }
 
 Future<bool> popMenu() async {
-  return await testMenuManager.popMenu();
+  return await testMenuManager!.popMenu();
 }
 
 Future processMenu(TestMenu menu) async {
-  return await testMenuManager.processMenu(menu);
+  return await testMenuManager!.processMenu(menu);
 }
 
 class TestMenuManager {
@@ -45,14 +40,14 @@ class TestMenuManager {
   //TestMenu displayedMenu;
   Map<TestMenu, TestMenuRunner> menuRunners = {};
 
-  TestMenuRunner get activeMenuRunner {
+  TestMenuRunner? get activeMenuRunner {
     if (stackMenus.isNotEmpty) {
       return stackMenus.last;
     }
     return null;
   }
 
-  TestMenu get activeMenu => activeMenuRunner?.menu;
+  TestMenu? get activeMenu => activeMenuRunner?.menu;
 
   List<TestMenuRunner> get stackMenus => _stackMenus;
   final _stackMenus = <TestMenuRunner>[];
@@ -111,7 +106,7 @@ class TestMenuManager {
   /// Return when closed!
   Future showMenu(TestMenu menu) async {
     await pushMenu(menu);
-    await menuRunners[menu].done;
+    await menuRunners[menu]!.done;
   }
 
   bool stackContainsMenu(TestMenu menu) {
@@ -123,15 +118,15 @@ class TestMenuManager {
       return false;
     }
     if (menu.parent != null) {
-      if (!stackContainsMenu(menu.parent)) {
-        if (!_push(menu.parent)) {
+      if (!stackContainsMenu(menu.parent!)) {
+        if (!_push(menu.parent!)) {
           print('cant push ${menu.parent}');
           return false;
         }
       }
     }
     if (TestMenuManager.debug.on) {
-      write('[mgr] pushMenu $menu to ${testMenuManager.stackMenus}');
+      write('[mgr] pushMenu $menu to ${testMenuManager!.stackMenus}');
     }
     // Make sure parent runner exists
     final runner = TestMenuRunner(activeMenuRunner, menu);
@@ -155,15 +150,15 @@ class TestMenuManager {
     final activeMenuRunner = this.activeMenuRunner;
     if (TestMenuManager.debug.on) {
       write(
-          '[mgr] poping $activeMenuRunner from ${testMenuManager.stackMenus}');
+          '[mgr] poping $activeMenuRunner from ${testMenuManager!.stackMenus}');
     }
     final poped = _pop(count);
     if (poped && activeMenuRunner != null) {
       await activeMenuRunner.leave();
       if (TestMenuManager.debug.on) {
-        write('[mgr] pop presenting ${this.activeMenuRunner.menu}');
+        write('[mgr] pop presenting ${this.activeMenuRunner!.menu}');
       }
-      presenter.presentMenu(this.activeMenuRunner.menu);
+      presenter.presentMenu(this.activeMenuRunner!.menu);
     }
     return poped;
   }
@@ -212,16 +207,16 @@ class TestMenuManager {
   // Get or create the runner for a given item
   TestMenuRunner getRunner(WithParent item) {
     if (!(item.parent is RootTestMenu)) {
-      getRunner(item.parent);
+      getRunner(item.parent!);
     }
     var runner = menuRunners[item.parent];
     if (runner == null) {
       //devPrint('getRunner $item');
 
-      _push(item.parent);
+      _push(item.parent!);
       runner = menuRunners[item.parent];
     }
-    return runner;
+    return runner!;
   }
 
   // make sure the menu is entered first
@@ -239,7 +234,7 @@ class TestMenuManager {
   }
 
   /// Commands executed on startup
-  List<String> initCommands;
+  List<String>? initCommands;
 
   void stop() {
     // _inCommandSubscription.cancel();
@@ -271,7 +266,7 @@ class TestMenuManager {
       }
     } else {
       if (value != null) {
-        if (value >= 0 && value < menu.length) {
+        if (value >= 0 && value < menu!.length) {
           return runItem(menu[value]);
           // }
           //        if (value == -1) {
