@@ -7,9 +7,9 @@ import 'package:test/test.dart';
 void main() {
   group('io', () {
     test('solo', () async {
-      int a;
-      int b;
-      int c;
+      int? a;
+      int? b;
+      int? c;
       //testMenuNewDeclarer();
       menu('main', () {
         // ignore: deprecated_member_use

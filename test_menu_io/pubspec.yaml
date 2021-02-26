@@ -6,12 +6,12 @@ description: Simple io test menu
 author: Alexandre Roux <alex@tekartik.com>
 publish_to: none
 environment:
-  sdk: '>=2.10.0-0 <3.0.0'
+  sdk: '>=2.12.0-259.16.beta <3.0.0'
 dependencies:
   tekartik_test_menu:
     git:
       url: git://github.com/tekartik/test_menu.dart
-      ref: dart2
+      ref: null_safety
       path: test_menu
     version: '>=0.5.2'
 #  tekartik_pub:
@@ -27,7 +27,7 @@ dev_dependencies:
   tekartik_deploy:
     git:
       url: git://github.com/tekartik/deploy.dart
-      ref: dart2
+      ref: null_safety
 
 dependency_overrides:
   tekartik_test_menu:

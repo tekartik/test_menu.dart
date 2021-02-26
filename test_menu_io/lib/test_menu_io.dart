@@ -27,7 +27,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
 
   List<String> arguments;
 
-  bool verbose;
+  late bool verbose;
 
   _TestMenuManagerConsole(this.arguments) {
     var parser = ArgParser();
@@ -50,9 +50,9 @@ class _TestMenuManagerConsole extends TestMenuPresenter
   }
 
   // Not null if currently prompting
-  Completer<String> promptCompleter;
+  Completer<String>? promptCompleter;
 
-  TestMenu displayedMenu;
+  TestMenu? displayedMenu;
   bool _argumentsHandled = false;
 
   void _displayMenu(TestMenu menu) {
@@ -65,8 +65,8 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     }
   }
 
-  Stream<String> _inCommand;
-  StreamSubscription _inCommandSubscription;
+  Stream<String>? _inCommand;
+  StreamSubscription? _inCommandSubscription;
 
   bool done = false;
 
@@ -77,7 +77,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
           sharedStdIn.transform(utf8.decoder).transform(const LineSplitter());
 
       // Waiting forever on stdin
-      _inCommandSubscription = _inCommand.listen(handleLine);
+      _inCommandSubscription = _inCommand!.listen(handleLine);
     }
 
     //return _inCommand.
@@ -101,7 +101,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     }
 
     if (promptCompleter != null) {
-      promptCompleter.complete(line);
+      promptCompleter!.complete(line);
       //Future done = promptCompleter.future;
       promptCompleter = null;
       //return done;
@@ -127,11 +127,11 @@ class _TestMenuManagerConsole extends TestMenuPresenter
 
     // Help
     if (line == _helpCommand) {
-      _displayMenu(menu);
+      _displayMenu(menu!);
       return Future.value();
     }
 
-    final item = menu.byCmd(line);
+    final item = menu!.byCmd(line);
 
     var command = menu.command;
     // devPrint('menu.command $command');
@@ -141,7 +141,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
       }
 
       try {
-        await testMenuManager.runItem(item);
+        await testMenuManager!.runItem(item);
       } catch (_) {}
       // return new Future.sync(item.run).then((_) {
       if (verbose) {
@@ -153,7 +153,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
       }
 
       try {
-        await testMenuManager.runItem(item);
+        await testMenuManager!.runItem(item!);
       } catch (_) {}
       // return new Future.sync(item.run).then((_) {
       if (verbose) {
@@ -172,13 +172,13 @@ class _TestMenuManagerConsole extends TestMenuPresenter
 //readLine().listen(processLine);
 //}
 
-  List<String> initialCommands;
+  List<String>? initialCommands;
   int initialCommandIndex = 0;
 
   Future _nextLine([_]) {
     if (initialCommands != null) {
-      if (initialCommandIndex < initialCommands.length) {
-        final commandLine = initialCommands[initialCommandIndex++];
+      if (initialCommandIndex < initialCommands!.length) {
+        final commandLine = initialCommands![initialCommandIndex++];
         return processLine(commandLine).then(_nextLine);
       }
     }
@@ -189,7 +189,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     if (menu != displayedMenu) {
       _displayMenu(menu);
     }
-    final name = menu.name != null ? '${menu.name} ' : '';
+    final name = '${menu.name} ';
     stdout.write('$name> ');
 
 //      Completer<String> completer = new Completer();
@@ -238,7 +238,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
   }
 
   @override
-  Future<String> prompt(Object message) {
+  Future<String> prompt(Object? message) {
     //print('$TAG Prompt: $message');
     message ??= 'Enter text';
     stdout.write('$message > ');
@@ -265,15 +265,15 @@ class _TestMenuManagerConsole extends TestMenuPresenter
 void initTestMenuConsole(List<String> arguments) {
   _testMenuManagerConsole = _TestMenuManagerConsole(arguments);
   // set current
-  testMenuPresenter = _testMenuManagerConsole;
+  testMenuPresenter = _testMenuManagerConsole!;
 }
 
 /// To use when releasing stdin is needed
 Future<T> usingSharedStdIn<T>(Future<T> Function() action) {
-  return _testMenuManagerConsole.subInteractive<T>(action);
+  return _testMenuManagerConsole!.subInteractive<T>(action);
 }
 
-_TestMenuManagerConsole _testMenuManagerConsole;
+_TestMenuManagerConsole? _testMenuManagerConsole;
 
 /// Main menu declaration
 void mainMenu(List<String> arguments, void Function() declare) {
