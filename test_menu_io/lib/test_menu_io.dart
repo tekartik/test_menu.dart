@@ -61,7 +61,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
     for (var i = 0; i < menu.length; i++) {
       final item = menu[i];
       final cmd = item.cmd ?? '$i';
-      print('$cmd ${item}');
+      print('$cmd $item');
     }
   }
 

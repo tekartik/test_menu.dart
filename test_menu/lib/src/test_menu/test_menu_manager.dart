@@ -176,12 +176,12 @@ class TestMenuManager {
 
   bool _pop([int count = 1]) {
     if (TestMenuManager.debug.on) {
-      write('${stackMenus} poping $count');
+      write('$stackMenus poping $count');
     }
 
     if (stackMenus.length > count) {
       if (TestMenuManager.debug.on) {
-        write('${stackMenus} after poping $count');
+        write('$stackMenus after poping $count');
       }
       // Remove and clear menuRunners
       final start = stackMenus.length - count;
@@ -193,7 +193,7 @@ class TestMenuManager {
       stackMenus.removeRange(start, end);
 
       if (TestMenuManager.debug.on) {
-        write('${stackMenus} after poping $count');
+        write('$stackMenus after poping $count');
       }
       return true;
     }
