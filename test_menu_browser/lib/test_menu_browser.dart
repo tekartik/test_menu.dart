@@ -143,6 +143,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       for (final runner in testMenuManager!.stackMenus) {
         sb.write(' > ${runner.menu.name}');
       }
+      // ignore: unsafe_html
       header.setInnerHtml(sb.toString());
       Element list = UListElement();
 
@@ -152,6 +153,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         liElement = LIElement();
 
         liElement
+          // ignore: unsafe_html
           ..setInnerHtml(' - exit')
           ..onClick.listen((_) {
             testMenuManager!.popMenu();
@@ -164,11 +166,12 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         final item = menu[i];
         liElement = LIElement();
         liElement
-          ..setInnerHtml('$i ${item}')
+          // ignore: unsafe_html
+          ..setInnerHtml('$i $item')
           ..onClick.listen((_) {
-            print("running '$index ${item}'");
+            print("running '$index $item'");
             testMenuManager!.runItem(item).then((_) {
-              print("done '$index ${item}'");
+              print("done '$index $item'");
             });
           });
         list.children.add(liElement);

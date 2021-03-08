@@ -113,8 +113,8 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
         container!.children.addAll([output!, menuContainer!, form]);
       } else {
-        output = container!.querySelector('#${testMenuBrowserOutputId}');
-        menuContainer = container!.querySelector('#${testMenuBrowserMenuId}');
+        output = container!.querySelector('#$testMenuBrowserOutputId');
+        menuContainer = container!.querySelector('#$testMenuBrowserMenuId');
       }
     }
   }
@@ -218,17 +218,17 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
             ..append(SpanElement()
               ..className = listItemIcon
               ..appendText('$i'))
-            ..appendText('${item}'))
+            ..appendText('$item'))
           ..onClick.listen((_) {
-            print("[i] running '$i ${item}'");
+            print("[i] running '$i $item'");
             testMenuManager!.runItem(item).then((_) {
-              print("[i] done '$i ${item}'");
+              print("[i] done '$i $item'");
               initInputForMenu();
             });
           });
         list.children.add(liElement);
         if (debugTestMenuManager) {
-          print('$i ${item}');
+          print('$i $item');
         }
       }
 
