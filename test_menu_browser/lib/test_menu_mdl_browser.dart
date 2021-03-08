@@ -166,7 +166,8 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
         final menuPopCount = popCount--;
         void _clickOnMenu([_]) {
           //devPrint('Click on menu');
-          if (menuPopCount <= testMenuManager!.activeDepth && menuPopCount > 0) {
+          if (menuPopCount <= testMenuManager!.activeDepth &&
+              menuPopCount > 0) {
             testMenuManager!.popMenu(menuPopCount);
           } else {
             // Make the href is updated

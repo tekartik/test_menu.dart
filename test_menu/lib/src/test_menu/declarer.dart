@@ -76,7 +76,8 @@ class Declarer {
     testMenu.addLeave(leave);
   }
 
-  void item(String name, Function() body, {String? cmd, bool? solo, bool? test}) {
+  void item(String name, Function() body,
+      {String? cmd, bool? solo, bool? test}) {
     final item = TestItem.fn(name, body, cmd: cmd, solo: solo, test: test);
     testMenu.addItem(item);
     //_testMenu.add("print hi", () => print('hi'));
