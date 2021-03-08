@@ -164,11 +164,11 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         final item = menu[i];
         liElement = LIElement();
         liElement
-          ..setInnerHtml('$i ${item}')
+          ..setInnerHtml('$i $item')
           ..onClick.listen((_) {
-            print("running '$index ${item}'");
+            print("running '$index $item'");
             testMenuManager.runItem(item).then((_) {
-              print("done '$index ${item}'");
+              print("done '$index $item'");
             });
           });
         list.children.add(liElement);

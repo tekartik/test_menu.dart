@@ -1,7 +1,5 @@
 import 'package:dev_test/package.dart';
 import 'package:path/path.dart';
-import 'package:pub_semver/pub_semver.dart';
-import 'package:process_run/shell.dart';
 
 Future main() async {
   for (var dir in [
