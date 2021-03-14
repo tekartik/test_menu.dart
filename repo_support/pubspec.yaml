@@ -11,11 +11,10 @@ dev_dependencies:
   pedantic:
   path:
   pub_semver:
-  process_run:
-  tekartik_travis_ci_flutter:
+  chrome_travis:
     git:
-      url: git://github.com/tekartik/travis_ci_flutter.dart
-      ref: dart2
-    version: '>=0.1.0'
+      url: git://github.com/tekartik/chrome_travis.dart
+      ref: null_safety
+  process_run: '>=0.10.0'
 
 
