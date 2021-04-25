@@ -2,8 +2,8 @@ library tekartik_test_menu_console;
 
 import 'dart:io' hide stdin;
 
-import 'package:process_run/shell.dart';
 import 'package:args/args.dart';
+import 'package:process_run/shell.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
@@ -250,6 +250,7 @@ class _TestMenuManagerConsole extends TestMenuPresenter
   }
 
   final _interactiveLock = Lock();
+
   Future<T> subInteractive<T>(Future<T> Function() action) async {
     return await _interactiveLock.synchronized(() async {
       try {

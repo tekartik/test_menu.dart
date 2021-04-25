@@ -32,8 +32,8 @@ class TestMenuRunner {
     if (!entered) {
       entered = true;
       await parent?.enter();
-      for (var enter_ in menu.enters) {
-        await run(enter_);
+      for (var enter in menu.enters) {
+        await run(enter);
       }
     }
   }
