@@ -1,12 +1,13 @@
 library test_menu_test;
 
 import 'dart:async';
+
+import 'package:dev_test/test.dart';
 import 'package:tekartik_common_utils/async_utils.dart';
 import 'package:tekartik_test_menu/src/common_import.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
-import 'package:tekartik_test_menu/test_menu_presenter.dart';
-import 'package:dev_test/test.dart';
 import 'package:tekartik_test_menu/test_menu.dart';
+import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
 class TestMenuPresenter1 extends Object
     with TestMenuPresenterMixin
@@ -17,7 +18,9 @@ class TestMenuPresenter1 extends Object
     // set as presenter
     testMenuPresenter = this;
   }
+
   late TestMenu menu;
+
   @override
   void presentMenu(TestMenu menu) {
     this.menu = menu;
