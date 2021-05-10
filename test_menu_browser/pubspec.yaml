@@ -56,6 +56,10 @@ dev_dependencies:
 dependency_overrides:
   tekartik_test_menu:
     path: ../test_menu
+  # temp nnbd
+  build_runner: '<2.0.0'
+  build_web_compilers: '<3.0.0'
+
 #  tekartik_mdl_js:
 #    path: /opt/devx/git/github.com/alextekartik/mdl_js.dart
 #  platform_context:
