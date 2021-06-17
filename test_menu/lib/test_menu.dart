@@ -87,8 +87,8 @@ void solo_menu(String name, void Function() body, {String? cmd}) {
   menu(name, body, cmd: cmd, solo: true);
 }
 
-void write(Object message) {
-  testMenuPresenter.write(message);
+void write(Object? message) {
+  testMenuPresenter.write(message ?? '<null>');
 }
 
 /// Show a new menu.
