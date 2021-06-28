@@ -1,8 +1,10 @@
 import 'dart:async';
+
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 
 abstract class WithParent {
   TestMenu? get parent;
+
   set parent(TestMenu? parent);
 }
 
@@ -13,11 +15,14 @@ class _WithParentMixin implements WithParent {
 
 abstract class TestItem implements Runnable, WithParent {
   String? get cmd;
+
   String get name;
+
   factory TestItem.fn(String name, TestItemFn fn,
       {String? cmd, bool? solo, bool? test}) {
     return RunnableTestItem(name, fn, cmd: cmd, solo: solo, test: test);
   }
+
   factory TestItem.menu(TestMenu menu) {
     return MenuTestItem(menu);
   }
@@ -30,7 +35,9 @@ typedef TestCommandFn<R> = R Function(String command);
 abstract class _BaseTestItem {
   final bool? solo;
   String name;
+
   String? get cmd;
+
   _BaseTestItem(this.name, this.solo);
 
   @override
@@ -45,6 +52,7 @@ abstract class Runnable {
 
 class _RunnableMixin implements Runnable {
   late TestItemFn fn;
+
   @override
   dynamic run() {
     return fn();
@@ -65,6 +73,7 @@ class MenuEnter extends Object with _RunnableMixin, _WithParentMixin {
 // Unhandled command (?, ., -)
 class MenuCommand extends Object with _WithParentMixin {
   final TestCommandFn fn;
+
   MenuCommand(this.fn);
 
   @override
@@ -90,6 +99,7 @@ class RunnableTestItem extends _BaseTestItem
   @override
   String? cmd;
   final bool? test;
+
   RunnableTestItem(String name, TestItemFn fn,
       {this.cmd, this.test, bool? solo})
       : super(name, solo) {
@@ -101,8 +111,10 @@ class MenuTestItem extends _BaseTestItem
     with _WithParentMixin
     implements TestItem {
   TestMenu menu;
+
   @override
   String? get cmd => menu.cmd;
+
   MenuTestItem(this.menu) : super(menu.name, menu.solo);
 
   @override
@@ -128,19 +140,26 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
   final bool? group;
   final bool? solo;
   final _items = <TestItem>[];
+
   List<TestItem> get items => _items;
+
   int get length => _items.length;
+
   TestMenu(this.name, {this.cmd, this.group, this.solo});
+
   final _enters = <MenuEnter>[];
   final _leaves = <MenuLeave>[];
   MenuCommand? _command;
+
   Iterable<MenuEnter> get enters => _enters;
+
   Iterable<MenuLeave> get leaves => _leaves;
 
   /// The default command handlers.
   MenuCommand? get command => _command;
 
   void add(String name, TestItemFn fn) => addItem(TestItem.fn(name, fn));
+
   void fixParent(WithParent child) {
     child.parent = this;
   }
@@ -173,7 +192,9 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
   void addAll(List<TestItem> items) => items.forEach((TestItem item) {
         addItem(item);
       });
+
   TestItem operator [](int index) => _items[index];
+
   TestItem? byCmd(String cmd) {
     for (final item in _items) {
       if (item.cmd == cmd) {

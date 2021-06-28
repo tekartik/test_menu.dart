@@ -3,7 +3,7 @@ version: 0.6.1
 homepage: https://github.com/tekartik/test_menu.dart
 # git://github.com/tekartik/tekartik_test_menu.dart
 description: Simple io test menu
-author: Alexandre Roux <alex@tekartik.com>
+
 publish_to: none
 environment:
   sdk: '>=2.12.0-259.16.beta <3.0.0'
