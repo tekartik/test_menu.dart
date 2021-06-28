@@ -37,6 +37,7 @@ class TestMenuManager {
   final TestMenuPresenter presenter;
   var lock = Lock(reentrant: true);
   static final DevFlag debug = DevFlag('TestMenuManager');
+
   //TestMenu displayedMenu;
   Map<TestMenu, TestMenuRunner> menuRunners = {};
 
@@ -294,7 +295,7 @@ class TestMenuManager {
     }
   }
 
-  /*
+/*
   @deprecated
   void onProcessMenu(TestMenu menu) {
     if (!_initCommandHandled) {
@@ -315,5 +316,5 @@ class TestMenuManager {
   }
   */
 
-  //void onProcessItem(TestItem item) {}
+//void onProcessItem(TestItem item) {}
 }

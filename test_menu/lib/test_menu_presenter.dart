@@ -16,12 +16,14 @@ abstract class TestMenuPresenter {
   void write(Object message);
 
   Future preProcessItem(TestItem item);
+
   Future preProcessMenu(TestMenu menu);
 }
 
 abstract class TestMenuPresenterMixin implements TestMenuPresenter {
   @override
   Future preProcessItem(TestItem item) async {}
+
   @override
   Future preProcessMenu(TestMenu menu) async {}
 }
@@ -51,7 +53,9 @@ class NullTestMenuPresenter extends _NullTestMenuPresenter {
 
 NullTestMenuPresenter nullTestMenuPresenter = NullTestMenuPresenter();
 TestMenuPresenter? _testMenuPresenter;
+
 TestMenuPresenter get testMenuPresenter =>
     _testMenuPresenter ?? nullTestMenuPresenter;
+
 set testMenuPresenter(TestMenuPresenter testMenuPresenter) =>
     _testMenuPresenter = testMenuPresenter;
