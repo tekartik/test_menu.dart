@@ -207,7 +207,7 @@ class TestMenuManager {
 
   // Get or create the runner for a given item
   TestMenuRunner getRunner(WithParent item) {
-    if (!(item.parent is RootTestMenu)) {
+    if (item.parent is! RootTestMenu) {
       getRunner(item.parent!);
     }
     var runner = menuRunners[item.parent];

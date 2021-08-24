@@ -122,7 +122,7 @@ String indent(String text, {String? first}) {
   if (first != null) {
     return '$first $text';
   }
-  return '$text';
+  return text;
 }
 
 String prettyPrint(dynamic text, {String? first}) {
