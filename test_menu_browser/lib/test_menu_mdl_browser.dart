@@ -26,14 +26,14 @@ export 'test_menu_browser.dart' show jsTest;
 //import 'package:tekartik_mdl_js/mdl_js.dart';
 
 // 2019-01 deprecated
-@deprecated
-const String CONTAINER_ID = 'tekartik_test_menu_container';
-@deprecated
-const String MENU_ID = 'test_menu';
-@deprecated
-const String OUTPUT_ID = 'output';
-@deprecated
-const String INPUT_ID = 'input';
+@Deprecated('Use testMenuBrowserContainerId')
+const String CONTAINER_ID = testMenuBrowserContainerId;
+@Deprecated('Use testMenuBrowserMenuId')
+const String MENU_ID = testMenuBrowserMenuId;
+@Deprecated('Use testMenuBrowserOutputId')
+const String OUTPUT_ID = testMenuBrowserOutputId;
+@Deprecated('Use testMenuBrowserInputId')
+const String INPUT_ID = testMenuBrowserInputId;
 
 const String testMenuBrowserContainerId = 'tekartik_test_menu_container';
 const String testMenuBrowserMenuId = 'test_menu';

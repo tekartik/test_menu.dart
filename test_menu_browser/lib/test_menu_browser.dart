@@ -15,9 +15,9 @@ export 'package:tekartik_test_menu/test_menu.dart';
 
 export 'src/common_browser.dart';
 
-@deprecated
+@Deprecated('Use testMenuBrowserContainerId')
 // ignore: constant_identifier_names
-const String CONTAINER_ID = 'tekartik_test_menu_container';
+const String CONTAINER_ID = testMenuBrowserContainerId;
 const String testMenuBrowserContainerId = 'tekartik_test_menu_container';
 
 void jsTest(String name) {

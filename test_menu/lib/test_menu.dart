@@ -37,7 +37,7 @@ Declarer? testMenuNewDeclarer() {
 /// declaration must be sync
 ///
 void menu(String name, void Function() body,
-    {String? cmd, bool? group, @deprecated bool? solo}) {
+    {String? cmd, bool? group, @Deprecated('Dev only') bool? solo}) {
   _declarer!.menu(name, body, cmd: cmd, group: group, solo: solo);
 }
 
@@ -48,7 +48,7 @@ void menu(String name, void Function() body,
 ///
 /// @param cmd command shortcut (instead of incremental number)
 void item(String name, dynamic Function() body,
-    {String? cmd, @deprecated bool? solo, bool? test}) {
+    {String? cmd, @Deprecated('Dev only') bool? solo, bool? test}) {
   _declarer!.item(name, body, cmd: cmd, solo: solo, test: test);
 }
 
@@ -74,14 +74,14 @@ void leave(dynamic Function() body) {
 }
 
 // deprecated for temp usage only
-@deprecated
+@Deprecated('Dev only')
 // ignore: non_constant_identifier_names
 void solo_item(String name, dynamic Function() body, {String? cmd}) {
   item(name, body, cmd: cmd, solo: true);
 }
 
 // deprecated for temp usage only
-@deprecated
+@Deprecated('Dev only')
 // ignore: non_constant_identifier_names
 void solo_menu(String name, void Function() body, {String? cmd}) {
   menu(name, body, cmd: cmd, solo: true);
@@ -99,7 +99,7 @@ Future<void> showMenu(void Function() declare) async {
   await testMenuManager!.showMenu(controller.testMenu);
 }
 
-@deprecated
+@Deprecated('Dev only')
 void devWrite(Object message) => write(message);
 
 Future<String?>? prompt([Object? message]) {

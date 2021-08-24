@@ -189,9 +189,11 @@ class TestMenu extends Object with _WithParentMixin implements TestObject {
     _command = menuCommand;
   }
 
-  void addAll(List<TestItem> items) => items.forEach((TestItem item) {
-        addItem(item);
-      });
+  void addAll(List<TestItem> items) {
+    for (var item in items) {
+      addItem(item);
+    }
+  }
 
   TestItem operator [](int index) => _items[index];
 
