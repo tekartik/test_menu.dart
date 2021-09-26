@@ -1,9 +1,6 @@
 library test_menu_test;
 
-import 'dart:async';
-
 import 'package:dev_test/test.dart';
-import 'package:tekartik_common_utils/async_utils.dart';
 import 'package:tekartik_test_menu/src/common_import.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/test_menu.dart';

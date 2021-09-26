@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:stack_trace/stack_trace.dart';
 import 'package:tekartik_test_menu/src/common_import.dart';
 import 'package:tekartik_test_menu/src/expect.dart';

@@ -2,7 +2,6 @@ library test_menu_test;
 
 import 'package:dev_test/test.dart';
 import 'package:tekartik_test_menu/test.dart' as common_test;
-import 'package:tekartik_test_menu/test_menu.dart' as common_test;
 
 void main() {
   group('test', () {
