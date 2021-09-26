@@ -1,6 +1,5 @@
 library tekartik_test_menu_browser;
 
-import 'dart:html';
 import 'dart:js';
 
 import 'package:tekartik_browser_utils/location_info_utils.dart';
