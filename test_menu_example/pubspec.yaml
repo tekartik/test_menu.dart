@@ -1,7 +1,7 @@
 name: tekartik_test_menu_example
 version: 0.6.1
 homepage: https://github.com/tekartik/test_menu.dart
-# git://github.com/tekartik/tekartik_test_menu.dart
+# https://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu example
 
 publish_to: none
@@ -13,15 +13,15 @@ dependencies:
   test: '>=1.0.0'
   tekartik_test_menu_browser:
     git:
-      url: git://github.com/tekartik/test_menu.dart
+      url: https://github.com/tekartik/test_menu.dart
       path: test_menu_browser
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.4.7'
   tekartik_test_menu_io:
     git:
-      url: git://github.com/tekartik/test_menu.dart
+      url: https://github.com/tekartik/test_menu.dart
       path: test_menu_io
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.4.7'
 
 dev_dependencies:
