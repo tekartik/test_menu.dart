@@ -1,7 +1,7 @@
 name: tekartik_test_menu_browser
 version: 0.6.0
 homepage: https://github.com/tekartik/test_menu.dart
-# git://github.com/tekartik/tekartik_test_menu.dart
+# https://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
 
 publish_to: none
@@ -11,25 +11,25 @@ environment:
 dependencies:
   tekartik_test_menu:
     git:
-      url: git://github.com/tekartik/test_menu.dart
-      ref: null_safety
+      url: https://github.com/tekartik/test_menu.dart
+      ref: dart2_3
       path: test_menu
     version: '>=0.6.0'
   tekartik_mdl_js:
     git:
-      url: git://github.com/tekartik/mdl_js.dart
-      ref: null_safety
+      url: https://github.com/tekartik/mdl_js.dart
+      ref: dart2_3
     version: '>=0.4.0+1'
   tekartik_browser_utils:
     git:
-      url: git://github.com/tekartik/browser_utils.dart
-      ref: null_safety
+      url: https://github.com/tekartik/browser_utils.dart
+      ref: dart2_3
     version: '>=0.6.8+1'
   tekartik_platform_browser:
     git:
-      url: git://github.com/tekartik/platform.dart
+      url: https://github.com/tekartik/platform.dart
       path: platform_browser
-      ref: null_safety
+      ref: dart2_3
 
 dev_dependencies:
   process_run: '>=0.10.0+1'
@@ -38,17 +38,17 @@ dev_dependencies:
   test: any
   tekartik_pub:
     git:
-      url: git://github.com/tekartik/pub.dart
-      ref: null_safety
+      url: https://github.com/tekartik/pub.dart
+      ref: dart2_3
   chrome_travis:
     git:
-      url: git://github.com/tekartik/chrome_travis.dart
-      ref: null_safety
+      url: https://github.com/tekartik/chrome_travis.dart
+      ref: dart2_3
     version: '>=0.1.3'
   tekartik_deploy:
     git:
-      url: git://github.com/tekartik/deploy.dart
-      ref: null_safety
+      url: https://github.com/tekartik/deploy.dart
+      ref: dart2_3
   build_runner: '>=0.9.0'
   build_test: '>=0.10.2'
   build_web_compilers: '>=0.4.0'

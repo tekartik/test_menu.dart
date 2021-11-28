@@ -10,9 +10,9 @@ Add the following to pubspec.yaml
 dependencies:
   tekartik_test_menu_browser:
     git:
-      url: git://github.com/tekartik/test_menu.dart
+      url: https://github.com/tekartik/test_menu.dart
       path: test_menu_browser
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.4.7'
 ```        
 

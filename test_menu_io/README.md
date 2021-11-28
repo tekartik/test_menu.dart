@@ -4,7 +4,7 @@
 dependencies:
   tekartik_test_menu_io:
     git:
-      url: git://github.com/tekartik/test_menu.dart
-      ref: null_safety
+      url: https://github.com/tekartik/test_menu.dart
+      ref: dart2_3
       path: test_menu_io
 ```
