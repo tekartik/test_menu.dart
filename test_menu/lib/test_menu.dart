@@ -87,6 +87,7 @@ void solo_menu(String name, void Function() body, {String? cmd}) {
   menu(name, body, cmd: cmd, solo: true);
 }
 
+/// Write a line on the presenter
 void write(Object? message) {
   testMenuPresenter.write(message ?? '<null>');
 }
@@ -99,8 +100,11 @@ Future<void> showMenu(void Function() declare) async {
   await testMenuManager!.showMenu(controller.testMenu);
 }
 
+/// Write a line on the presenter, deprecated to make it a temp debug call
 @Deprecated('Dev only')
-void devWrite(Object message) => write(message);
+void devWrite(Object? message) {
+  write(message);
+}
 
 Future<String?>? prompt([Object? message]) {
   //return testMenuManager.prompt(message);
