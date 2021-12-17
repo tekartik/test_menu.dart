@@ -4,7 +4,7 @@ Future main() async {
   await initTestMenuBrowser();
 
   item('write hola', () async {
-    write('!Holadddr ezzllllaaaeeze');
+    write('!Hola');
     //write('RESULT prompt: ${await prompt()}');
   });
   item('prompt', () async {
