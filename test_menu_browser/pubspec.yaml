@@ -36,6 +36,7 @@ dev_dependencies:
   grinder: any
   dev_test: any
   test: any
+  path:
   tekartik_pub:
     git:
       url: https://github.com/tekartik/pub.dart

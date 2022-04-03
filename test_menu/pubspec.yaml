@@ -16,6 +16,7 @@ dependencies:
     version: '>=0.10.3'
   matcher: any
   meta: any
+  stack_trace:
 
 dev_dependencies:
   process_run: '>=0.10.0+1'

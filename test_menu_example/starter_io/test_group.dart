@@ -1,4 +1,4 @@
-import 'package:tekartik_test_menu/test.dart';
+import 'package:tekartik_test_menu/test.dart'; // ignore: depend_on_referenced_packages
 import 'package:tekartik_test_menu_io/test_menu_io.dart';
 
 void main(List<String> args) {

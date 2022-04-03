@@ -5,11 +5,11 @@ import 'package:tekartik_mdl_js/mdl_classes.dart';
 import 'package:tekartik_mdl_js/mdl_js_loader.dart';
 import 'package:tekartik_mdl_js/mdl_list.dart';
 import 'package:tekartik_mdl_js/mdl_textfield.dart';
-import 'package:tekartik_platform/context.dart';
 import 'package:tekartik_platform_browser/context_browser.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
+import 'package:tekartik_test_menu_browser/src/import.dart';
 
 import 'src/common_browser.dart';
 import 'test_menu_browser.dart' as browser;

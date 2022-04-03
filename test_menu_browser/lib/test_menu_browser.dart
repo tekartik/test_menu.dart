@@ -3,10 +3,10 @@ library tekartik_test_menu_browser;
 import 'dart:js';
 
 import 'package:tekartik_browser_utils/location_info_utils.dart';
-import 'package:tekartik_common_utils/out_buffer.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart'; // ignore: implementation_imports
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart'; // ignore: implementation_imports
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
+import 'package:tekartik_test_menu_browser/src/import.dart';
 
 import 'src/common_browser.dart';
 

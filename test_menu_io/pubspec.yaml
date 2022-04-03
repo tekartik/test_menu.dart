@@ -8,6 +8,8 @@ publish_to: none
 environment:
   sdk: '>=2.12.0-259.16.beta <3.0.0'
 dependencies:
+  args:
+  process_run:
   tekartik_test_menu:
     git:
       url: https://github.com/tekartik/test_menu.dart
@@ -20,7 +22,6 @@ dependencies:
 #      ref: dart2_3
 
 dev_dependencies:
-  process_run: '>=0.10.0+1'
   grinder: any
   dev_test: any
   test: any
