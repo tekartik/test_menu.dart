@@ -1,8 +1,9 @@
 library test_menu_console_interactive_test;
 
-import 'package:tekartik_common_utils/async_utils.dart';
-import 'package:tekartik_test_menu/test_menu.dart';
 //import 'package:tekartik_test_menu/src/common.dart';
+
+import 'package:tekartik_common_utils/async_utils.dart'; // ignore: depend_on_referenced_packages
+import 'package:tekartik_test_menu/test_menu.dart'; // ignore: depend_on_referenced_packages
 
 // basic '0;-'
 void main() {

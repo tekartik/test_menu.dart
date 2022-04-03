@@ -62,8 +62,8 @@ class Runner {
     // look for solo stuff
     await _handleSolo(testMenu);
 
-    final _hasSolo = soloTree != null;
-    if (!_hasSolo) {
+    final hasSolo = soloTree != null;
+    if (!hasSolo) {
       await pushMenu(testMenu);
     } else {
       for (var testMenu in soloTree!) {
