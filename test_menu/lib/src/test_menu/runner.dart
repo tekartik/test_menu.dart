@@ -34,7 +34,7 @@ class Runner {
     final tree = <TestMenu>[];
     List<TestMenu>? soloTree;
     RunnableTestItem? soloTestItem;
-    Future _handleSolo(TestMenu testMenu) async {
+    Future handleSolo(TestMenu testMenu) async {
       tree.add(testMenu);
 
       // handle solo_menu
@@ -53,14 +53,14 @@ class Runner {
             //await item.run();
           }
         } else if (item is MenuTestItem) {
-          await _handleSolo(item.menu);
+          await handleSolo(item.menu);
         }
       }
       tree.remove(testMenu);
     }
 
     // look for solo stuff
-    await _handleSolo(testMenu);
+    await handleSolo(testMenu);
 
     final hasSolo = soloTree != null;
     if (!hasSolo) {

@@ -164,7 +164,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       for (final runner in testMenuManager!.stackMenus) {
         final testMenu = runner.menu;
         final menuPopCount = popCount--;
-        void _clickOnMenu([_]) {
+        void clickOnMenu([_]) {
           //devPrint('Click on menu');
           if (menuPopCount <= testMenuManager!.activeDepth &&
               menuPopCount > 0) {
@@ -177,7 +177,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
         header.append(buttonCreate()
           ..text = testMenu.name
-          ..onClick.listen(_clickOnMenu));
+          ..onClick.listen(clickOnMenu));
         /*
         header.append(new AnchorElement(href: '#')
           ..text = ' > ${testMenu.name}'
