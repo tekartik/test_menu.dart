@@ -23,6 +23,9 @@ Future main(List<String> arguments) async {
       command((command) {
         write('Got command: $command');
       });
+      item('write hola', () {
+        write('Hola');
+      });
     });
 
     item('dynamic menu', () async {

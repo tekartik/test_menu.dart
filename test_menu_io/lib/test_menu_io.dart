@@ -153,11 +153,11 @@ class _TestMenuManagerConsole extends TestMenuPresenter
       }
 
       try {
-        await testMenuManager!.runItem(item!);
+        await command.fn(line);
       } catch (_) {}
       // return new Future.sync(item.run).then((_) {
       if (verbose) {
-        print("$tag done '$item'");
+        print("$tag done '$command'");
       }
     } else {
       print('errorValue: $line');
