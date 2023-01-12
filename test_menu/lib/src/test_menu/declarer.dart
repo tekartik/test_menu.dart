@@ -66,17 +66,17 @@ class Declarer {
     testMenu.setCommand(command);
   }
 
-  void enter(Function() body) {
+  void enter(dynamic Function() body) {
     final enter = MenuEnter(body);
     testMenu.addEnter(enter);
   }
 
-  void leave(Function() body) {
+  void leave(dynamic Function() body) {
     final leave = MenuLeave(body);
     testMenu.addLeave(leave);
   }
 
-  void item(String name, Function() body,
+  void item(String name, dynamic Function() body,
       {String? cmd, bool? solo, bool? test}) {
     final item = TestItem.fn(name, body, cmd: cmd, solo: solo, test: test);
     testMenu.addItem(item);
