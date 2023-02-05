@@ -8,7 +8,7 @@ import 'package:tekartik_test_menu/test_menu_presenter.dart';
 class TestMenuRunner {
   final TestMenu menu;
   final TestMenuRunner? parent;
-  final _doneCompleter = Completer.sync();
+  final _doneCompleter = Completer<void>.sync();
 
   /// Completed when poped
   Future<void> get done => _doneCompleter.future;

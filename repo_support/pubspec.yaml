@@ -4,17 +4,12 @@ version: 0.2.0
 publish_to: none
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.18.0 <3.0.0'
 
 dev_dependencies:
   dev_test: '>=0.13.0'
-  pedantic:
   path:
   pub_semver:
-  chrome_travis:
-    git:
-      url: https://github.com/tekartik/chrome_travis.dart
-      ref: dart2_3
+  lints:
   process_run: '>=0.10.0'
-
 
