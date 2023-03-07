@@ -22,19 +22,11 @@ dev_dependencies:
   process_run: '>=0.10.0+1'
   dev_test: any
   test: any
-  tekartik_pub:
-    git:
-      url: https://github.com/tekartik/pub.dart
-      ref: dart2_3
   tekartik_browser_utils:
     git:
       url: https://github.com/tekartik/browser_utils.dart
       ref: dart2_3
     version: '>=0.5.0'
-  tekartik_deploy:
-    git:
-      url: https://github.com/tekartik/deploy.dart
-      ref: dart2_3
 
 dependency_overrides:
 #  tekartik_mdl_js:

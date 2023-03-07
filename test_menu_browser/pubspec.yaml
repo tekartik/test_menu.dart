@@ -39,18 +39,9 @@ dependencies:
 
 dev_dependencies:
   process_run: '>=0.10.0+1'
-  grinder: any
   dev_test: any
   test: any
   path:
-  tekartik_pub:
-    git:
-      url: https://github.com/tekartik/pub.dart
-      ref: dart2_3
-  tekartik_deploy:
-    git:
-      url: https://github.com/tekartik/deploy.dart
-      ref: dart2_3
   build_runner: '>=0.9.0'
   build_test: '>=0.10.2'
   build_web_compilers: '>=0.4.0'
