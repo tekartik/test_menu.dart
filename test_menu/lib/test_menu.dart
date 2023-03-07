@@ -73,18 +73,24 @@ void leave(dynamic Function() body) {
   _declarer!.leave(body);
 }
 
-// deprecated for temp usage only
+/// Unless [solo] is set to false, will run as solo.
+///
+/// Deprecated for temp usage only.
 @Deprecated('Dev only')
 // ignore: non_constant_identifier_names
-void solo_item(String name, dynamic Function() body, {String? cmd}) {
-  item(name, body, cmd: cmd, solo: true);
+void solo_item(String name, dynamic Function() body,
+    {String? cmd, @Deprecated('Dev only') bool? solo}) {
+  item(name, body, cmd: cmd, solo: solo ?? true);
 }
 
-// deprecated for temp usage only
+/// Unless [solo] is set to false, will run as solo.
+///
+/// Deprecated for temp usage only.
 @Deprecated('Dev only')
 // ignore: non_constant_identifier_names
-void solo_menu(String name, void Function() body, {String? cmd}) {
-  menu(name, body, cmd: cmd, solo: true);
+void solo_menu(String name, void Function() body,
+    {String? cmd, @Deprecated('Dev only') bool? solo}) {
+  menu(name, body, cmd: cmd, solo: solo ?? true);
 }
 
 /// Write a line on the presenter
