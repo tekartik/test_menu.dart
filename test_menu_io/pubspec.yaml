@@ -9,6 +9,7 @@ environment:
   sdk: '>=2.18.0 <3.0.0'
 dependencies:
   args:
+  dev_test:
   process_run:
   tekartik_test_menu:
     git:
@@ -22,7 +23,6 @@ dependencies:
 #      ref: dart2_3
 
 dev_dependencies:
-  dev_test: any
   test: any
 
 dependency_overrides:
