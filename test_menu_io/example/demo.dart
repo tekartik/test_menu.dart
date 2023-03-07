@@ -1,6 +1,9 @@
+import 'package:tekartik_test_menu_io/key_value_io.dart';
 import 'package:tekartik_test_menu_io/test_menu_io.dart';
 
 //import '
+var myVar = 'MYVAR'.kvFromEnv(defaultValue: '12345');
+var myOtherVar = 'MYOTHERVAR'.kvFromEnv();
 
 Future main(List<String> arguments) async {
   mainMenu(arguments, () {
@@ -15,6 +18,9 @@ Future main(List<String> arguments) async {
     item('crash', () {
       throw 'Hi';
     });
+    keyValuesMenu('vars', [myVar, myOtherVar]);
+    keyValuesMenu(
+        'vars2', [myVar, myOtherVar, myVar, myOtherVar, myVar, myOtherVar]);
     menu('sub', () {
       item('write hi', () => write('hi'));
     });

@@ -3,10 +3,12 @@ library test_menu_console_interactive_test;
 import 'package:tekartik_test_menu/test_menu.dart';
 
 import 'src/import.dart';
-//import 'package:tekartik_test_menu/src/common.dart';
 
-// basic '0;-'
 void main() {
+  commonTestMenu();
+}
+
+void commonTestMenu() {
   menu('main', () {
     item('write hola', () async {
       write('Hola');

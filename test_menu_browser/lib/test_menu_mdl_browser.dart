@@ -279,3 +279,9 @@ Future initTestMenuBrowser({List<String>? js}) async {
 }
 
 TestMenuManagerBrowser? _testMenuManagerBrowser;
+
+/// Main menu declaration
+Future<void> mainMenu(void Function() declare, {List<String>? js}) async {
+  await initTestMenuBrowser(js: js);
+  declare();
+}
