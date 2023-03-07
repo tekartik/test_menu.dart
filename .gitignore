@@ -29,3 +29,10 @@ pubspec.lock
 
 # WebStorm
 .idea/
+*.iml
+.vscode/
+
+# Local
+.local
+
+# Local

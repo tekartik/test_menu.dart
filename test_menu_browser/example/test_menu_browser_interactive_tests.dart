@@ -17,5 +17,5 @@ void main() {
   showTestMenu(menu);
   */
 
-  common_test_menu.main();
+  common_test_menu.commonTestMenu();
 }
