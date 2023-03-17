@@ -100,11 +100,11 @@ class _TestMenuManagerConsole extends TestMenuPresenter
       print('$tag Line: $line');
     }
 
-    if (promptCompleter != null) {
-      promptCompleter!.complete(line);
-      //Future done = promptCompleter.future;
+    var currentPromptCompleter = promptCompleter;
+    if (currentPromptCompleter != null) {
+      // since it is a async controller, make sure to set it no null first
       promptCompleter = null;
-      //return done;
+      currentPromptCompleter.complete(line);
       return Future.value();
     }
     final menu = displayedMenu;
