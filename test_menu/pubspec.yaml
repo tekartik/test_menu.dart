@@ -7,12 +7,12 @@ description: Simple test menu
 publish_to: none
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 dependencies:
   tekartik_common_utils:
     git:
       url: https://github.com/tekartik/common_utils.dart
-      ref: dart2_3
+      ref: dart3a
     version: '>=0.10.3'
   matcher: any
   meta: any
@@ -25,7 +25,7 @@ dev_dependencies:
   tekartik_browser_utils:
     git:
       url: https://github.com/tekartik/browser_utils.dart
-      ref: dart2_3
+      ref: dart3a
     version: '>=0.5.0'
 
 dependency_overrides:
