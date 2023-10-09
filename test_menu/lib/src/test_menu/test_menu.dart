@@ -8,7 +8,7 @@ abstract class WithParent {
   set parent(TestMenu? parent);
 }
 
-class _WithParentMixin implements WithParent {
+mixin class _WithParentMixin implements WithParent {
   @override
   TestMenu? parent;
 }
@@ -50,7 +50,7 @@ abstract class Runnable {
   dynamic run();
 }
 
-class _RunnableMixin implements Runnable {
+mixin class _RunnableMixin implements Runnable {
   late TestItemFn fn;
 
   @override

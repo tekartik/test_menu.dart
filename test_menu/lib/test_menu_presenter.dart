@@ -20,7 +20,7 @@ abstract class TestMenuPresenter {
   Future preProcessMenu(TestMenu menu);
 }
 
-abstract class TestMenuPresenterMixin implements TestMenuPresenter {
+abstract mixin class TestMenuPresenterMixin implements TestMenuPresenter {
   @override
   Future preProcessItem(TestItem item) async {}
 

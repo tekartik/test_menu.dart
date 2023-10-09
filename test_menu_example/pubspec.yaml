@@ -7,7 +7,7 @@ description: Simple test menu example
 publish_to: none
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   process_run:
@@ -16,13 +16,13 @@ dependencies:
     git:
       url: https://github.com/tekartik/test_menu.dart
       path: test_menu_browser
-      ref: dart2_3
+      ref: dart3a
     version: '>=0.4.7'
   tekartik_test_menu_io:
     git:
       url: https://github.com/tekartik/test_menu.dart
       path: test_menu_io
-      ref: dart2_3
+      ref: dart3a
     version: '>=0.4.7'
 
 dev_dependencies:

@@ -12,7 +12,7 @@ dependencies:
     git:
       url: https://github.com/tekartik/test_menu.dart
       path: test_menu_browser
-      ref: dart2_3
+      ref: dart3a
     version: '>=0.4.7'
 ```        
 

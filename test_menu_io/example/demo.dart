@@ -14,6 +14,10 @@ Future main(List<String> arguments) async {
     item('prompt', () async {
       write('RESULT prompt: ${await prompt('Some text please then [ENTER]')}');
     });
+    item('prompt twice', () async {
+      write('RESULT prompt: ${await prompt('Some text please then [ENTER]')}');
+      write('RESULT prompt: ${await prompt('Some text please then [ENTER]')}');
+    });
 
     item('crash', () {
       throw 'Hi';
