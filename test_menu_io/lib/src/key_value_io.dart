@@ -7,10 +7,19 @@ extension KeyValueIoExt on KeyValue {
   Future<KeyValue> promptToEnv() async {
     var newValue = await prompt('$key${valid ? ' ($value)' : ''}') ?? '';
     if (newValue.isNotEmpty) {
-      await setEnvVar(key, newValue);
-      value = newValue;
+      await setToEnv(newValue);
     }
     return this;
+  }
+
+  Future<void> setToEnv(String value) async {
+    await setEnvVar(key, value);
+    this.value = value;
+  }
+
+  Future<void> deleteFromEnv() async {
+    await deleteEnvVar(key);
+    value = null;
   }
 }
 

@@ -6,11 +6,15 @@ Console and Browser simple test menu for dart test applications
 
 Add the following to pubspec.yaml
 
-    dependencies:
-      tekartik_test_menu:
-        git: https://github.com/tekartik/test_menu.dart
-        version: '>=0.4.0'
-        
+```yaml
+dependencies:
+  tekartik_test_menu:
+    git:
+      url: https://github.com/tekartik/test_menu.dart
+      path: test_menu
+      ref: dart3a
+      version: '>=0.4.0'
+```
 
 copy `starter_xxx` to you project to get started
 
