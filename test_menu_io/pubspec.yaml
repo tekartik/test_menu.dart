@@ -9,7 +9,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 dependencies:
   args:
-  dev_test:
+  dev_build:
   process_run:
   tekartik_test_menu:
     git:
