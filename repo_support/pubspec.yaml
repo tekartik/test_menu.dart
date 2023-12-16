@@ -10,6 +10,6 @@ dev_dependencies:
   dev_test: '>=0.13.0'
   path:
   pub_semver:
-  lints:
+  lints: '>=2.0.0'
   process_run: '>=0.10.0'
 
