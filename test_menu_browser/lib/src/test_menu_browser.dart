@@ -106,7 +106,9 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         if (item == null) {
           continue;
         }
-        if (item is MenuTestItem) {
+        // ignore: dead_code
+        if (false) {
+          // item is DevTestItem) {
           // index = stackMenus[stackMenus.length - 2].indexOfItem(item);
           // nothing
           continue;

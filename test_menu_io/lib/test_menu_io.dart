@@ -10,6 +10,7 @@ import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
 import 'src/common_io.dart';
 
+export 'package:dev_build/menu/menu_io.dart';
 export 'package:tekartik_test_menu/test_menu.dart';
 
 export 'src/common_io.dart';
