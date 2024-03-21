@@ -1,7 +1,5 @@
 library test_menu_console_interactive_test;
 
-// ignore: depend_on_referenced_packages
-import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_test_menu_io/test_menu_io.dart';
 
 void main(List<String> arguments) {

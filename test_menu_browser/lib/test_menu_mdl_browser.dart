@@ -1,5 +1,6 @@
 library tekartik_test_menu_mdl_browser;
 
+import 'dart:html';
 import 'package:tekartik_mdl_js/mdl_button.dart';
 import 'package:tekartik_mdl_js/mdl_classes.dart';
 import 'package:tekartik_mdl_js/mdl_js_loader.dart';
