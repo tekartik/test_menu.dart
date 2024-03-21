@@ -10,6 +10,9 @@ export 'package:dev_build/src/menu/io/menu_io_console.dart'
     show usingSharedStdIn;
 
 /// Compat
+export 'src/common_io.dart';
+
+/// Compat
 Future<void> testMenuRun() async {
   await menuRun();
 }
