@@ -1,15 +1,15 @@
 name: tekartik_test_menu_io
-version: 0.8.0+1
+version: 0.8.0+3
 homepage: https://github.com/tekartik/test_menu.dart
 # https://github.com/tekartik/tekartik_test_menu.dart
 description: Simple io test menu
 
 publish_to: none
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 dependencies:
   args:
-  dev_build:
+  dev_build: '>=0.16.5-6'
   process_run:
   tekartik_test_menu:
     git:
@@ -28,7 +28,8 @@ dev_dependencies:
 dependency_overrides:
   tekartik_test_menu:
     path: ../test_menu
-
+  # dev_build:
+  #  path: ../../../tekartik/dev_test.dart/dev_build
 #  tekartik_mdl_js:
 #    path: /opt/devx/git/github.com/alextekartik/mdl_js.dart
 #  platform_context:

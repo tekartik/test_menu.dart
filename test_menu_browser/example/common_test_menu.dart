@@ -1,10 +1,9 @@
 library test_menu_console_interactive_test;
 
-import 'package:tekartik_test_menu/test_menu.dart';
+import 'package:tekartik_test_menu_io/test_menu_io.dart';
 
-import 'src/import.dart';
-
-void main() {
+void main(List<String> arguments) {
+  initTestMenuConsole(arguments);
   commonTestMenu();
 }
 

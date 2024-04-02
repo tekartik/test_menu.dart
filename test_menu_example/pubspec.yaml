@@ -7,7 +7,7 @@ description: Simple test menu example
 publish_to: none
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   process_run:
@@ -37,7 +37,8 @@ dependency_overrides:
     path: ../test_menu_browser
   tekartik_test_menu:
       path: ../test_menu
-
+  # dev_build:
+  #  path: ../../../tekartik/dev_test.dart/dev_build
 #  tekartik_mdl_js:
 #    path: /opt/devx/git/github.com/alextekartik/mdl_js.dart
 #  platform_context:

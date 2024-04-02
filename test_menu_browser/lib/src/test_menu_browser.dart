@@ -1,5 +1,6 @@
 library tekartik_test_menu_browser;
 
+import 'dart:html';
 import 'dart:js';
 
 import 'package:tekartik_browser_utils/location_info_utils.dart';
@@ -106,7 +107,9 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         if (item == null) {
           continue;
         }
-        if (item is MenuTestItem) {
+        // ignore: dead_code
+        if (false) {
+          // item is DevTestItem) {
           // index = stackMenus[stackMenus.length - 2].indexOfItem(item);
           // nothing
           continue;

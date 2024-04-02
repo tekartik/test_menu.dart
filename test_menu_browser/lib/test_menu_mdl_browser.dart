@@ -1,5 +1,6 @@
 library tekartik_test_menu_mdl_browser;
 
+import 'dart:html';
 import 'package:tekartik_mdl_js/mdl_button.dart';
 import 'package:tekartik_mdl_js/mdl_classes.dart';
 import 'package:tekartik_mdl_js/mdl_js_loader.dart';
@@ -255,6 +256,10 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
   }
 }
 
+Future initMenuBrowser({List<String>? js}) async {
+  await initTestMenuBrowser(js: js);
+}
+
 Future initTestMenuBrowser({List<String>? js}) async {
   var futures = [
     loadMdlJs(),
@@ -282,6 +287,11 @@ TestMenuManagerBrowser? _testMenuManagerBrowser;
 
 /// Main menu declaration
 Future<void> mainMenu(void Function() declare, {List<String>? js}) async {
+  await mainMenuBrowser(declare, js: js);
+}
+
+Future<void> mainMenuBrowser(void Function() declare,
+    {List<String>? js}) async {
   await initTestMenuBrowser(js: js);
   declare();
 }
