@@ -1,17 +1,17 @@
-library tekartik_test_menu_browser;
+library;
 
-import 'dart:async';
-import 'dart:html';
-import 'dart:js';
+import 'dart:js_interop' hide JSAnyOperatorExtension;
+import 'dart:js_interop_unsafe';
 
+//import 'package:tekartik_browser_utils/browser_utils_import.dart';
+import 'package:tekartik_browser_utils/css_utils.dart';
 import 'package:tekartik_browser_utils/location_info_utils.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart'; // ignore: implementation_imports
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart'; // ignore: implementation_imports
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'package:tekartik_test_menu_browser/src/common_browser.dart';
 import 'package:tekartik_test_menu_browser/src/import.dart';
-import 'package:tekartik_test_menu_browser/test_menu_web.dart'
-    show testMenuLoadJs;
+import 'package:web/web.dart';
 
 export 'package:tekartik_test_menu/test_menu.dart';
 export 'package:tekartik_test_menu_browser/src/common_browser.dart';
@@ -22,7 +22,7 @@ const String CONTAINER_ID = testMenuBrowserContainerId;
 const String testMenuBrowserContainerId = 'tekartik_test_menu_container';
 
 void jsTest(String name) {
-  context.callMethod(name);
+  globalContext.callMethod(name.toJS);
 }
 
 // can be extended
@@ -33,7 +33,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
   Element? menuContainer;
   Element? output;
-  InputElement? basicInput;
+  HTMLInputElement? basicInput;
 
   var outBuffer = OutBuffer(100);
 
@@ -72,11 +72,12 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     if (container == null) {
       container = document.getElementById(testMenuBrowserContainerId);
       if (container == null) {
-        container = DivElement();
-        document.body!.children.add(container!);
+        container = HTMLDivElement();
+        document.body!.appendChild(container!);
+        print('body: ${document.body!.innerHTML}');
       }
 
-      basicInput = InputElement();
+      basicInput = HTMLInputElement();
 
       basicInput!.onChange.listen((_) {
         // devPrint('on change: ${basicInput.value}');
@@ -86,11 +87,14 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         }
       });
 
-      menuContainer = DivElement();
+      menuContainer = HTMLDivElement();
 
-      output = PreElement();
+      output = HTMLPreElement.pre();
 
-      container!.children.addAll([output!, menuContainer!, basicInput!]);
+      container!
+        ..appendChild(output!)
+        ..appendChild(menuContainer!)
+        ..appendChild(basicInput!);
     }
   }
 
@@ -140,50 +144,55 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     findContainer();
 
     if (displayedMenu != menu) {
-      Element header = HeadingElement.h3();
+      Element header = HTMLHeadingElement.h3();
       final sb = StringBuffer();
       for (final runner in testMenuManager!.stackMenus) {
         sb.write(' > ${runner.menu.name}');
       }
       // ignore: unsafe_html
-      header.setInnerHtml(sb.toString());
-      Element list = UListElement();
+      header.innerHTML = sb.toString();
+      Element list = HTMLUListElement();
 
-      LIElement liElement;
+      HTMLLIElement liElement;
 
       if (testMenuManager!.activeDepth > 0) {
-        liElement = LIElement();
+        liElement = HTMLLIElement();
 
         liElement
           // ignore: unsafe_html
-          ..setInnerHtml(' - exit')
+          ..innerHTML = ' - exit'
           ..onClick.listen((_) {
             testMenuManager!.popMenu();
           });
-        list.children.add(liElement);
+        list.appendChild(liElement);
       }
 
       for (var i = 0; i < menu.length; i++) {
         final index = i;
         final item = menu[i];
-        liElement = LIElement();
+        liElement = HTMLLIElement();
         liElement
           // ignore: unsafe_html
-          ..setInnerHtml('$i $item')
+          ..innerHTML = ('$i $item')
           ..onClick.listen((_) {
             print("running '$index $item'");
             testMenuManager!.runItem(item).then((_) {
               print("done '$index $item'");
             });
           });
-        list.children.add(liElement);
+        list.appendChild(liElement);
         //print('$i ${item}');
       }
 
+      var children = menuContainer!.children;
       displayedMenu = menu;
-      menuContainer!.children
-        ..clear()
-        ..addAll([header, list]);
+      for (var i = 0; i < children.length; i++) {
+        children.item(i)!.remove();
+      }
+
+      menuContainer!
+        ..appendChild(header)
+        ..appendChild(list);
     }
   }
 
@@ -194,7 +203,20 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 }
 
 Future<void> initTestMenuBrowser({List<String>? jsFiles}) async {
-  await testMenuLoadJs(jsFiles);
+  var futures = [
+    testMenuLoadJs(jsFiles),
+    () async {
+      // print('Loading timesheet');
+      try {
+        await loadStylesheet(
+            'packages/tekartik_test_menu_browser/css/test_menu_web.css');
+        print('Loaded timesheet');
+      } catch (e) {
+        print('Error loading timesheet: $e');
+      }
+    }()
+  ];
+  await Future.wait(futures);
   _testMenuManagerBrowser = TestMenuManagerBrowser();
 
   testMenuPresenter = _testMenuManagerBrowser!;
@@ -202,6 +224,14 @@ Future<void> initTestMenuBrowser({List<String>? jsFiles}) async {
   initTestMenuManager();
   final hash = window.location.hash;
   testMenuManager!.initCommands = TestMenuManager.initCommandsFromHash(hash);
+}
+
+Future testMenuLoadJs(List<String>? jsFiles) async {
+  if (jsFiles != null) {
+    for (final jsFile in jsFiles) {
+      await loadJavascriptScript(jsFile);
+    }
+  }
 }
 
 TestMenuManagerBrowser? _testMenuManagerBrowser;

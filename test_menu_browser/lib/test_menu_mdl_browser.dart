@@ -1,6 +1,8 @@
 library tekartik_test_menu_mdl_browser;
 
 import 'dart:html';
+
+import 'package:tekartik_browser_utils/css_utils.dart';
 import 'package:tekartik_mdl_js/mdl_button.dart';
 import 'package:tekartik_mdl_js/mdl_classes.dart';
 import 'package:tekartik_mdl_js/mdl_js_loader.dart';
@@ -13,8 +15,8 @@ import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'package:tekartik_test_menu_browser/src/import.dart';
 
 import 'src/common_browser.dart';
-import 'test_menu_browser.dart' as browser;
 import 'test_menu_browser.dart' as common_browser;
+import 'test_menu_web.dart' as browser;
 
 export 'package:tekartik_test_menu/test_menu.dart';
 

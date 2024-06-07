@@ -1,6 +1,6 @@
-library test_menu;
+library;
 
-import 'package:tekartik_test_menu_browser/test_menu_browser.dart';
+import 'package:tekartik_test_menu_browser/test_menu_web.dart';
 //import '
 
 void main() async {

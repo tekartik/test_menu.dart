@@ -1,11 +1,12 @@
-import 'dart:html' as html;
+import 'package:tekartik_browser_utils/storage_utils.dart';
 
+@Deprecated('Use webLocalStorageSet')
 void setLocalStorageVar(String key, String value) =>
-    html.window.localStorage[key] = value;
+    webLocalStorageSet(key, value);
 
-String? getLocalStorageVar(String key) => html.window.localStorage[key];
+@Deprecated('Use webLocalStorageGet')
+String? getLocalStorageVar(String key) => webLocalStorageGet(key);
 
 /// Delete an env var
-void deleteLocalStorageVar(String key) {
-  html.window.localStorage.remove(key);
-}
+@Deprecated('Use webLocalStorageRemove')
+void deleteLocalStorageVar(String key) => webLocalStorageRemove(key);

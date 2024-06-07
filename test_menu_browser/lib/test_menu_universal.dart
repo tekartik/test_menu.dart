@@ -5,3 +5,8 @@ export 'package:tekartik_test_menu/test_menu.dart';
 Future<void> mainMenu(List<String> arguments, void Function() declare) async {
   await platformMainMenu(arguments, declare);
 }
+
+Future<void> mainMenuUniversal(
+    List<String> arguments, void Function() declare) async {
+  await platformMainMenu(arguments, declare);
+}
