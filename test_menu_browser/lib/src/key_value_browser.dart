@@ -1,13 +1,13 @@
+import 'package:tekartik_browser_utils/storage_utils.dart';
 import 'package:tekartik_test_menu/key_value.dart';
 import 'package:tekartik_test_menu/test_menu.dart';
-import 'package:tekartik_test_menu_browser/src/vars_browser.dart';
 
 extension KeyValueBrowserExt on KeyValue {
   /// Prompt env and global save
   Future<KeyValue> promptToLocalStorage() async {
     var newValue = await prompt('$key${valid ? ' ($value)' : ''}') ?? '';
     if (newValue.isNotEmpty) {
-      setLocalStorageVar(key, newValue);
+      webLocalStorageSet(key, newValue);
       value = newValue;
     }
     return this;
@@ -37,7 +37,7 @@ extension KeyValueKeyBrowserExt on String {
   }
 
   String? fromLocalStorage({String? defaultValue}) {
-    var value = _exportCache[this] ??= getLocalStorageVar(this) ?? defaultValue;
+    var value = _exportCache[this] ??= webLocalStorageGet(this) ?? defaultValue;
     return value;
   }
 }
@@ -73,7 +73,7 @@ void keyValuesMenu(String name, Iterable<KeyValue> kvs) {
     item('clear one by one', () {
       for (var kv in kvs) {
         item('delete ${kv.key}', () async {
-          deleteLocalStorageVar(kv.key);
+          webLocalStorageRemove(kv.key);
           kv.value = null;
 
           write(kv);

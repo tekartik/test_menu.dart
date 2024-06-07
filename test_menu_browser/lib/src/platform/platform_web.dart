@@ -1,6 +1,6 @@
-import 'package:tekartik_test_menu/key_value.dart';
+import 'package:tekartik_browser_utils/storage_utils.dart';
 import 'package:tekartik_test_menu_browser/key_value_browser.dart';
-import 'package:tekartik_test_menu_browser/test_menu_mdl_browser.dart';
+import 'package:tekartik_test_menu_browser/test_menu_web.dart';
 
 Future<void> platformMainMenu(
     List<String> arguments, void Function() declare) async {
@@ -20,9 +20,9 @@ extension KeyValueKeyUniversalPlatformExt on String {
 }
 
 //void deleteVar(String key) => deleteLocalStorageVar(key);
-Future<void> deleteVar(String key) async => deleteLocalStorageVar(key);
+Future<void> deleteVar(String key) async => webLocalStorageRemove(key);
 
 Future<void> setVar(String key, String value) async =>
-    setLocalStorageVar(key, value);
+    webLocalStorageSet(key, value);
 
-String? getVar(String key) => getLocalStorageVar(key);
+String? getVar(String key) => webLocalStorageGet(key);

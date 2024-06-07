@@ -36,7 +36,7 @@ dependency_overrides:
   tekartik_test_menu_browser:
     path: ../test_menu_browser
   tekartik_test_menu:
-      path: ../test_menu
+    path: ../test_menu
   # dev_build:
   #  path: ../../../tekartik/dev_test.dart/dev_build
 #  tekartik_mdl_js:
