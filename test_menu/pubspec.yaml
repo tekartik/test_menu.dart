@@ -21,7 +21,6 @@ dependencies:
 
 dev_dependencies:
   process_run: '>=0.10.0+1'
-  dev_test: any
   test: any
   tekartik_browser_utils:
     git:

@@ -149,8 +149,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       for (final runner in testMenuManager!.stackMenus) {
         sb.write(' > ${runner.menu.name}');
       }
-      // ignore: unsafe_html
-      header.innerHTML = sb.toString();
+      header.textContent = sb.toString();
       Element list = HTMLUListElement();
 
       HTMLLIElement liElement;
@@ -159,8 +158,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         liElement = HTMLLIElement();
 
         liElement
-          // ignore: unsafe_html
-          ..innerHTML = ' - exit'
+          ..textContent = ' - exit'
           ..onClick.listen((_) {
             testMenuManager!.popMenu();
           });
@@ -173,7 +171,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         liElement = HTMLLIElement();
         liElement
           // ignore: unsafe_html
-          ..innerHTML = ('$i $item')
+          ..textContent = ('$i $item')
           ..onClick.listen((_) {
             print("running '$index $item'");
             testMenuManager!.runItem(item).then((_) {
