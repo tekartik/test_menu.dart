@@ -6,7 +6,7 @@ description: Simple io test menu
 
 publish_to: none
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ^3.5.0
 dependencies:
   args:
   dev_build: '>=0.16.5-6'
