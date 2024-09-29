@@ -1,4 +1,4 @@
-library tekartik_test_menu_browser;
+library;
 
 import 'dart:async';
 import 'dart:html';

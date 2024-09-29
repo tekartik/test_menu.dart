@@ -1,4 +1,4 @@
-library test_menu_console_interactive_test;
+library;
 
 import 'package:process_run/shell.dart';
 //import 'package:tekartik_test_menu/src/common_import.dart';

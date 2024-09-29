@@ -1,5 +1,5 @@
 @TestOn('browser')
-library test_menu_browser.test_menu_mdl_browser_test;
+library;
 
 import 'package:tekartik_test_menu_browser/test_menu_mdl_browser.dart';
 import 'package:test/test.dart';

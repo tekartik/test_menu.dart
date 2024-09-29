@@ -1,6 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
-library test_menu_console_interactive_test;
+library;
 
 // ignore_for_file: implementation_imports
 
