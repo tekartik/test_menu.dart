@@ -1,4 +1,4 @@
-library tekartik_test_menu_mdl_browser;
+library;
 
 import 'dart:html';
 

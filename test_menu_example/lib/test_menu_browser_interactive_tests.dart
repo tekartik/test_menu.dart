@@ -1,4 +1,4 @@
-library test_menu_console_interactive_test;
+library;
 
 import 'package:tekartik_test_menu_browser/test_menu_browser.dart';
 

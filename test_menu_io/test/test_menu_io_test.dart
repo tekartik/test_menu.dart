@@ -1,5 +1,5 @@
 @TestOn('vm')
-library test_menu_test;
+library;
 
 import 'package:tekartik_test_menu_io/test_menu_io.dart';
 import 'package:test/test.dart';
