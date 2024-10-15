@@ -5,7 +5,7 @@ import 'package:tekartik_test_menu/test_menu.dart';
 extension KeyValueBrowserExt on KeyValue {
   /// Prompt env and global save
   Future<KeyValue> promptToLocalStorage() async {
-    var newValue = await prompt('$key${valid ? ' ($value)' : ''}') ?? '';
+    var newValue = await prompt('$key${valid ? ' ($value)' : ''}');
     if (newValue.isNotEmpty) {
       webLocalStorageSet(key, newValue);
       value = newValue;

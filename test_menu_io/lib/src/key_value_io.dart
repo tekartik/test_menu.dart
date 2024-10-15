@@ -5,7 +5,7 @@ import 'package:tekartik_test_menu_io/src/vars.dart';
 extension KeyValueIoExt on KeyValue {
   /// Prompt env and global save
   Future<KeyValue> promptToEnv() async {
-    var newValue = await prompt('$key${valid ? ' ($value)' : ''}') ?? '';
+    var newValue = await prompt('$key${valid ? ' ($value)' : ''}');
     if (newValue.isNotEmpty) {
       await setToEnv(newValue);
     }
