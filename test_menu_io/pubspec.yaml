@@ -25,9 +25,7 @@ dependencies:
 dev_dependencies:
   test: any
 
-dependency_overrides:
-  tekartik_test_menu:
-    path: ../test_menu
+resolution: workspace
   # dev_build:
   #  path: ../../../tekartik/dev_test.dart/dev_build
 #  tekartik_mdl_js:

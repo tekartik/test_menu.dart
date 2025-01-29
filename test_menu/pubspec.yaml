@@ -28,7 +28,7 @@ dev_dependencies:
       ref: dart3a
     version: '>=0.5.0'
 
-dependency_overrides:
+resolution: workspace
 #  dev_build:
 #    path: ../../../tekartik/dev_test.dart/dev_build
 #  tekartik_mdl_js:

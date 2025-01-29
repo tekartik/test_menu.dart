@@ -52,11 +52,7 @@ dev_dependencies:
   build_web_compilers: '>=0.4.0'
   dev_build: '>=0.16.5-0'
 
-dependency_overrides:
-  tekartik_test_menu:
-    path: ../test_menu
-  tekartik_test_menu_io:
-    path: ../test_menu_io
+resolution: workspace
   # dev_build:
   #  path: ../../../tekartik/dev_test.dart/dev_build
 
