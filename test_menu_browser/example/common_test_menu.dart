@@ -1,11 +1,11 @@
 library;
 
-import 'package:tekartik_test_menu_io/test_menu_io.dart';
+import 'package:tekartik_common_utils/common_utils_import.dart';
+import 'package:tekartik_test_menu_browser/key_value_universal.dart';
+import 'package:tekartik_test_menu_browser/test_menu_universal.dart';
 
-void main(List<String> arguments) {
-  initTestMenuConsole(arguments);
-  commonTestMenu();
-}
+var kvTestValue = 'TestValue'.kvFromVar();
+var kvOtherTestValue = 'OtherTestValue'.kvFromVar();
 
 void commonTestMenu() {
   menu('main', () {
@@ -37,6 +37,7 @@ void commonTestMenu() {
         write('$i: this is a line, but only 100 of them will be displayed');
       }
     });
+    keyValuesMenu('vars', [kvTestValue, kvOtherTestValue]);
 
     menu('slow_sub', () {
       enter(() async {

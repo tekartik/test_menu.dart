@@ -37,6 +37,7 @@ void keyValuesMenu(String name, Iterable<KeyValue> kvs) {
     });
     item('all', () async {
       await kvs.promptToVar();
+      write('done all kvs: $kvs');
     });
     item('prompt invalids', () async {
       await kvs.promptToVar(ifInvalid: true);

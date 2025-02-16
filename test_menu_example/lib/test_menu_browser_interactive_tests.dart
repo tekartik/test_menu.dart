@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 library;
 
 import 'package:tekartik_test_menu_browser/test_menu_browser.dart';
