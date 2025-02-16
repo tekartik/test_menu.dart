@@ -16,6 +16,12 @@ import 'package:web/web.dart';
 export 'package:tekartik_test_menu/test_menu.dart';
 export 'package:tekartik_test_menu_browser/src/common_browser.dart';
 
+void _log(Object message) {
+  print('/tmw $message');
+}
+
+// var debugTestMenuWeb = devWarning(true);
+const debugTestMenuWeb = false;
 @Deprecated('Use testMenuBrowserContainerId')
 // ignore: constant_identifier_names
 const String CONTAINER_ID = testMenuBrowserContainerId;
@@ -45,7 +51,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   void write(Object message) {
     outBuffer.add('$message');
     if (debugTestMenuManager) {
-      print('[bwsr writ] $message');
+      _log('[bwsr writ] $message');
     }
     commonLog(message);
     output!.text = outBuffer.toString();
@@ -54,11 +60,18 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   Completer<String>? promptCompleter;
 
   @override
-  Future<String> prompt(Object? message) {
-    write(message ?? 'Enter text');
+  Future<String> prompt(Object? message) async {
+    write('[PROMPT]: ${message ?? 'Enter text'}');
     var completer = Completer<String>.sync();
     promptCompleter = completer;
-    return completer.future;
+    if (debugTestMenuWeb) {
+      _log('promptCompleter ${promptCompleter.hashCode}');
+    }
+    var result = await completer.future;
+    if (debugTestMenuWeb) {
+      _log('Prompt result $result');
+    }
+    return result;
   }
 
   TestMenuManagerBrowser() {
@@ -80,10 +93,18 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       basicInput = HTMLInputElement();
 
       basicInput!.onChange.listen((_) {
-        // devPrint('on change: ${basicInput.value}');
+        var promptCompleter = this.promptCompleter;
+        var value = basicInput!.value;
+        if (debugTestMenuWeb) {
+          _log(
+              'on change: $value ${promptCompleter?.hashCode} ${promptCompleter?.isCompleted}');
+        }
         if (promptCompleter != null) {
-          promptCompleter!.complete(basicInput!.value);
-          promptCompleter = null;
+          _log('set null completer');
+          this.promptCompleter = null;
+          if (!promptCompleter.isCompleted) {
+            promptCompleter.complete(value);
+          }
         }
       });
 

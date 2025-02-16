@@ -37,6 +37,14 @@ void commonTestMenu() {
         write('$i: this is a line, but only 100 of them will be displayed');
       }
     });
+    menu('prompt', () {
+      item('prompt twice', () async {
+        write(
+            'RESULT prompt: ${await prompt('Some text please then [ENTER]')}');
+        write(
+            'RESULT2 prompt: ${await prompt('Some text 2 please then [ENTER]')}');
+      });
+    });
     keyValuesMenu('vars', [kvTestValue, kvOtherTestValue]);
 
     menu('slow_sub', () {
