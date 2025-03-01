@@ -54,7 +54,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       _log('[bwsr writ] $message');
     }
     commonLog(message);
-    output!.text = outBuffer.toString();
+    output!.textContent = outBuffer.toString();
   }
 
   Completer<String>? promptCompleter;

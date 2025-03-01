@@ -7,11 +7,11 @@ description: Simple test menu example
 publish_to: none
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.6.0
 
 dependencies:
-  process_run:
-  test: '>=1.0.0'
+  process_run: ">=1.2.1+1"
+  test: ">=1.24.0"
   tekartik_test_menu_browser:
     git:
       url: https://github.com/tekartik/test_menu.dart
@@ -35,9 +35,9 @@ dependencies:
       ref: dart3a
       path: test_menu
 dev_dependencies:
-  build_runner: ">=0.10.0"
+  build_runner: ">=2.4.13"
   build_test: '>=0.10.2'
-  build_web_compilers: ">=0.4.0"
+  build_web_compilers: ">=4.0.11"
 
 resolution: workspace
   # dev_build:
