@@ -6,7 +6,18 @@ import 'platform/platform.dart';
 export 'platform/platform.dart'
     show KeyValueUniversalPlatformExt, KeyValueKeyUniversalPlatformExt;
 
-extension KeyValueUniversalExt on KeyValue {}
+/// Universal extension
+extension KeyValueUniversalExt on KeyValue {
+  /// Delete the var
+  Future<void> delete() => deleteVar(key);
+
+  /// Set the var or delete it if null
+  Future<void> set(String? value) async =>
+      value == null ? await delete() : await setVar(key, value);
+
+  /// Get the var (not needed unless changed)
+  String? get() => getVar(key);
+}
 
 extension KeyValueListUniversalExt on Iterable<KeyValue> {
   /// Prompt env and global save
