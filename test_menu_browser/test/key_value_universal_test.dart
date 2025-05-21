@@ -5,8 +5,9 @@ var myVar = 'n1xqmEiN4xLJy6bQDGNk.myTestVar'.kvFromVar(defaultValue: '12345');
 void main() {
   group('universal vars', () {
     test('init', () async {
-      var myVar =
-          'n1xqmEiN4xLJy6bQDGNk.myTestVar1'.kvFromVar(defaultValue: '12345');
+      var myVar = 'n1xqmEiN4xLJy6bQDGNk.myTestVar1'.kvFromVar(
+        defaultValue: '12345',
+      );
       expect(myVar.value, '12345');
       expect(myVar.valid, true);
       var myVar2 = 'n1xqmEiN4xLJy6bQDGNk.myTestVar2'.kvFromVar();

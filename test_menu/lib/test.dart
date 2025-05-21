@@ -13,8 +13,12 @@ export 'test_menu.dart';
 /// can return a future
 ///
 /// @param cmd command shortcut (instead of incremental number)
-void test(String name, dynamic Function() body,
-    {String? cmd, @Deprecated('Dev only') bool? solo}) {
+void test(
+  String name,
+  dynamic Function() body, {
+  String? cmd,
+  @Deprecated('Dev only') bool? solo,
+}) {
   // ignore: deprecated_member_use_from_same_package, deprecated_member_use
   item(name, body, cmd: cmd, solo: solo);
 }

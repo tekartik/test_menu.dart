@@ -9,6 +9,8 @@ Future<void> mainMenu(List<String> arguments, void Function() declare) async {
 }
 
 Future<void> mainMenuUniversal(
-    List<String> arguments, void Function() declare) async {
+  List<String> arguments,
+  void Function() declare,
+) async {
   await platformMainMenu(arguments, declare);
 }

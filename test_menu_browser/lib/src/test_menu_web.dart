@@ -97,7 +97,8 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         var value = basicInput!.value;
         if (debugTestMenuWeb) {
           _log(
-              'on change: $value ${promptCompleter?.hashCode} ${promptCompleter?.isCompleted}');
+            'on change: $value ${promptCompleter?.hashCode} ${promptCompleter?.isCompleted}',
+          );
         }
         if (promptCompleter != null) {
           _log('set null completer');
@@ -228,12 +229,13 @@ Future<void> initTestMenuBrowser({List<String>? jsFiles}) async {
       // print('Loading timesheet');
       try {
         await loadStylesheet(
-            'packages/tekartik_test_menu_browser/css/test_menu_web.css');
+          'packages/tekartik_test_menu_browser/css/test_menu_web.css',
+        );
         print('Loaded timesheet');
       } catch (e) {
         print('Error loading timesheet: $e');
       }
-    }()
+    }(),
   ];
   await Future.wait(futures);
   _testMenuManagerBrowser = TestMenuManagerBrowser();

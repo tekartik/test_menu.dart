@@ -7,7 +7,13 @@ var myOtherVar = 'MYOTHERVAR'.kvFromVar();
 void universalTestMenu() {
   menu('universal', () {
     keyValuesMenu('vars', [myVar, myOtherVar]);
-    keyValuesMenu(
-        'vars2', [myVar, myOtherVar, myVar, myOtherVar, myVar, myOtherVar]);
+    keyValuesMenu('vars2', [
+      myVar,
+      myOtherVar,
+      myVar,
+      myOtherVar,
+      myVar,
+      myOtherVar,
+    ]);
   });
 }

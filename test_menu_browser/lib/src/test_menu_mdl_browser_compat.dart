@@ -179,9 +179,11 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
           }
         }
 
-        header.append(buttonCreate()
-          ..text = testMenu.name
-          ..onClick.listen(clickOnMenu));
+        header.append(
+          buttonCreate()
+            ..text = testMenu.name
+            ..onClick.listen(clickOnMenu),
+        );
         /*
         header.append(new AnchorElement(href: '#')
           ..text = ' > ${testMenu.name}'
@@ -199,37 +201,47 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       Element liElement;
 
       if (testMenuManager!.activeDepth > 0) {
-        liElement = listItemCreate()
-          ..append(listItemPrimaryContentCreate()
-            ..append(SpanElement()
-              ..className = listItemIcon
-              ..appendText('-'))
-            ..appendText('exit'))
-          ..onClick.listen((_) {
-            if (TestMenuManager.debug.on) {
-              write('[mdl poping] ${testMenuManager!.menuRunners}');
-            }
-            testMenuManager!.popMenu();
-          });
+        liElement =
+            listItemCreate()
+              ..append(
+                listItemPrimaryContentCreate()
+                  ..append(
+                    SpanElement()
+                      ..className = listItemIcon
+                      ..appendText('-'),
+                  )
+                  ..appendText('exit'),
+              )
+              ..onClick.listen((_) {
+                if (TestMenuManager.debug.on) {
+                  write('[mdl poping] ${testMenuManager!.menuRunners}');
+                }
+                testMenuManager!.popMenu();
+              });
         list.children.add(liElement);
       }
 
       for (var i = 0; i < menu.length; i++) {
         //int index = i;
         final item = menu[i];
-        liElement = listItemCreate()
-          ..append(listItemPrimaryContentCreate()
-            ..append(SpanElement()
-              ..className = listItemIcon
-              ..appendText('$i'))
-            ..appendText('$item'))
-          ..onClick.listen((_) {
-            print("[i] running '$i $item'");
-            testMenuManager!.runItem(item).then((_) {
-              print("[i] done '$i $item'");
-              initInputForMenu();
-            });
-          });
+        liElement =
+            listItemCreate()
+              ..append(
+                listItemPrimaryContentCreate()
+                  ..append(
+                    SpanElement()
+                      ..className = listItemIcon
+                      ..appendText('$i'),
+                  )
+                  ..appendText('$item'),
+              )
+              ..onClick.listen((_) {
+                print("[i] running '$i $item'");
+                testMenuManager!.runItem(item).then((_) {
+                  print("[i] done '$i $item'");
+                  initInputForMenu();
+                });
+              });
         list.children.add(liElement);
         if (debugTestMenuManager) {
           print('$i $item');
@@ -268,7 +280,7 @@ Future initTestMenuBrowser({List<String>? js}) async {
     loadMdlJs(),
     loadMdlCss(),
     loadMaterialIconsCss(),
-    loadStylesheet('packages/tekartik_test_menu_browser/css/test_menu_mdl.css')
+    loadStylesheet('packages/tekartik_test_menu_browser/css/test_menu_mdl.css'),
   ];
   if (debugTestMenuManager) {
     print('loading js: $js');
@@ -293,8 +305,10 @@ Future<void> mainMenu(void Function() declare, {List<String>? js}) async {
   await mainMenuBrowser(declare, js: js);
 }
 
-Future<void> mainMenuBrowser(void Function() declare,
-    {List<String>? js}) async {
+Future<void> mainMenuBrowser(
+  void Function() declare, {
+  List<String>? js,
+}) async {
   await initTestMenuBrowser(js: js);
   declare();
 }

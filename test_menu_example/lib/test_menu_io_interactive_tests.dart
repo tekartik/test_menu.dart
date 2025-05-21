@@ -16,8 +16,9 @@ void main(List<String> arguments) {
   common_test_menu.main();
   item('spawn this menu again $count', () async {
     await usingSharedStdIn(() async {
-      await Shell(stdin: sharedStdIn)
-          .run('dart run lib/test_menu_io_interactive_tests.dart ${count + 1}');
+      await Shell(
+        stdin: sharedStdIn,
+      ).run('dart run lib/test_menu_io_interactive_tests.dart ${count + 1}');
     });
   });
   /*

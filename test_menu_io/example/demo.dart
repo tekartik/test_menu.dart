@@ -23,8 +23,14 @@ Future main(List<String> arguments) async {
       throw 'Hi';
     });
     keyValuesMenu('vars', [myVar, myOtherVar]);
-    keyValuesMenu(
-        'vars2', [myVar, myOtherVar, myVar, myOtherVar, myVar, myOtherVar]);
+    keyValuesMenu('vars2', [
+      myVar,
+      myOtherVar,
+      myVar,
+      myOtherVar,
+      myVar,
+      myOtherVar,
+    ]);
     menu('sub', () {
       item('write hi', () => write('hi'));
     });

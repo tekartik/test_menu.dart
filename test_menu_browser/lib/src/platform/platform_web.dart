@@ -3,7 +3,9 @@ import 'package:tekartik_test_menu_browser/key_value_browser.dart';
 import 'package:tekartik_test_menu_browser/test_menu_web.dart';
 
 Future<void> platformMainMenu(
-    List<String> arguments, void Function() declare) async {
+  List<String> arguments,
+  void Function() declare,
+) async {
   //if (isRunningAsJavascript) {}
   await initTestMenuBrowser();
   declare();

@@ -16,6 +16,7 @@ Future<void> buildWasm() async {
     await File(join('web', file)).copy(join('build', 'wasm', file));
   }
 
-  await File(join('web', 'wasm_main.dart.js'))
-      .copy(join('build', 'wasm', 'main.dart.js'));
+  await File(
+    join('web', 'wasm_main.dart.js'),
+  ).copy(join('build', 'wasm', 'main.dart.js'));
 }
