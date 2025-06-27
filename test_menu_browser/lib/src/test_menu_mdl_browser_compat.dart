@@ -201,47 +201,45 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       Element liElement;
 
       if (testMenuManager!.activeDepth > 0) {
-        liElement =
-            listItemCreate()
+        liElement = listItemCreate()
+          ..append(
+            listItemPrimaryContentCreate()
               ..append(
-                listItemPrimaryContentCreate()
-                  ..append(
-                    SpanElement()
-                      ..className = listItemIcon
-                      ..appendText('-'),
-                  )
-                  ..appendText('exit'),
+                SpanElement()
+                  ..className = listItemIcon
+                  ..appendText('-'),
               )
-              ..onClick.listen((_) {
-                if (TestMenuManager.debug.on) {
-                  write('[mdl poping] ${testMenuManager!.menuRunners}');
-                }
-                testMenuManager!.popMenu();
-              });
+              ..appendText('exit'),
+          )
+          ..onClick.listen((_) {
+            if (TestMenuManager.debug.on) {
+              write('[mdl poping] ${testMenuManager!.menuRunners}');
+            }
+            testMenuManager!.popMenu();
+          });
         list.children.add(liElement);
       }
 
       for (var i = 0; i < menu.length; i++) {
         //int index = i;
         final item = menu[i];
-        liElement =
-            listItemCreate()
+        liElement = listItemCreate()
+          ..append(
+            listItemPrimaryContentCreate()
               ..append(
-                listItemPrimaryContentCreate()
-                  ..append(
-                    SpanElement()
-                      ..className = listItemIcon
-                      ..appendText('$i'),
-                  )
-                  ..appendText('$item'),
+                SpanElement()
+                  ..className = listItemIcon
+                  ..appendText('$i'),
               )
-              ..onClick.listen((_) {
-                print("[i] running '$i $item'");
-                testMenuManager!.runItem(item).then((_) {
-                  print("[i] done '$i $item'");
-                  initInputForMenu();
-                });
-              });
+              ..appendText('$item'),
+          )
+          ..onClick.listen((_) {
+            print("[i] running '$i $item'");
+            testMenuManager!.runItem(item).then((_) {
+              print("[i] done '$i $item'");
+              initInputForMenu();
+            });
+          });
         list.children.add(liElement);
         if (debugTestMenuManager) {
           print('$i $item');
