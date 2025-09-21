@@ -14,7 +14,6 @@ dependencies:
   tekartik_test_menu:
     git:
       url: https://github.com/tekartik/test_menu.dart
-      ref: dart3a
       path: test_menu
     version: '>=0.8.0'
 #  tekartik_pub:
