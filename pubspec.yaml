@@ -8,3 +8,4 @@ workspace:
   - test_menu_browser
   - test_menu_example
   - test_menu_io
+  - test_menu_node
