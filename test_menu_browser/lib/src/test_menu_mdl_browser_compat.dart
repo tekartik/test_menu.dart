@@ -14,7 +14,6 @@ import 'package:tekartik_platform_browser/context_browser.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
-import 'package:tekartik_test_menu_browser/src/import.dart';
 
 import 'test_menu_browser.dart' as common_browser;
 import 'test_menu_web.dart' as browser;
