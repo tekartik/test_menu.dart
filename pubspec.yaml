@@ -3,7 +3,6 @@ publish_to: none
 environment:
   sdk: ^3.9.0
 workspace:
-  - repo_support
   - test_menu
   - test_menu_browser
   - test_menu_example
