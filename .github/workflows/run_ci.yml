@@ -28,6 +28,9 @@ jobs:
             dart: stable
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
       - uses: dart-lang/setup-dart@v1.4
         with:
           sdk: ${{ matrix.dart }}
