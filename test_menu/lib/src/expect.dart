@@ -8,8 +8,10 @@ import 'package:matcher/matcher.dart';
 
 /// An exception thrown when a test assertion fails.
 class TestFailure {
+  /// The failure message.
   final String message;
 
+  /// Creates a new [TestFailure] with the given [message].
   TestFailure(this.message);
 
   @override
@@ -51,6 +53,7 @@ typedef ErrorFormatter =
 /// asynchronously. When you use [expect] with these matchers, it ensures that
 /// the test doesn't complete until the matcher has either matched or failed. If
 /// you want to wait for the matcher to complete before continuing the test, you
+
 /// can call [expectLater] instead and `await` the result.
 void expect(Object? actual, Object? matcher, {String? reason, Object? skip}) {
   _expect(actual, matcher, reason: reason, skip: skip);
@@ -132,6 +135,7 @@ FutureOr _expect(
 /// [message].
 Never fail(String message) => throw TestFailure(message);
 
+/// Indent a string.
 String indent(String text, {String? first}) {
   if (first != null) {
     return '$first $text';
@@ -139,6 +143,7 @@ String indent(String text, {String? first}) {
   return text;
 }
 
+/// Pretty print an object.
 String prettyPrint(dynamic text, {String? first}) {
   if (first != null) {
     return '$first $text';
@@ -146,7 +151,7 @@ String prettyPrint(dynamic text, {String? first}) {
   return '$text';
 }
 
-// The default error formatter.
+/// The default error formatter.
 @Deprecated('Will be removed in 0.13.0.')
 String formatFailure(
   Matcher expected,

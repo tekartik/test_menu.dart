@@ -12,8 +12,6 @@ dependencies:
     git:
       url: https://github.com/tekartik/test_menu.dart
       path: test_menu
-      ref: dart3a
-      version: '>=0.4.0'
 ```
 
 copy `starter_xxx` to you project to get started

@@ -23,6 +23,7 @@ void test(
   item(name, body, cmd: cmd, solo: solo);
 }
 
+/// Declare a solo test item, all other tests will be skipped.
 // deprecated for temp usage only
 @Deprecated('Dev only')
 // ignore: non_constant_identifier_names
@@ -39,6 +40,7 @@ void group(String name, void Function() body, {String? cmd, bool? solo}) {
   menu(name, body, group: true, solo: solo);
 }
 
+/// Declare a solo test group, all other tests will be skipped.
 // deprecated for temp usage only
 @Deprecated('Dev only')
 // ignore: non_constant_identifier_names
