@@ -1,3 +1,5 @@
 platforms:
   - vm
   - chrome
+# activate might fail otherwise
+concurrency: 1

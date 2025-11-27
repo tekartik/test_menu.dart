@@ -33,4 +33,5 @@ jobs:
           sdk: ${{ matrix.dart }}
       - run: dart --version
       - run: dart pub global activate dev_build
+      - run: dart pub global activate process_run
       - run: dart pub global run dev_build:run_ci --recursive

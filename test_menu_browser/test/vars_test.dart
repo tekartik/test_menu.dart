@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 Future<void> main() async {
   test('vars test', () async {
-    var key = 'eAEVYA0YTid8HNjBbdMb';
+    var key = 'eAEVYA0YTid8HNjBbdMbBrowser';
     await deleteVar(key);
     expect(getVar(key), isNull);
 
