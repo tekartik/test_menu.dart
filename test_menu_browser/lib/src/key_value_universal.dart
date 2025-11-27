@@ -9,14 +9,26 @@ export 'platform/platform.dart'
 /// Universal extension
 extension KeyValueUniversalExt on KeyValue {
   /// Delete the var
-  Future<void> delete() => deleteVar(key);
+  Future<void> delete() async {
+    await deleteVar(key);
+    value = null;
+  }
 
   /// Set the var or delete it if null
-  Future<void> set(String? value) async =>
-      value == null ? await delete() : await setVar(key, value);
+  Future<void> set(String? value) async {
+    if (value == null) {
+      await delete();
+      return;
+    }
+    await setVar(key, value);
+    this.value = value;
+  }
 
   /// Get the var (not needed unless changed)
-  String? get() => getVar(key);
+  String? get() {
+    value = getVar(key);
+    return value;
+  }
 }
 
 extension KeyValueListUniversalExt on Iterable<KeyValue> {

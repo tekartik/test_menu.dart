@@ -37,8 +37,6 @@ extension KeyValueListIoExt on Iterable<KeyValue> {
   }
 }
 
-final _exportCache = <String, String?>{};
-
 /// io helper
 extension KeyValueKeyIoExt on String {
   KeyValue kvFromEnv({String? defaultValue}) {
@@ -46,7 +44,7 @@ extension KeyValueKeyIoExt on String {
   }
 
   String? fromEnv({String? defaultValue}) {
-    var value = _exportCache[this] ??= getEnvVar(this) ?? defaultValue;
+    var value = getEnvVar(this) ?? defaultValue;
     return value;
   }
 }
