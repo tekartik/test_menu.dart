@@ -9,15 +9,25 @@ Future<void> main() async {
   test('vars test', () async {
     var key = 'eAEVYA0YTid8HNjBbdMb';
     await deleteEnvVar(key);
+    await deleteEnvVar(key, user: true);
     expect(getEnvVar(key), isNull);
 
-    await setEnvVar(key, 'value1');
-    expect(getEnvVar(key), 'value1');
+    await setEnvVar(key, 'value1_user', user: true);
 
-    await setEnvVar(key, 'value2');
-    expect(getEnvVar(key), 'value2');
+    expect(getEnvVar(key), 'value1_user');
+    await setEnvVar(key, 'value1_local');
+
+    expect(getEnvVar(key), 'value1_local');
+    await setEnvVar(key, 'value1_local2');
+    expect(getEnvVar(key), 'value1_local2');
+    await deleteEnvVar(key);
+    expect(getEnvVar(key), 'value1_user');
+
+    await setEnvVar(key, 'value1_user2', user: true);
+    expect(getEnvVar(key), 'value1_user2');
 
     await deleteEnvVar(key);
+    await deleteEnvVar(key, user: true);
     expect(getEnvVar(key), isNull);
   });
 }
