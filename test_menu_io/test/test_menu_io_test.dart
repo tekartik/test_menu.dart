@@ -12,7 +12,7 @@ void main() {
       int? c;
       //testMenuNewDeclarer();
       menu('main', () {
-        // ignore: deprecated_member_use
+        // ignore: invalid_use_of_do_not_submit_member
         solo_item('1', () async {
           a = 1;
         });
@@ -21,7 +21,7 @@ void main() {
         });
 
         menu('sub', () {
-          // ignore: deprecated_member_use
+          // ignore: invalid_use_of_do_not_submit_member
           solo_item('3', () {
             c = 3;
           });

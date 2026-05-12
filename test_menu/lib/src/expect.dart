@@ -98,7 +98,7 @@ FutureOr _expect(
   String? reason,
   Object? skip,
   bool verbose = false,
-  // ignore: deprecated_member_use, deprecated_member_use_from_same_package
+  // ignore: deprecated_member_use_from_same_package
   ErrorFormatter? formatter,
 }) {
   formatter ??= (actual, matcher, reason, matchState, verbose) {

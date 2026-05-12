@@ -19,7 +19,7 @@ void main(List<String> args) {
       }, cmd: 'e');
       menu('sub', () {
         item('print hi', () => print('hi'));
-        // ignore: deprecated_member_use
+        // ignore: invalid_use_of_do_not_submit_member
         solo_item('print hi', () {
           print('hi');
         });

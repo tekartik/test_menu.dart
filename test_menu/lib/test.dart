@@ -1,5 +1,6 @@
 library;
 
+import 'package:meta/meta.dart';
 import 'package:tekartik_test_menu/test.dart';
 
 export 'package:matcher/matcher.dart';
@@ -17,17 +18,18 @@ void test(
   String name,
   dynamic Function() body, {
   String? cmd,
-  @Deprecated('Dev only') bool? solo,
+  @doNotSubmit bool? solo,
 }) {
-  // ignore: deprecated_member_use_from_same_package, deprecated_member_use
+  // ignore: invalid_use_of_do_not_submit_member
   item(name, body, cmd: cmd, solo: solo);
 }
 
 /// Declare a solo test item, all other tests will be skipped.
 // deprecated for temp usage only
-@Deprecated('Dev only')
+@doNotSubmit
 // ignore: non_constant_identifier_names
 void solo_test(String name, dynamic Function() body, {String? cmd}) {
+  // ignore: invalid_use_of_do_not_submit_member
   item(name, body, cmd: cmd, solo: true);
 }
 
@@ -35,15 +37,21 @@ void solo_test(String name, dynamic Function() body, {String? cmd}) {
 /// Declare a test group
 ///
 /// @param cmd command shortcut (instead of incremental number)
-void group(String name, void Function() body, {String? cmd, bool? solo}) {
-  // ignore: deprecated_member_use_from_same_package, deprecated_member_use
+void group(
+  String name,
+  void Function() body, {
+  String? cmd,
+  @doNotSubmit bool? solo,
+}) {
+  // ignore: invalid_use_of_do_not_submit_member
   menu(name, body, group: true, solo: solo);
 }
 
 /// Declare a solo test group, all other tests will be skipped.
 // deprecated for temp usage only
-@Deprecated('Dev only')
+@doNotSubmit
 // ignore: non_constant_identifier_names
 void solo_group(String name, void Function() body, {String? cmd}) {
+  // ignore: invalid_use_of_do_not_submit_member
   group(name, body, solo: true);
 }
