@@ -12,19 +12,19 @@ Future main(List<String> args) async {
         write('RESULT prompt: ${await prompt()}');
       });
       item('print hi', () {
-        print('hi');
+        writeln('hi');
       });
       item('stderr echo prompt', () async {
         stderr.write(await prompt());
       }, cmd: 'e');
       menu('sub', () {
         enter(() async {
-          print('enter sub');
+          writeln('enter sub');
         });
         leave(() async {
-          print('leave sub');
+          writeln('leave sub');
         });
-        item('print hi', () => print('hi'));
+        item('print hi', () => writeln('hi'));
       });
     });
   });

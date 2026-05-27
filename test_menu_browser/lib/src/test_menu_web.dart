@@ -17,6 +17,7 @@ export 'package:tekartik_test_menu/test_menu.dart';
 export 'package:tekartik_test_menu_browser/src/common_browser.dart';
 
 void _log(Object message) {
+  // ignore: avoid_print
   print('/tmw $message');
 }
 
@@ -44,11 +45,16 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   var outBuffer = OutBuffer(100);
 
   void commonLog(Object message) {
-    print('[w] $message');
+    _log('[w] $message');
   }
 
   @override
   void write(Object message) {
+    writeln(message);
+  }
+
+  @override
+  void writeln(Object message) {
     outBuffer.add('$message');
     if (debugTestMenuManager) {
       _log('[bwsr writ] $message');
@@ -87,7 +93,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       if (container == null) {
         container = HTMLDivElement();
         document.body!.appendChild(container!);
-        print('body: ${document.body!.innerHTML}');
+        _log('body: ${document.body!.innerHTML}');
       }
 
       basicInput = HTMLInputElement();
@@ -195,13 +201,13 @@ class TestMenuManagerBrowser extends TestMenuPresenter
           // ignore: unsafe_html
           ..textContent = ('$i $item')
           ..onClick.listen((_) {
-            print("running '$index $item'");
+            _log("running '$index $item'");
             testMenuManager!.runItem(item).then((_) {
-              print("done '$index $item'");
+              _log("done '$index $item'");
             });
           });
         list.appendChild(liElement);
-        //print('$i ${item}');
+        //_log('$i ${item}');
       }
 
       var children = menuContainer!.children;
@@ -226,14 +232,14 @@ Future<void> initTestMenuBrowser({List<String>? jsFiles}) async {
   var futures = [
     testMenuLoadJs(jsFiles),
     () async {
-      // print('Loading timesheet');
+      // _log('Loading timesheet');
       try {
         await loadStylesheet(
           'packages/tekartik_test_menu_browser/css/test_menu_web.css',
         );
-        print('Loaded timesheet');
+        _log('Loaded timesheet');
       } catch (e) {
-        print('Error loading timesheet: $e');
+        _log('Error loading timesheet: $e');
       }
     }(),
   ];

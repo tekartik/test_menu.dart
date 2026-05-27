@@ -18,7 +18,7 @@ Future<void> testMenuRun() async {
   await menuRun();
 }
 
-void initTestMenuConsole(List<String> arguments) async {
+void initTestMenuConsole(List<String> arguments) {
   initMenuConsole(arguments);
 }
 

@@ -238,6 +238,11 @@ class _MenuManagerConsole extends MenuPresenter with MenuPresenterMixin {
 
   @override
   void write(Object message) {
+    writeln(message);
+  }
+
+  @override
+  void writeln(Object message) {
     console.out.writeln('$message');
   }
 

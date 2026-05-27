@@ -20,7 +20,7 @@ Future main(List<String> arguments) async {
     });
 
     item('crash', () {
-      throw 'Hi';
+      throw StateError('crash');
     });
     keyValuesMenu('vars', [myVar, myOtherVar]);
     keyValuesMenu('vars2', [

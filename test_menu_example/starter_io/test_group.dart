@@ -16,10 +16,10 @@ void main(List<String> args) {
         write('RESULT prompt: ${await prompt()}');
       });
       item('print hi', () {
-        print('hi');
+        writeln('hi');
       });
       menu('sub', () {
-        item('print hi', () => print('hi'));
+        item('print hi', () => writeln('hi'));
       }, cmd: 's');
     });
   });

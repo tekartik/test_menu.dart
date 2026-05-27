@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:matcher/matcher.dart';
 
 /// An exception thrown when a test assertion fails.
-class TestFailure {
+class TestFailure implements Exception {
   /// The failure message.
   final String message;
 

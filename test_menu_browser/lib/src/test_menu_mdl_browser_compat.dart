@@ -11,7 +11,9 @@ import 'package:tekartik_mdl_js/mdl_js_loader.dart';
 import 'package:tekartik_mdl_js/mdl_list.dart';
 import 'package:tekartik_mdl_js/mdl_textfield.dart';
 import 'package:tekartik_platform_browser/context_browser.dart';
+// ignore: implementation_imports
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
+// ignore: implementation_imports
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 
@@ -23,20 +25,10 @@ export 'package:tekartik_test_menu/test_menu.dart';
 export 'common_browser.dart';
 export 'test_menu_browser.dart' show jsTest;
 
-// ignore_for_file: implementation_imports
-// ignore_for_file: constant_identifier_names
-
-//import 'package:tekartik_mdl_js/mdl_js.dart';
-
-// 2019-01 deprecated
-@Deprecated('Use testMenuBrowserContainerId')
-const String CONTAINER_ID = testMenuBrowserContainerId;
-@Deprecated('Use testMenuBrowserMenuId')
-const String MENU_ID = testMenuBrowserMenuId;
-@Deprecated('Use testMenuBrowserOutputId')
-const String OUTPUT_ID = testMenuBrowserOutputId;
-@Deprecated('Use testMenuBrowserInputId')
-const String INPUT_ID = testMenuBrowserInputId;
+void _log(Object? message) {
+  // ignore: avoid_print
+  print(message);
+}
 
 const String testMenuBrowserContainerId = 'tekartik_test_menu_container';
 const String testMenuBrowserMenuId = 'test_menu';
@@ -53,9 +45,14 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
 
   @override
   void write(Object message) {
+    writeln(message);
+  }
+
+  @override
+  void writeln(Object message) {
     final text = '$message';
     if (debugTestMenuManager) {
-      print('writing $text');
+      _log('writing $text');
     }
     commonLog(message);
     outBuffer.add(text);
@@ -90,7 +87,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
         input = TextField(id: testMenuBrowserInputId, floatingLabel: true);
         form.append(input.element!);
         form.onSubmit.listen((Event e) {
-          //print('on submit: ${input.value}');
+          //_log('on submit: ${input.value}');
           final value = input.value;
           input.value = null;
           e.preventDefault();
@@ -104,7 +101,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
               testMenuManager!.popMenu();
             } else {
               final index = int.tryParse(value!) ?? -1;
-              //print('on submit: $value ${index}');
+              //_log('on submit: $value ${index}');
               if (index >= 0) {
                 if (displayedMenu != null) {
                   testMenuManager!.runItem(displayedMenu![index]);
@@ -187,7 +184,7 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
         header.append(new AnchorElement(href: '#')
           ..text = ' > ${testMenu.name}'
           ..onClick.listen((_) {
-            print('$menuPopCount / $activeDepth');
+            _log('$menuPopCount / $activeDepth');
             if (menuPopCount <= activeDepth && menuPopCount > 0) {
               testMenuManager.pop(menuPopCount);
             }
@@ -233,15 +230,15 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
               ..appendText('$item'),
           )
           ..onClick.listen((_) {
-            print("[i] running '$i $item'");
+            _log("[i] running '$i $item'");
             testMenuManager!.runItem(item).then((_) {
-              print("[i] done '$i $item'");
+              _log("[i] done '$i $item'");
               initInputForMenu();
             });
           });
         list.children.add(liElement);
         if (debugTestMenuManager) {
-          print('$i $item');
+          _log('$i $item');
         }
       }
 
@@ -280,7 +277,7 @@ Future initTestMenuBrowser({List<String>? js}) async {
     loadStylesheet('packages/tekartik_test_menu_browser/css/test_menu_mdl.css'),
   ];
   if (debugTestMenuManager) {
-    print('loading js: $js');
+    _log('loading js: $js');
   }
   await Future.wait(futures);
   await browser.testMenuLoadJs(js);

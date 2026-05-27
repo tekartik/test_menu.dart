@@ -4,27 +4,27 @@ void main(List<String> args) {
   // TestMenuManager.debug.on = true;
   mainMenu(args, () {
     command((command) {
-      print('Command entered: $command');
+      writeln('Command entered: $command');
     });
     menu('main', () {
       item('write hola', () async {
         write('Hola');
       }, cmd: 'a');
       item('echo prompt', () async {
-        write('RESULT prompt: ${await prompt()}');
+        writeln('RESULT prompt: ${await prompt()}');
       });
       item('print hi', () {
-        print('hi');
+        writeln('hi');
       });
       menu('sub', () {
-        item('print hi', () => print('hi'));
+        item('print hi', () => writeln('hi'));
       }, cmd: 's');
       item('custom menu', () async {
-        write('before custom menu');
+        writeln('before custom menu');
         await showMenu(() {
           item('custom item', () {});
         });
-        write('after custom menu');
+        writeln('after custom menu');
       });
     });
   });

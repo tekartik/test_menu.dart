@@ -17,7 +17,7 @@ Future main() async {
       jsTest('testConsoleLog');
     });
     item('crash', () {
-      throw 'Hi';
+      throw StateError('Hi');
     });
     menu('sub', () {
       item('write hi', () => write('hi'));

@@ -15,7 +15,7 @@ Future main(List<String> arguments) async {
     });
 
     item('crash', () {
-      throw 'Hi';
+      throw StateError('crash');
     });
 
     menu('sub', () {

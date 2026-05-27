@@ -18,13 +18,13 @@ void main() async {
       jsTest('testConsoleLog');
     });
     item('print hi', () {
-      print('hi');
+      writeln('hi');
     });
     item('crash', () {
-      throw 'Hi';
+      throw StateError('Hi');
     });
     menu('sub', () {
-      item('print hi', () => print('hi'));
+      item('print hi', () => writeln('hi'));
     });
   });
 }

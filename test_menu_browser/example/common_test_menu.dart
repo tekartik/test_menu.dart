@@ -22,16 +22,17 @@ void commonTestMenu() {
       write('RESULT prompt: ${await prompt()}');
     });
     item('print hi', () {
+      // ignore: avoid_print
       print('hi');
     });
     item('crash', () {
-      throw 'crash';
+      throw StateError('crash');
     });
     menu('sub', () {
       menu('below', () {
         item('write below', () => write('below sub'));
       });
-      item('write sub', () => print('sub'));
+      item('write sub', () => writeln('sub'));
     });
     item('write 250 lines', () {
       for (var i = 1; i <= 250; i++) {

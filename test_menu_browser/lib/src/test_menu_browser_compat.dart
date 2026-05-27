@@ -40,13 +40,20 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   var outBuffer = OutBuffer(100);
 
   void commonLog(Object message) {
+    // ignore: avoid_print
     print('[w] $message');
   }
 
   @override
   void write(Object message) {
+    writeln(message);
+  }
+
+  @override
+  void writeln(Object message) {
     outBuffer.add('$message');
     if (debugTestMenuManager) {
+      // ignore: avoid_print
       print('[bwsr writ] $message');
     }
     commonLog(message);
@@ -172,8 +179,10 @@ class TestMenuManagerBrowser extends TestMenuPresenter
           // ignore: unsafe_html
           ..setInnerHtml('$i $item')
           ..onClick.listen((_) {
+            // ignore: avoid_print
             print("running '$index $item'");
             testMenuManager!.runItem(item).then((_) {
+              // ignore: avoid_print
               print("done '$index $item'");
             });
           });
