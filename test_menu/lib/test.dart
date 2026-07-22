@@ -8,7 +8,6 @@ export 'package:matcher/matcher.dart';
 export 'src/expect.dart' show expect, fail;
 export 'test_menu.dart';
 
-///
 /// Declare a test item
 ///
 /// can return a future
@@ -16,6 +15,7 @@ export 'test_menu.dart';
 /// @param cmd command shortcut (instead of incremental number)
 void test(
   String name,
+
   dynamic Function() body, {
   String? cmd,
   @doNotSubmit bool? solo,
@@ -33,12 +33,12 @@ void solo_test(String name, dynamic Function() body, {String? cmd}) {
   item(name, body, cmd: cmd, solo: true);
 }
 
-///
 /// Declare a test group
 ///
 /// @param cmd command shortcut (instead of incremental number)
 void group(
   String name,
+
   void Function() body, {
   String? cmd,
   @doNotSubmit bool? solo,

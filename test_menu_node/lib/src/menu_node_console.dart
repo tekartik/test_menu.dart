@@ -74,6 +74,7 @@ class _MenuManagerConsole extends MenuPresenter with MenuPresenterMixin {
       () async {
         while (true) {
           var line = await readline.question('');
+
           handleLine(line);
 
           /*
@@ -183,6 +184,7 @@ class _MenuManagerConsole extends MenuPresenter with MenuPresenterMixin {
     if (initialCommands != null) {
       if (initialCommandIndex < initialCommands!.length) {
         final commandLine = initialCommands![initialCommandIndex++];
+
         return processLine(commandLine).then(_nextLine);
       }
     }
@@ -264,6 +266,7 @@ class _MenuManagerConsole extends MenuPresenter with MenuPresenterMixin {
     return await _interactiveLock.synchronized(() async {
       try {
         freeSharedStdIn();
+
         return await action();
       } finally {
         readLine();
@@ -289,5 +292,6 @@ _MenuManagerConsole? _menuManagerConsole;
 /// Main menu declaration
 void mainMenuConsole(List<String> arguments, void Function() declare) {
   initMenuConsoleImpl(arguments);
+
   declare();
 }

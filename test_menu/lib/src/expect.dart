@@ -21,6 +21,7 @@ class TestFailure implements Exception {
 /// The type used for functions that can be used to build up error reports
 /// upon failures in [expect].
 @Deprecated('Will be removed in 0.13.0.')
+/// Typedef representing [ErrorFormatter].
 typedef ErrorFormatter =
     String Function(
       dynamic actual,
@@ -128,6 +129,7 @@ FutureOr _expect(
   } catch (e, trace) {
     reason ??= '$e at $trace';
   }
+
   fail(formatter(actual, matcher as Matcher, reason!, matchState, verbose));
 }
 
