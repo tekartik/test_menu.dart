@@ -4,6 +4,7 @@ import 'dart:js_interop' hide JSAnyOperatorExtension;
 import 'dart:js_interop_unsafe';
 
 import 'package:tekartik_browser_utils/location_info_utils.dart';
+import 'package:tekartik_prefs_browser/prefs_light.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart'; // ignore: implementation_imports
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart'; // ignore: implementation_imports
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
@@ -38,8 +39,20 @@ const _maxRecentCount = 8;
 const _maxKeyCount = 10;
 
 const _maxHistoryCount = 50;
-const _themeStorageKey = 'tekartik_test_menu_theme';
 const _styleElementId = 'tekartik_test_menu_style';
+
+/// Local storage entries are prefixed by `tekartik_test_menu/`.
+const _prefsName = 'tekartik_test_menu';
+const _prefsThemeKey = 'theme';
+const _prefsMenuKey = 'menu';
+
+/// Menu height limit, in percent of the output and menu area, bounded by a
+/// min and max in pixels. It only applies when the menu is below the output
+/// (narrow screens).
+const _menuPercentDefault = 40;
+const _menuMinDefault = 120;
+const _menuMaxDefault = 480;
+
 const _exitCommands = {'-', '.'};
 const _helpCommand = '?';
 
@@ -69,19 +82,16 @@ HTMLButtonElement _button(String className, {String? text, String? label}) {
 HTMLButtonElement _iconButton(String className, String icon, String label) =>
     _button(className, label: label)..appendChild(svgIcon(icon));
 
-String? _storageGet(String key) {
-  try {
-    return window.localStorage.getItem(key);
-  } catch (_) {
-    return null;
-  }
+void _setLabel(Element element, String label) {
+  element
+    ..setAttribute('title', label)
+    ..setAttribute('aria-label', label);
 }
 
-void _storageSet(String key, String value) {
-  try {
-    window.localStorage.setItem(key, value);
-  } catch (_) {}
-}
+/// Built from char codes, ddc emits non ascii characters as is and a page
+/// without `<meta charset="utf-8">` would display `â€º`.
+final _pathSeparator = ' ${String.fromCharCode(0x203a)} ';
+final _arrowsUpDown = String.fromCharCodes([0x2191, 0x2193]);
 
 // can be extended
 class TestMenuManagerBrowser extends TestMenuPresenter
@@ -112,6 +122,25 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   late HTMLElement _quick;
   late HTMLElement _keys;
   late HTMLButtonElement _themeButton;
+  late HTMLElement _frame;
+  late HTMLButtonElement _menuButton;
+  late HTMLButtonElement _settingsButton;
+  late HTMLElement _settings;
+  late HTMLInputElement _menuShowInput;
+  late HTMLInputElement _menuLimitInput;
+
+  /// Percent, min and max inputs.
+  late List<HTMLInputElement> _menuSizeInputs;
+
+  /// Theme and menu layout storage, local storage by default.
+  final PrefsLight prefs;
+
+  // Menu layout, saved in [prefs].
+  var _menuHidden = false;
+  var _menuLimit = true;
+  var _menuPercent = _menuPercentDefault;
+  var _menuMin = _menuMinDefault;
+  var _menuMax = _menuMaxDefault;
 
   /// Output entry of the pending prompt.
   HTMLElement? _promptEntry;
@@ -212,7 +241,12 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     }
   }
 
-  TestMenuManagerBrowser() {
+  /// [prefs] default to the browser local storage.
+  TestMenuManagerBrowser({PrefsLight? prefs})
+    : prefs =
+          prefs ??
+          getPrefsLightBrowserOrNull(name: _prefsName) ??
+          PrefsMemory() {
     if (locationInfo!.arguments.containsKey('debug')) {
       // ignore: deprecated_member_use
       TestMenuManager.debug.on = true;
@@ -236,7 +270,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     root.classList.add('tm-root');
     container = root;
 
-    final frame = _withClass(HTMLDivElement(), 'tm-window');
+    final frame = _frame = _withClass(HTMLDivElement(), 'tm-window');
 
     // Title bar
     final dots = _withClass(HTMLSpanElement(), 'tm-dots')
@@ -249,6 +283,14 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       ..setAttribute('role', 'status');
     _themeButton = _button('tm-icon-btn')
       ..onClick.listen((_) => _toggleTheme());
+    _menuButton = _iconButton('tm-icon-btn', iconMenu, 'Hide menu')
+      ..onClick.listen((_) {
+        _menuHidden = !_menuHidden;
+        _menuLayoutChanged();
+      });
+    _settingsButton = _iconButton('tm-icon-btn', iconSettings, 'Menu layout')
+      ..setAttribute('aria-expanded', 'false')
+      ..onClick.listen((_) => _toggleSettings());
     final titleBar = _withClass(HTMLElement.header(), 'tm-titlebar')
       ..appendChild(dots)
       ..appendChild(
@@ -260,6 +302,8 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       )
       ..appendChild(_status)
       ..appendChild(_withClass(HTMLSpanElement(), 'tm-spacer'))
+      ..appendChild(_menuButton)
+      ..appendChild(_settingsButton)
       ..appendChild(
         _iconButton('tm-icon-btn', iconTrash, 'Clear output')
           ..onClick.listen((_) => clearOutput()),
@@ -334,21 +378,207 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       ..appendChild(keyRow)
       ..appendChild(form);
 
+    _settings = _buildSettings();
     frame
       ..appendChild(titleBar)
+      ..appendChild(_settings)
       ..appendChild(crumbs)
       ..appendChild(_quick)
       ..appendChild(_scroller)
       ..appendChild(footer);
     root.appendChild(frame);
 
-    _initTheme();
+    _updateThemeButton();
+    _applyMenuLayout();
     _updateStatus();
     window.onKeyDown.listen(_onDocumentKeyDown);
     // Only grab the focus when it does not pop up a virtual keyboard.
     if (window.matchMedia('(pointer: fine)').matches) {
       basicInput!.focus();
     }
+    final charset = document.characterSet;
+    if (charset.toUpperCase() != 'UTF-8') {
+      _log(
+        'page charset is $charset, add <meta charset="utf-8"> to the html '
+        'head if non ascii characters are not displayed correctly',
+      );
+    }
+    unawaited(_loadPrefs());
+  }
+
+  HTMLElement _buildSettings() {
+    _menuShowInput = _checkbox(() {
+      _menuHidden = !_menuShowInput.checked;
+      _menuLayoutChanged();
+    });
+    _menuLimitInput = _checkbox(() {
+      _menuLimit = _menuLimitInput.checked;
+      _menuLayoutChanged();
+    });
+    _menuSizeInputs = [
+      _numberInput(min: 5, max: 100, step: 5, onValue: (v) => _menuPercent = v),
+      _numberInput(min: 0, max: 10000, step: 10, onValue: (v) => _menuMin = v),
+      _numberInput(min: 0, max: 10000, step: 10, onValue: (v) => _menuMax = v),
+    ];
+    final [percent, minHeight, maxHeight] = _menuSizeInputs;
+    return _withClass(HTMLDivElement(), 'tm-settings')
+      ..setAttribute('hidden', '')
+      ..setAttribute('role', 'group')
+      ..setAttribute('aria-label', 'Menu layout')
+      ..appendChild(_withClass(HTMLSpanElement(), 'tm-settings-label', 'MENU'))
+      ..appendChild(_field([_menuShowInput, 'show']))
+      ..appendChild(_field([_menuLimitInput, 'limit height to']))
+      ..appendChild(_field([percent, '% of height']))
+      ..appendChild(_field(['min', minHeight, 'px']))
+      ..appendChild(_field(['max', maxHeight, 'px']))
+      ..appendChild(
+        _button(
+          'tm-chip tm-settings-reset',
+          text: 'reset',
+          label: 'Reset the menu layout',
+        )..onClick.listen((_) => _resetMenuLayout()),
+      )
+      ..appendChild(
+        _withClass(
+          HTMLSpanElement(),
+          'tm-settings-hint',
+          'The height limit applies when the menu is below the output',
+        ),
+      );
+  }
+
+  /// A label wrapping [parts], texts or elements.
+  HTMLLabelElement _field(List<Object> parts) {
+    final label = _withClass(HTMLLabelElement(), 'tm-field');
+    for (final part in parts) {
+      label.appendChild(part is String ? Text(part) : part as Element);
+    }
+    return label;
+  }
+
+  HTMLInputElement _checkbox(void Function() onChange) {
+    final input = HTMLInputElement()..type = 'checkbox';
+    input.onChange.listen((_) => onChange());
+    return input;
+  }
+
+  HTMLInputElement _numberInput({
+    required int min,
+    required int max,
+    required int step,
+    required void Function(int value) onValue,
+  }) {
+    final input = _withClass(HTMLInputElement(), 'tm-num')
+      ..type = 'number'
+      ..min = '$min'
+      ..max = '$max'
+      ..step = '$step'
+      ..setAttribute('inputmode', 'numeric');
+    // Applied while typing, invalid values are ignored.
+    input.onInput.listen((_) {
+      final value = int.tryParse(input.value.trim());
+      if (value != null && value >= min && value <= max) {
+        onValue(value);
+        _menuLayoutChanged(syncInputs: false);
+      }
+    });
+    // Show back the value in use once done.
+    input.onChange.listen((_) => _syncMenuSizeInputs());
+    return input;
+  }
+
+  void _toggleSettings() {
+    final open = _settings.hasAttribute('hidden');
+    _settings.toggleAttribute('hidden', !open);
+    _settingsButton.setAttribute('aria-expanded', '$open');
+  }
+
+  void _applyMenuLayout({bool syncInputs = true}) {
+    _frame
+      ..toggleAttribute('data-menu-hidden', _menuHidden)
+      ..toggleAttribute('data-menu-limit', _menuLimit);
+    _frame.style
+      ..setProperty('--tm-menu-percent', '$_menuPercent%')
+      ..setProperty('--tm-menu-min', '${_menuMin}px')
+      ..setProperty('--tm-menu-max', '${_menuMax}px');
+    _menuButton.setAttribute('aria-pressed', '${!_menuHidden}');
+    _setLabel(_menuButton, _menuHidden ? 'Show menu' : 'Hide menu');
+    _menuShowInput.checked = !_menuHidden;
+    _menuLimitInput
+      ..checked = _menuLimit
+      ..disabled = _menuHidden;
+    for (final input in _menuSizeInputs) {
+      input.disabled = _menuHidden || !_menuLimit;
+    }
+    if (syncInputs) {
+      _syncMenuSizeInputs();
+    }
+  }
+
+  void _syncMenuSizeInputs() {
+    final values = [_menuPercent, _menuMin, _menuMax];
+    for (var i = 0; i < values.length; i++) {
+      _menuSizeInputs[i].value = '${values[i]}';
+    }
+  }
+
+  void _menuLayoutChanged({bool syncInputs = true}) {
+    _applyMenuLayout(syncInputs: syncInputs);
+    _savePrefs(
+      () => prefs.setMap(_prefsMenuKey, {
+        'hidden': _menuHidden,
+        'limit': _menuLimit,
+        'percent': _menuPercent,
+        'min': _menuMin,
+        'max': _menuMax,
+      }),
+    );
+  }
+
+  void _resetMenuLayout() {
+    _menuHidden = false;
+    _menuLimit = true;
+    _menuPercent = _menuPercentDefault;
+    _menuMin = _menuMinDefault;
+    _menuMax = _menuMaxDefault;
+    _applyMenuLayout();
+    _savePrefs(() => prefs.remove(_prefsMenuKey));
+  }
+
+  Future<void> _loadPrefs() async {
+    try {
+      final theme = await prefs.getString(_prefsThemeKey);
+      if (theme == 'light' || theme == 'dark') {
+        container!.setAttribute('data-theme', theme!);
+        _updateThemeButton();
+      }
+      final menu = await prefs.getMap(_prefsMenuKey);
+      if (menu != null) {
+        int intValue(String key, int defaultValue, int min, int max) {
+          final value = menu[key];
+          return value is int && value >= min && value <= max
+              ? value
+              : defaultValue;
+        }
+
+        _menuHidden = menu['hidden'] == true;
+        _menuLimit = menu['limit'] != false;
+        _menuPercent = intValue('percent', _menuPercentDefault, 5, 100);
+        _menuMin = intValue('min', _menuMinDefault, 0, 10000);
+        _menuMax = intValue('max', _menuMaxDefault, 0, 10000);
+        _applyMenuLayout();
+      }
+    } catch (e) {
+      _log('prefs error $e');
+    }
+  }
+
+  void _savePrefs(Future<void> Function() action) {
+    unawaited(
+      action().catchError((Object e) {
+        _log('prefs error $e');
+      }),
+    );
   }
 
   void _injectStyle() {
@@ -466,27 +696,19 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     return !window.matchMedia('(prefers-color-scheme: light)').matches;
   }
 
-  void _initTheme() {
-    final theme = _storageGet(_themeStorageKey);
-    if (theme == 'light' || theme == 'dark') {
-      container!.setAttribute('data-theme', theme!);
-    }
-    _updateThemeButton();
-  }
-
   void _toggleTheme() {
     final theme = _isDark ? 'light' : 'dark';
     container!.setAttribute('data-theme', theme);
-    _storageSet(_themeStorageKey, theme);
+    _savePrefs(() => prefs.setString(_prefsThemeKey, theme));
     _updateThemeButton();
   }
 
   void _updateThemeButton() {
     final dark = _isDark;
-    final label = dark ? 'Switch to light theme' : 'Switch to dark theme';
-    _themeButton
-      ..title = label
-      ..setAttribute('aria-label', label);
+    _setLabel(
+      _themeButton,
+      dark ? 'Switch to light theme' : 'Switch to dark theme',
+    );
     _themeButton.textContent = '';
     _themeButton.appendChild(svgIcon(dark ? iconSun : iconMoon));
   }
@@ -617,7 +839,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     }
     lines
       ..add('  ?  this help')
-      ..add(' ↑↓  previous commands')
+      ..add(' $_arrowsUpDown  previous commands')
       ..add('Reloading the page runs the last item again.');
     _info(lines.join('\n'));
   }
@@ -727,7 +949,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         names.insert(0, menu.name);
       }
     }
-    return [...names, '${_itemKey(item)} ${item.name}'].join(' › ');
+    return [...names, '${_itemKey(item)} ${item.name}'].join(_pathSeparator);
   }
 
   void _addRecent(TestItem item) {
@@ -943,9 +1165,15 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   }
 }
 
-Future<void> initTestMenuBrowser({List<String>? jsFiles}) async {
+/// Init the web test menu, [prefs] (theme and menu layout) default to the
+/// browser local storage.
+Future<void> initTestMenuBrowser({
+  List<String>? jsFiles,
+  PrefsLight? prefs,
+}) async {
   await testMenuLoadJs(jsFiles);
-  _testMenuManagerBrowser = TestMenuManagerBrowser()..findContainer();
+  _testMenuManagerBrowser = TestMenuManagerBrowser(prefs: prefs)
+    ..findContainer();
 
   testMenuPresenter = _testMenuManagerBrowser!;
 

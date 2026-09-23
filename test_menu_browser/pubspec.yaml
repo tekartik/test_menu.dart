@@ -35,6 +35,11 @@ dependencies:
   tekartik_common_utils:
     git:
       url: https://github.com/tekartik/common_utils.dart
+  tekartik_prefs_browser:
+    git:
+      url: https://github.com/tekartik/prefs.dart
+      path: prefs_browser
+    version: '>=0.2.1'
 dev_dependencies:
   tekartik_app_web_build:
     git:

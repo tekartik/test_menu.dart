@@ -16,6 +16,13 @@ const iconSun =
 /// Moon (switch to dark).
 const iconMoon = 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z';
 
+/// List (show/hide the menu).
+const iconMenu = 'M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01';
+
+/// Sliders (menu layout settings).
+const iconSettings =
+    'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6';
+
 /// Arrow right (send).
 const iconSend = 'M5 12h14M13 6l6 6-6 6';
 

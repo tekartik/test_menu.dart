@@ -70,7 +70,10 @@ Its `test_menu_universal.dart` library runs the *same* menu on the console
 * Serve the entry point with `webdev serve web:8080` (needs
   `build_web_compilers`) or `dart run build_runner serve`. A matching
   `.html` file must load the compiled script, for example
-  `<script defer src="main.dart.js"></script>`.
+  `<script defer src="main.dart.js"></script>`, and declare
+  `<meta charset="UTF-8">`: `webdev` serves html without a charset and ddc
+  keeps non ascii characters as is in its scripts, so without it `›` in an
+  item name shows as `â€º`.
 * Add `<div id="tekartik_test_menu_container"></div>` (the value of
   `testMenuBrowserContainerId`) where the menu should appear; without it a
   `<div>` is appended to `<body>`.
@@ -79,6 +82,15 @@ Its `test_menu_universal.dart` library runs the *same* menu on the console
   extra scripts first:
   `await initTestMenuBrowser(jsFiles: ['my_lib.js'])`, then call a global
   JavaScript function with `jsTest('myGlobalFunction')`.
+* Title bar buttons hide/show the menu and open the menu layout settings:
+  when the menu is below the output (narrow screens, < 900px) its height can
+  be limited to a percent of the output and menu area, bounded by a min and
+  max in pixels (default on, 40%, 120px to 480px), the menu then scrolling on
+  its own. The theme and the menu layout are saved in a `PrefsLight`, the
+  browser local storage by default (`tekartik_test_menu/theme` and
+  `tekartik_test_menu/menu` entries);
+  `initTestMenuBrowser(prefs: PrefsMemory())` (or
+  `TestMenuManagerBrowser(prefs: ...)`) uses another storage.
 * Running an item sets `window.location.hash` to the item path, and
   `initTestMenuBrowser` replays that hash on startup: **reloading the page
   re-runs the last item**, which is the intended edit/reload loop. Adding

@@ -208,6 +208,63 @@ $_lightTokens
   background: var(--tm-surface-3);
   color: var(--tm-text);
 }
+.tm-icon-btn[aria-pressed="true"],
+.tm-icon-btn[aria-expanded="true"] {
+  color: var(--tm-accent);
+}
+
+/* menu layout settings */
+.tm-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--tm-border);
+  background: var(--tm-surface-2);
+  font-size: 12.5px;
+}
+.tm-settings[hidden] {
+  display: none;
+}
+.tm-settings-label {
+  color: var(--tm-faint);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.tm-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tm-muted);
+  white-space: nowrap;
+}
+.tm-field:has(:disabled) {
+  opacity: 0.5;
+}
+.tm-field input[type="checkbox"] {
+  margin: 0;
+  accent-color: var(--tm-accent);
+}
+.tm-num {
+  width: 8ch;
+  padding: 2px 6px;
+  border: 1px solid var(--tm-border);
+  border-radius: 5px;
+  background: var(--tm-surface);
+  color: var(--tm-text);
+  font: inherit;
+}
+.tm-num:focus {
+  border-color: var(--tm-accent);
+  outline: none;
+}
+.tm-settings-hint {
+  display: none;
+  color: var(--tm-faint);
+  font-size: 11.5px;
+}
 
 /* breadcrumb */
 .tm-crumbs {
@@ -310,11 +367,41 @@ $_lightTokens
 .tm-menu {
   padding: 10px 14px 14px;
 }
+.tm-window[data-menu-hidden] .tm-menu {
+  display: none;
+}
+/* the menu below the output, its height can be limited */
+@media (max-width: 899.98px) {
+  .tm-window[data-menu-limit] .tm-main {
+    overflow: hidden;
+  }
+  .tm-window[data-menu-limit] .tm-output {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+  .tm-window[data-menu-limit] .tm-menu {
+    flex: none;
+    max-height: clamp(
+      var(--tm-menu-min, 120px),
+      var(--tm-menu-percent, 40%),
+      var(--tm-menu-max, 480px)
+    );
+    overflow: auto;
+    border-top: 1px solid var(--tm-border);
+  }
+}
 @media (min-width: 900px) {
   .tm-main {
     display: grid;
     grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
     overflow: hidden;
+  }
+  .tm-window[data-menu-hidden] .tm-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tm-settings-hint {
+    display: inline;
   }
   .tm-menu {
     order: -1;
