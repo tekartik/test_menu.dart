@@ -15,9 +15,10 @@ description: >-
 # tekartik_test_menu_browser: the web runner
 
 `tekartik_test_menu_browser` presents a `tekartik_test_menu` declaration as a
-clickable list in a web page: `initTestMenuBrowser()` installs a
-`TestMenuManagerBrowser` presenter that renders the menu into a `<div>`,
-prints `write` output into a `<pre>` and answers `prompt` from an `<input>`.
+terminal-like console in a web page: `initTestMenuBrowser()` installs a
+`TestMenuManagerBrowser` presenter that renders, in a `<div>`, the clickable
+menu, an output log for `write` and a command line that runs items and
+answers `prompt`.
 Its `test_menu_universal.dart` library runs the *same* menu on the console
 (`dart run`) and in the browser through conditional imports.
 
@@ -73,17 +74,27 @@ Its `test_menu_universal.dart` library runs the *same* menu on the console
 * Add `<div id="tekartik_test_menu_container"></div>` (the value of
   `testMenuBrowserContainerId`) where the menu should appear; without it a
   `<div>` is appended to `<body>`.
-* `initTestMenuBrowser` loads
-  `packages/tekartik_test_menu_browser/css/test_menu_web.css` (failure is
-  logged, not fatal) and can load extra scripts first:
+* `initTestMenuBrowser` injects its own stylesheet (dark and light themes,
+  nothing to serve from `packages/`, so it also works in wasm) and can load
+  extra scripts first:
   `await initTestMenuBrowser(jsFiles: ['my_lib.js'])`, then call a global
   JavaScript function with `jsTest('myGlobalFunction')`.
 * Running an item sets `window.location.hash` to the item path, and
   `initTestMenuBrowser` replays that hash on startup: **reloading the page
   re-runs the last item**, which is the intended edit/reload loop. Adding
   `?debug` to the url turns on the menu manager traces.
-* `write`/`writeln` append to a bounded output buffer (100 lines) shown in a
-  `<pre>`; `prompt` waits for a `change` event on the input field.
+* `write`/`writeln` append to the output log (the last 100 entries are kept,
+  a line starting with `ERROR` is shown as an error with a collapsible stack
+  trace); `prompt` highlights the command line and the next submitted line,
+  even empty, answers it.
+* The command line takes an item number or its `cmd` shortcut, `-` or `.` to
+  go back, `?` for help, and hands any other line to the menu
+  `command((line) {...})` handler if declared; arrow up/down browse the
+  history. Recently run items are offered as chips and the breadcrumb goes
+  back to a parent menu. Drive it from a browser test with
+  `(menuPresenter as TestMenuManagerBrowser).processLine('0')`
+  (`menuPresenter` comes from
+  `package:tekartik_test_menu/test_menu_presenter.dart`).
 * Wasm: `dart compile wasm web/main.dart -o build/wasm/main.wasm` then serve
   that directory (see `tool/build_wasm.dart`, `tool/run_wasm.dart`).
 
