@@ -12,6 +12,7 @@ import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart'; // ign
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'package:tekartik_test_menu_browser/src/common_browser.dart';
 import 'package:tekartik_test_menu_browser/src/import.dart';
+import 'package:tekartik_test_menu_browser/src/menu_stack_names.dart';
 import 'package:tekartik_test_menu_browser/test_menu_web.dart'
     show testMenuLoadJs;
 
@@ -103,39 +104,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   }
 
   // for href
-  List<String> getMenuStackNames([TestItem? item]) {
-    final list = <String>[];
-
-    TestMenu? lastMenu;
-    //devPrint(testMenuManager.stackMenus);
-    for (var i = testMenuManager!.stackMenus.length - 1; i >= 0; i--) {
-      final menu = testMenuManager!.stackMenus[i].menu;
-
-      int index;
-
-      if (lastMenu == null) {
-        lastMenu = testMenuManager!.activeMenu;
-        if (item == null) {
-          continue;
-        }
-        // ignore: dead_code
-        if (false) {
-          // item is DevTestItem) {
-          // index = stackMenus[stackMenus.length - 2].indexOfItem(item);
-          // nothing
-          continue;
-        } else {
-          index = testMenuManager!.activeMenu!.indexOfItem(item);
-        }
-      } else {
-        index = menu.indexOfMenu(lastMenu);
-        lastMenu = menu;
-      }
-
-      list.insert(0, index.toString());
-    }
-    return list;
-  }
+  List<String> getMenuStackNames([TestItem? item]) => testMenuStackNames(item);
 
   @override
   Future preProcessItem(TestItem item) async {

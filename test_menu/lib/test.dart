@@ -44,7 +44,7 @@ void group(
   @doNotSubmit bool? solo,
 }) {
   // ignore: invalid_use_of_do_not_submit_member
-  menu(name, body, group: true, solo: solo);
+  menu(name, body, cmd: cmd, group: true, solo: solo);
 }
 
 /// Declare a solo test group, all other tests will be skipped.
@@ -53,5 +53,5 @@ void group(
 // ignore: non_constant_identifier_names
 void solo_group(String name, void Function() body, {String? cmd}) {
   // ignore: invalid_use_of_do_not_submit_member
-  group(name, body, solo: true);
+  group(name, body, cmd: cmd, solo: true);
 }

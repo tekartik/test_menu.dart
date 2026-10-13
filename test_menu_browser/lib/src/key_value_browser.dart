@@ -1,34 +1,25 @@
 import 'package:tekartik_browser_utils/storage_utils.dart';
 import 'package:tekartik_test_menu/key_value.dart';
-import 'package:tekartik_test_menu/test_menu.dart';
+// ignore: implementation_imports
+import 'package:tekartik_test_menu/src/key_value_menu.dart';
 
 extension KeyValueBrowserExt on KeyValue {
   /// Prompt env and global save
-  Future<KeyValue> promptToLocalStorage() async {
-    var newValue = await prompt('$key${valid ? ' ($value)' : ''}');
-    if (newValue.isNotEmpty) {
-      webLocalStorageSet(key, newValue);
-      value = newValue;
-    }
-    return this;
-  }
+  Future<KeyValue> promptToLocalStorage() =>
+      keyValuePrompt(this, (value) async {
+        webLocalStorageSet(key, value);
+        this.value = value;
+      });
 }
 
 extension KeyValueListBrowserExt on Iterable<KeyValue> {
   /// Prompt env and global save
-  Future<void> promptToLocalStorage({bool? ifInvalid}) async {
-    for (var kv in this) {
-      if (ifInvalid ?? false) {
-        if (kv.valid) {
-          continue;
-        }
-      }
-      await kv.promptToLocalStorage();
-    }
-  }
+  Future<void> promptToLocalStorage({bool? ifInvalid}) => keyValuesPrompt(
+    this,
+    (kv) => kv.promptToLocalStorage(),
+    ifInvalid: ifInvalid,
+  );
 }
-
-final _exportCache = <String, String?>{};
 
 /// io helper
 extension KeyValueKeyBrowserExt on String {
@@ -36,49 +27,21 @@ extension KeyValueKeyBrowserExt on String {
     return KeyValue(this, fromLocalStorage(defaultValue: defaultValue));
   }
 
+  /// Read from the local storage (not cached, like the io env).
   String? fromLocalStorage({String? defaultValue}) {
-    var value = _exportCache[this] ??= webLocalStorageGet(this) ?? defaultValue;
-    return value;
+    return webLocalStorageGet(this) ?? defaultValue;
   }
 }
 
 /// Key values menu.
 void keyValuesMenu(String name, Iterable<KeyValue> kvs) {
-  menu(name, () {
-    item('dump', () async {
-      kvs.dump();
-    });
-    item('all', () async {
-      await kvs.promptToLocalStorage();
-    });
-    item('prompt invalids', () async {
-      await kvs.promptToLocalStorage(ifInvalid: true);
-    });
-    void allKv() {
-      for (var kv in kvs) {
-        item('update ${kv.key}', () async {
-          var newKv = await kv.promptToLocalStorage();
-          write(newKv);
-        });
-      }
-    }
-
-    if (kvs.length < 6) {
-      allKv();
-    } else {
-      menu('one by one', () {
-        allKv();
-      });
-    }
-    item('clear one by one', () {
-      for (var kv in kvs) {
-        item('delete ${kv.key}', () async {
-          webLocalStorageRemove(kv.key);
-          kv.value = null;
-
-          write(kv);
-        });
-      }
-    });
-  });
+  keyValuesMenuImpl(
+    name,
+    kvs,
+    promptKv: (kv) => kv.promptToLocalStorage(),
+    deleteKv: (kv) async {
+      webLocalStorageRemove(kv.key);
+      kv.value = null;
+    },
+  );
 }

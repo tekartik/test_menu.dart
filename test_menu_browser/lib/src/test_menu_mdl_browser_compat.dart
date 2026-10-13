@@ -76,45 +76,50 @@ class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
       if (container == null) {
         container = DivElement()..id = testMenuBrowserContainerId;
         document.body!.children.add(container!);
+      }
+      // Reuse the output and menu of an existing container, the input
+      // (not reusable) is always created.
+      output =
+          container!.querySelector('#$testMenuBrowserOutputId') ??
+          (PreElement()..id = testMenuBrowserOutputId);
+      menuContainer =
+          container!.querySelector('#$testMenuBrowserMenuId') ??
+          (DivElement()..id = testMenuBrowserMenuId);
+      container!.querySelector('#$testMenuBrowserInputId')?.remove();
 
-        menuContainer = DivElement()..id = testMenuBrowserMenuId;
+      var form = FormElement();
+      form.setAttribute('action', '#');
 
-        output = PreElement()..id = testMenuBrowserOutputId;
+      input = TextField(id: testMenuBrowserInputId, floatingLabel: true);
+      form.append(input.element!);
+      form.onSubmit.listen((Event e) {
+        //_log('on submit: ${input.value}');
+        final value = input.value;
+        input.value = null;
+        e.preventDefault();
+        if (promptCompleter != null) {
+          promptCompleter!.complete(value);
+          promptCompleter = null;
 
-        var form = FormElement();
-        form.setAttribute('action', '#');
-
-        input = TextField(id: testMenuBrowserInputId, floatingLabel: true);
-        form.append(input.element!);
-        form.onSubmit.listen((Event e) {
-          //_log('on submit: ${input.value}');
-          final value = input.value;
-          input.value = null;
-          e.preventDefault();
-          if (promptCompleter != null) {
-            promptCompleter!.complete(value);
-            promptCompleter = null;
-
-            initInputForMenu();
+          initInputForMenu();
+        } else {
+          if (value == '-') {
+            testMenuManager!.popMenu();
           } else {
-            if (value == '-') {
-              testMenuManager!.popMenu();
-            } else {
-              final index = int.tryParse(value!) ?? -1;
-              //_log('on submit: $value ${index}');
-              if (index >= 0) {
-                if (displayedMenu != null) {
-                  testMenuManager!.runItem(displayedMenu![index]);
-                }
-              }
+            final index = int.tryParse(value!) ?? -1;
+            //_log('on submit: $value ${index}');
+            final menu = displayedMenu;
+            if (menu != null && index >= 0 && index < menu.length) {
+              testMenuManager!.runItem(menu[index]);
             }
           }
-        });
+        }
+      });
 
-        container!.children.addAll([output!, menuContainer!, form]);
-      } else {
-        output = container!.querySelector('#$testMenuBrowserOutputId');
-        menuContainer = container!.querySelector('#$testMenuBrowserMenuId');
+      for (var element in [output!, menuContainer!, form]) {
+        if (element.parent == null) {
+          container!.append(element);
+        }
       }
     }
   }

@@ -106,12 +106,11 @@ FutureOr _expect(
     var mismatchDescription = StringDescription();
     matcher.describeMismatch(actual, mismatchDescription, matchState, verbose);
 
-    // ignore: deprecated_member_use
     return _formatFailure(
       matcher,
       actual,
       mismatchDescription.toString(),
-      reason: reason,
+      reason: reason.isEmpty ? null : reason,
     );
   };
 
@@ -119,52 +118,50 @@ FutureOr _expect(
     throw ArgumentError.value(skip, 'skip', 'must be a bool or a String');
   }
 
-  matcher = wrapMatcher(matcher);
+  var wrapped = wrapMatcher(matcher);
 
-  var matchState = <String, Object?>{};
+  if (skip != null && skip != false) {
+    String message;
+    if (skip is String) {
+      message = 'Skip expect: $skip';
+    } else if (reason != null) {
+      message = 'Skip expect ($reason).';
+    } else {
+      message = 'Skip expect (${prettyPrint(wrapped)}).';
+    }
+    // ignore: avoid_print
+    print(message);
+    return Future.value(null);
+  }
+
+  // Untyped, matchers store their own state in it.
+  var matchState = <Object?, Object?>{};
   try {
-    if ((matcher as Matcher).matches(actual, matchState)) {
+    if (wrapped.matches(actual, matchState)) {
       return Future.value(null);
     }
   } catch (e, trace) {
     reason ??= '$e at $trace';
   }
 
-  fail(formatter(actual, matcher as Matcher, reason!, matchState, verbose));
+  fail(formatter(actual, wrapped, reason ?? '', matchState, verbose));
 }
 
 /// Convenience method for throwing a new [TestFailure] with the provided
 /// [message].
 Never fail(String message) => throw TestFailure(message);
 
-/// Indent a string.
+/// Indent each line of [text], [first] prefixing the first line.
 String indent(String text, {String? first}) {
-  if (first != null) {
-    return '$first $text';
-  }
-  return text;
+  first ??= '';
+  var prefix = ' ' * first.length;
+  var lines = text.split('\n');
+  return [
+    '$first${lines.first}',
+    for (var line in lines.skip(1)) '$prefix$line',
+  ].join('\n');
 }
 
-/// Pretty print an object.
-String prettyPrint(dynamic text, {String? first}) {
-  if (first != null) {
-    return '$first $text';
-  }
-  return '$text';
-}
-
-/// The default error formatter.
-@Deprecated('Will be removed in 0.13.0.')
-String formatFailure(
-  Matcher expected,
-  Object? actual,
-  String which, {
-  String? reason,
-}) {
-  var buffer = StringBuffer();
-  buffer.writeln(indent(prettyPrint(expected), first: 'Expected: '));
-  buffer.writeln(indent(prettyPrint(actual), first: '  Actual: '));
-  if (which.isNotEmpty) buffer.writeln(indent(which, first: '   Which: '));
-  if (reason != null) buffer.writeln(reason);
-  return buffer.toString();
-}
+/// Pretty print an object (a matcher is described).
+String prettyPrint(Object? value) =>
+    StringDescription().addDescriptionOf(value).toString();
