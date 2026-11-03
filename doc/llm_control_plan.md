@@ -2,22 +2,24 @@
 
 Status (2026-11-03):
 
-- Phase 1 (dev_build 1.2.0) is done and pushed to dev_test.dart, but not
-  published yet. Checked end to end with the `app-agent` MCP:
-  `dart run <menu> --agent`, then `app_connect {vmService}`, then
-  `menu_line` with a prompt and its answer.
+All four phases are done.
+
+- Phase 1 (dev_build 1.2.0, dev_test.dart). Checked end to end with the
+  `app-agent` MCP: `dart run <menu> --agent`, then `app_connect
+  {vmService}`, then `menu_line` with a prompt and its answer.
 - Phase 2: dev_build 1.2.0 is published.
-- Phase 3 (tekartik_test_menu 0.8.1, test_menu_browser 0.9.3) is done but
-  not committed. Checked end to end with `webdev serve` (ddc), then
-  `app_connect {open: <url>?agent}`, then `menu_line`: a sub menu, a prompt
-  and its answer, a write. The Chrome test runs on dart2js and dart2wasm.
-- Phase 4 (test_menu_flutter 1.2.0) is done but not committed. It needs
-  phase 3 pushed: test_menu_flutter takes tekartik_test_menu from git.
-  Checked end to end: `flutter run -d linux`, then `app_connect {vmService}`;
-  and a release web build opened with `?agent`.
-- An app that registers its own agent commands keeps them, but only when
-  it registers first. tekartik_app_agent's `agentVmRegister` does not catch
-  the `ArgumentError` of names already taken by a menu.
+- Phase 3 (tekartik_test_menu 0.8.1, test_menu_browser 0.9.3, this repo).
+  Checked end to end with `webdev serve` (ddc), then `app_connect {open:
+  <url>?agent}`, then `menu_line`: a sub menu, a prompt and its answer, a
+  write. The Chrome test runs on dart2js and dart2wasm.
+- Phase 4 (test_menu_flutter 1.2.0). Checked end to end: `flutter run -d
+  linux`, then `app_connect {vmService}`; and a release web build opened
+  with `?agent`. The same release moved the flutter console to the web
+  console design (no window frame).
+- An app and a menu in the same isolate: the first to register the VM
+  extensions keeps them, the other one skips (no throw on either side since
+  tekartik_app_agent 0.4.1). On the web, an app bridge already installed is
+  kept.
 
 The agent tests live in a new test package of the same repo,
 `dev_test.dart/dev_build_test` (`tekartik_dev_build_test`, not published).
@@ -182,8 +184,9 @@ to `tekartik_test_menu`. The cost: dev_build-only tool menus get nothing.
 ## 5. Open points
 
 - **Same extension names as `tekartik_app_agent`.** An app that runs
-  `agentInit` and a dev menu in the same isolate keeps the app's commands;
-  the menu skips its registration. Should that case matter, the menu
+  `agentInit` and a dev menu in the same isolate: the first to register
+  keeps its commands, the other skips its registration (`agentInit` first
+  keeps the app's). Should that case matter, the menu
   commands can be handed to the app's `AgentCommands` (same json shape, a
   few lines in the app), or use `ext.tekartik.menu.*` names that the MCP
   server also looks for (a change to `tekartik_app_agent_mcp`).
