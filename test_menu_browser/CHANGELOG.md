@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.3
+
+- A page opened with `?agent` can be driven by an LLM agent
+  (`window.tekartikAgent`, the `app-agent` MCP `menu` and `menu_line`
+  tools); the page follows what the agent does
+- `TestMenuManagerBrowser` implements `MenuLineProcessor`
+- Requires dev_build 1.2.0
+
 ## 0.9.2
 
 - Web console fills the page (no window frame, no dots): one header row

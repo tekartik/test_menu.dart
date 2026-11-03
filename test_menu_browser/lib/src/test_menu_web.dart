@@ -7,6 +7,8 @@ import 'package:tekartik_browser_utils/location_info_utils.dart';
 import 'package:tekartik_prefs_browser/prefs_light.dart';
 import 'package:tekartik_test_menu/src/test_menu/test_menu.dart'; // ignore: implementation_imports
 import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart'; // ignore: implementation_imports
+import 'package:tekartik_test_menu/test_menu.dart' as test_menu show writeln;
+import 'package:tekartik_test_menu/test_menu_agent.dart';
 import 'package:tekartik_test_menu/test_menu_presenter.dart';
 import 'package:tekartik_test_menu_browser/src/common_browser.dart';
 import 'package:tekartik_test_menu_browser/src/import.dart';
@@ -97,7 +99,8 @@ final _arrowsUpDown = String.fromCharCodes([0x2191, 0x2193]);
 
 // can be extended
 class TestMenuManagerBrowser extends TestMenuPresenter
-    with TestMenuPresenterMixin {
+    with TestMenuPresenterMixin
+    implements MenuLineProcessor {
   TestMenu? displayedMenu;
   var _displayedDepth = -1;
 
@@ -770,6 +773,9 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   /// It answers the pending prompt if any. Otherwise it is an item number or
   /// shortcut, `-` (or `.`) to go back, `?` for help, anything else going to
   /// the menu `command` handler if declared.
+  ///
+  /// Also how the menu agent (`window.tekartikAgent`) types a line.
+  @override
   Future<void> processLine(String line) async {
     if (promptCompleter != null) {
       _answerPrompt(line);
@@ -850,7 +856,8 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       _lastRunFailed = true;
       _fixLastError(e);
       if (reportError) {
-        writeln('ERROR $e\n$st');
+        // The global one, also recorded by the menu agent.
+        test_menu.writeln('ERROR $e\n$st');
       }
     } finally {
       _runningCount--;
@@ -1119,6 +1126,9 @@ class TestMenuManagerBrowser extends TestMenuPresenter
 
 /// Init the web test menu, [prefs] (theme and menu layout) default to the
 /// browser local storage.
+///
+/// A page opened with `?agent` can be driven by an LLM agent through
+/// `window.tekartikAgent` (see `testMenuAgentInit`).
 Future<void> initTestMenuBrowser({
   List<String>? jsFiles,
   PrefsLight? prefs,
@@ -1132,6 +1142,7 @@ Future<void> initTestMenuBrowser({
   initTestMenuManager();
   final hash = window.location.hash;
   testMenuManager!.initCommands = TestMenuManager.initCommandsFromHash(hash);
+  testMenuAgentInit();
 }
 
 Future testMenuLoadJs(List<String>? jsFiles) async {

@@ -1,5 +1,5 @@
 name: tekartik_test_menu_browser
-version: 0.9.2
+version: 0.9.3
 homepage: https://github.com/tekartik/test_menu.dart
 # https://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
@@ -52,7 +52,7 @@ dev_dependencies:
   build_runner: ">=2.15.0"
   build_test: '>=0.10.2'
   build_web_compilers: ">=4.4.19"
-  dev_build: ">=1.1.7+3"
+  dev_build: ">=1.2.0"
 
 resolution: workspace
   # dev_build:

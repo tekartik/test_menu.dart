@@ -6,7 +6,18 @@ Status (2026-11-03):
   published yet. Checked end to end with the `app-agent` MCP:
   `dart run <menu> --agent`, then `app_connect {vmService}`, then
   `menu_line` with a prompt and its answer.
-- The other phases are not started.
+- Phase 2: dev_build 1.2.0 is published.
+- Phase 3 (tekartik_test_menu 0.8.1, test_menu_browser 0.9.3) is done but
+  not committed. Checked end to end with `webdev serve` (ddc), then
+  `app_connect {open: <url>?agent}`, then `menu_line`: a sub menu, a prompt
+  and its answer, a write. The Chrome test runs on dart2js and dart2wasm.
+- Phase 4 (test_menu_flutter 1.2.0) is done but not committed. It needs
+  phase 3 pushed: test_menu_flutter takes tekartik_test_menu from git.
+  Checked end to end: `flutter run -d linux`, then `app_connect {vmService}`;
+  and a release web build opened with `?agent`.
+- An app that registers its own agent commands keeps them, but only when
+  it registers first. tekartik_app_agent's `agentVmRegister` does not catch
+  the `ArgumentError` of names already taken by a menu.
 
 The agent tests live in a new test package of the same repo,
 `dev_test.dart/dev_build_test` (`tekartik_dev_build_test`, not published).

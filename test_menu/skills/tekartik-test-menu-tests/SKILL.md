@@ -3,11 +3,12 @@ name: tekartik-test-menu-tests
 description: >-
   Use when declaring an interactive, manual test menu or debug harness with
   tekartik_test_menu (test.dart, test_menu.dart, key_value.dart,
-  test_menu_presenter.dart): test, group, solo_test, solo_group, expect, fail,
-  and the re-exported dev_build declarations menu, item, enter, leave,
-  enterItem, leaveItem, command, write, writeln, prompt, showMenu, popMenu,
-  solo_item, solo_menu, testMenuRun/menuRun, TestMenuManager, KeyValue,
-  TestMenuPresenter. Also when picking the platform runner package
+  test_menu_presenter.dart, test_menu_agent.dart): test, group, solo_test,
+  solo_group, expect, fail, and the re-exported dev_build declarations menu,
+  item, enter, leave, enterItem, leaveItem, command, write, writeln, prompt,
+  showMenu, popMenu, solo_item, solo_menu, testMenuRun/menuRun,
+  TestMenuManager, KeyValue, TestMenuPresenter, testMenuAgentInit (LLM agent
+  control). Also when picking the platform runner package
   (tekartik_test_menu_io, tekartik_test_menu_node,
   tekartik_test_menu_browser).
 ---
@@ -52,6 +53,12 @@ companion package renders the menu on a console, on node or in a browser.
 * `package:tekartik_test_menu/test_menu_presenter.dart`:
   `TestMenuPresenter`, `TestMenuPresenterMixin`, the `testMenuPresenter`
   setter, to render the menu somewhere else.
+* `package:tekartik_test_menu/test_menu_agent.dart`: `testMenuAgentInit()`
+  lets an LLM agent drive the menu (the `menu` and `menu_line` commands of
+  dev_build's menu agent, re-exported): over the VM service, and on the web
+  through `window.tekartikAgent` when the page url has `?agent`. The browser
+  runner calls it; a custom presenter also implements `MenuLineProcessor`
+  (`processLine(line)`, the line typed) so the agent can answer its prompts.
 
 ### Declaring
 

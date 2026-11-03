@@ -8,8 +8,10 @@ description: >-
   mainMenu, mainMenuUniversal, mainMenuWeb, initTestMenuBrowser,
   TestMenuManagerBrowser, testMenuBrowserContainerId, testMenuLoadJs, jsTest,
   keyValuesMenu, kvFromVar, kvFromLocalStorage, promptToVar,
-  promptToLocalStorage, getVar/setVar/deleteVar, and serving or testing the
-  page with webdev, dart test -p chrome or dart compile wasm.
+  promptToLocalStorage, getVar/setVar/deleteVar, serving or testing the
+  page with webdev, dart test -p chrome or dart compile wasm, and driving
+  the page from an LLM agent (?agent, window.tekartikAgent, the app-agent
+  MCP menu and menu_line tools).
 ---
 
 # tekartik_test_menu_browser: the web runner
@@ -113,6 +115,32 @@ Its `test_menu_universal.dart` library runs the *same* menu on the console
   `package:tekartik_test_menu/test_menu_presenter.dart`).
 * Wasm: `dart compile wasm web/main.dart -o build/wasm/main.wasm` then serve
   that directory (see `tool/build_wasm.dart`, `tool/run_wasm.dart`).
+
+### Driven by an LLM agent
+
+* Open the page with `?agent` (`http://127.0.0.1:8080/?agent`):
+  `initTestMenuBrowser` then installs `window.tekartikAgent` (through
+  `testMenuAgentInit` of `package:tekartik_test_menu/test_menu_agent.dart`),
+  the bridge of tekartik_app_agent. The `app-agent` MCP server connects with
+  `app_connect {open: <url with ?agent>}` (a headless Chrome) or
+  `{chrome: <debugging endpoint>, page: ...}` (a Chrome started with
+  `--remote-debugging-port`, the tab a person sees), and lists two tools:
+  * `menu`: the path, the items (`key`, `name`, `menu` for a sub menu),
+    `canBack`, the status (`ready`, `running`, `input`, `error`), the pending
+    prompt and the last output lines (or `since` a cursor);
+  * `menu_line {line, timeout}`: a line typed in the command line (an item
+    key, `-`, the answer of a pending prompt, a line for the `command`
+    handler). It waits for the run or a prompt, and returns the output
+    written meanwhile (`PROMPT ...`, `ANSWER ...`, writes, `ERROR` lines,
+    prints) plus the state.
+* The page follows what the agent does (path, log, recent items, prompt
+  answer), and a person can use it at the same time; a line sent while an
+  item runs is refused (`busy`).
+* Without `?agent` nothing is installed. An app that already has its own
+  `window.tekartikAgent` (tekartik_app_agent) keeps it.
+* From a browser test: `testMenuAgentInit(uri: Uri.parse('/?agent'))` after
+  `initTestMenuBrowser()`, then `window.tekartikAgent.run('menu_line',
+  {line: '0'})` (see `test/test_menu_web_agent_test.dart`).
 
 ### Key values
 

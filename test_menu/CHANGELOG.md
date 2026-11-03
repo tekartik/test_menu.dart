@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.1
+
+- `test_menu_agent.dart`: `testMenuAgentInit` lets an LLM agent drive the
+  menu (dev_build menu agent, `menu` and `menu_line` commands) over the VM
+  service and, on the web with `?agent`, through `window.tekartikAgent`
+- Requires dev_build 1.2.0
+
 ## 0.4.0
 
 - Add enter/leave support

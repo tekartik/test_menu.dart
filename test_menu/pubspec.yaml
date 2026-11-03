@@ -1,5 +1,5 @@
 name: tekartik_test_menu
-version: 0.8.0
+version: 0.8.1
 homepage: https://github.com/tekartik/test_menu.dart
 # https://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
@@ -16,7 +16,7 @@ dependencies:
   matcher: any
   meta: ">=1.18.0"
   stack_trace:
-  dev_build: ">=1.1.7+3"
+  dev_build: ">=1.2.0"
 
 dev_dependencies:
   process_run: ">=1.2.1+1"
