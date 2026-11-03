@@ -4,8 +4,6 @@ library;
 
 const _darkTokens = '''
   color-scheme: dark;
-  --tm-bg: #0b0f14;
-  --tm-dot: rgba(255, 255, 255, 0.07);
   --tm-surface: #0f141a;
   --tm-surface-2: #141a22;
   --tm-surface-3: #1b232e;
@@ -19,13 +17,10 @@ const _darkTokens = '''
   --tm-red: #f47067;
   --tm-amber: #e3b341;
   --tm-purple: #b392f0;
-  --tm-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7);
 ''';
 
 const _lightTokens = '''
   color-scheme: light;
-  --tm-bg: #eef1f5;
-  --tm-dot: rgba(15, 23, 42, 0.09);
   --tm-surface: #ffffff;
   --tm-surface-2: #f6f8fa;
   --tm-surface-3: #eaeef2;
@@ -39,10 +34,14 @@ const _lightTokens = '''
   --tm-red: #cf222e;
   --tm-amber: #9a6700;
   --tm-purple: #8250df;
-  --tm-shadow: 0 24px 60px -28px rgba(15, 23, 42, 0.35);
 ''';
 
 /// The test menu web stylesheet, every rule is scoped under `.tm-root`.
+///
+/// The console fills the viewport (no frame around it): a one row header
+/// (menu path, status, actions), the output and the menu (side by side on
+/// wide screens, stacked otherwise) and a footer (recent items, keypad when
+/// the menu is hidden, command line).
 const testMenuWebCss =
     '''
 body.tm-page {
@@ -52,16 +51,10 @@ body.tm-page {
 $_darkTokens
   --tm-font: ui-monospace, "JetBrains Mono", "Cascadia Mono", "SF Mono", Menlo,
     Consolas, "DejaVu Sans Mono", "Liberation Mono", "Courier New", monospace;
-  --tm-pad: 24px;
   box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100dvh;
-  padding: var(--tm-pad) 16px;
-  background-color: var(--tm-bg);
-  background-image: radial-gradient(var(--tm-dot) 1px, transparent 1px);
-  background-size: 16px 16px;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--tm-surface);
   color: var(--tm-text);
   font: 13.5px/1.55 var(--tm-font);
   -webkit-text-size-adjust: 100%;
@@ -97,55 +90,57 @@ $_lightTokens
   outline: 2px solid var(--tm-accent);
   outline-offset: 1px;
 }
-
-/* window */
-.tm-window {
+.tm-app {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 1180px;
-  height: calc(100vh - 2 * var(--tm-pad));
-  height: calc(100dvh - 2 * var(--tm-pad));
-  min-height: 420px;
+  height: 100%;
   overflow: hidden;
-  background: var(--tm-surface);
-  border: 1px solid var(--tm-border);
-  border-radius: 12px;
-  box-shadow: var(--tm-shadow);
 }
 
-/* title bar */
-.tm-titlebar {
+/* header: menu path, status and actions */
+.tm-header {
   display: flex;
+  flex: none;
   align-items: center;
-  gap: 10px;
-  padding: 9px 10px 9px 14px;
+  gap: 2px;
+  padding: 3px 4px 3px 10px;
   background: var(--tm-surface-2);
   border-bottom: 1px solid var(--tm-border);
 }
-.tm-dots {
+.tm-crumbs {
   display: flex;
-  flex: none;
-  gap: 6px;
-}
-.tm-dots span {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #ff5f57;
-}
-.tm-dots span:nth-child(2) {
-  background: #febc2e;
-}
-.tm-dots span:nth-child(3) {
-  background: #28c840;
-}
-.tm-title {
+  flex: 1;
+  align-items: center;
+  gap: 4px;
   min-width: 0;
-  overflow: hidden;
-  font-weight: 700;
+  overflow-x: auto;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  scrollbar-width: none;
+}
+.tm-crumbs::-webkit-scrollbar {
+  display: none;
+}
+.tm-sep {
+  flex: none;
+  color: var(--tm-faint);
+}
+.tm-crumb {
+  flex: none;
+  padding: 2px 2px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tm-crumb:hover {
+  color: var(--tm-accent);
+  text-decoration: underline;
+}
+.tm-crumb[aria-current] {
+  color: var(--tm-green);
+  text-decoration: none;
+  cursor: default;
 }
 .tm-status {
   --tm-status: var(--tm-green);
@@ -153,6 +148,7 @@ $_lightTokens
   flex: none;
   align-items: center;
   gap: 6px;
+  margin: 0 4px;
   padding: 1px 8px;
   border: 1px solid color-mix(in srgb, var(--tm-status) 45%, transparent);
   border-radius: 999px;
@@ -164,10 +160,24 @@ $_lightTokens
 }
 .tm-status::before {
   content: "";
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: currentColor;
+}
+/* ready: only the dot */
+.tm-status[data-state="ready"] {
+  padding: 0;
+  border-color: transparent;
+  background: none;
+}
+.tm-status[data-state="ready"] .tm-status-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .tm-status[data-state="running"] {
   --tm-status: var(--tm-amber);
@@ -187,15 +197,12 @@ $_lightTokens
     opacity: 0.2;
   }
 }
-.tm-spacer {
-  flex: 1;
-}
 .tm-icon-btn {
   display: inline-grid;
   flex: none;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: 1px solid transparent;
   border-radius: 7px;
@@ -213,13 +220,14 @@ $_lightTokens
   color: var(--tm-accent);
 }
 
-/* menu layout settings */
+/* settings: theme and menu layout */
 .tm-settings {
   display: flex;
+  flex: none;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 14px;
-  padding: 8px 14px;
+  padding: 6px 10px;
   border-bottom: 1px solid var(--tm-border);
   background: var(--tm-surface-2);
   font-size: 12.5px;
@@ -265,92 +273,14 @@ $_lightTokens
   color: var(--tm-faint);
   font-size: 11.5px;
 }
-
-/* breadcrumb */
-.tm-crumbs {
-  display: flex;
+.tm-theme {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-bottom: 1px solid var(--tm-border);
-  font-size: 12.5px;
+  gap: 4px;
 }
-.tm-crumb-path {
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 2px 6px;
-  min-width: 0;
-}
-.tm-sep {
-  color: var(--tm-accent);
-  font-weight: 700;
-}
-.tm-crumb {
-  padding: 0 2px;
-  border: 0;
-  border-radius: 4px;
-  background: none;
-  font-weight: 700;
-  cursor: pointer;
-}
-.tm-crumb:hover {
-  color: var(--tm-accent);
-  text-decoration: underline;
-}
-.tm-crumb[aria-current] {
-  color: var(--tm-green);
-  text-decoration: none;
-  cursor: default;
-}
-.tm-crumb-meta {
-  flex: none;
-  color: var(--tm-faint);
-  font-size: 11.5px;
-}
-
-/* recent items */
-.tm-quick {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  overflow-x: auto;
-  border-bottom: 1px solid var(--tm-border);
-  scrollbar-width: none;
-}
-.tm-quick[hidden] {
-  display: none;
-}
-.tm-quick-label {
-  flex: none;
-  margin-right: 2px;
-  color: var(--tm-faint);
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-.tm-chip {
-  flex: none;
-  max-width: 24ch;
-  overflow: hidden;
-  padding: 2px 8px;
-  border: 1px solid var(--tm-border);
-  border-radius: 5px;
-  background: var(--tm-surface-3);
-  font-size: 12px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  cursor: pointer;
-}
-.tm-chip:hover {
-  border-color: var(--tm-accent);
-  color: var(--tm-accent);
-}
-.tm-chip-key {
-  color: var(--tm-accent);
-  font-weight: 700;
+.tm-theme svg {
+  width: 13px;
+  height: 13px;
 }
 
 /* main area: stacked on small screens, menu sidebar on large ones */
@@ -362,25 +292,26 @@ $_lightTokens
   overflow: auto;
 }
 .tm-output {
-  padding: 12px 14px 4px;
+  padding: 8px 10px 6px;
 }
 .tm-menu {
-  padding: 10px 14px 14px;
+  padding: 4px 4px 6px;
+  border-top: 1px solid var(--tm-border);
 }
-.tm-window[data-menu-hidden] .tm-menu {
+.tm-app[data-menu-hidden] .tm-menu {
   display: none;
 }
 /* the menu below the output, its height can be limited */
 @media (max-width: 899.98px) {
-  .tm-window[data-menu-limit] .tm-main {
+  .tm-app[data-menu-limit] .tm-main {
     overflow: hidden;
   }
-  .tm-window[data-menu-limit] .tm-output {
+  .tm-app[data-menu-limit] .tm-output {
     flex: 1;
     min-height: 0;
     overflow: auto;
   }
-  .tm-window[data-menu-limit] .tm-menu {
+  .tm-app[data-menu-limit] .tm-menu {
     flex: none;
     max-height: clamp(
       var(--tm-menu-min, 120px),
@@ -388,16 +319,15 @@ $_lightTokens
       var(--tm-menu-max, 480px)
     );
     overflow: auto;
-    border-top: 1px solid var(--tm-border);
   }
 }
 @media (min-width: 900px) {
   .tm-main {
     display: grid;
-    grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+    grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
     overflow: hidden;
   }
-  .tm-window[data-menu-hidden] .tm-main {
+  .tm-app[data-menu-hidden] .tm-main {
     grid-template-columns: minmax(0, 1fr);
   }
   .tm-settings-hint {
@@ -406,12 +336,13 @@ $_lightTokens
   .tm-menu {
     order: -1;
     overflow: auto;
-    padding: 14px 12px;
+    padding: 6px;
+    border-top: 0;
     border-right: 1px solid var(--tm-border);
   }
   .tm-output {
     overflow: auto;
-    padding: 14px 18px;
+    padding: 10px 14px;
   }
 }
 
@@ -465,7 +396,7 @@ $_lightTokens
 }
 .tm-line-prompt {
   margin: 6px 0;
-  padding: 8px 10px;
+  padding: 6px 10px;
   border: 1px solid var(--tm-border);
   border-radius: 7px;
   background: var(--tm-surface-2);
@@ -488,17 +419,6 @@ $_lightTokens
 }
 
 /* menu */
-.tm-menu-title {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 6px;
-  margin: 0 0 8px;
-  font-size: 15px;
-  font-weight: 700;
-}
-.tm-menu-title [aria-current] {
-  color: var(--tm-green);
-}
 .tm-menu-list {
   display: flex;
   flex-direction: column;
@@ -512,7 +432,7 @@ $_lightTokens
   align-items: baseline;
   gap: 10px;
   width: 100%;
-  padding: 5px 8px;
+  padding: 4px 8px;
   border: 0;
   border-radius: 6px;
   background: transparent;
@@ -562,36 +482,72 @@ $_lightTokens
   color: var(--tm-amber);
 }
 
-/* footer: keypad and command line */
+/* footer: recent items, keypad and command line */
 .tm-footer {
   display: flex;
+  flex: none;
   flex-direction: column;
-  gap: 8px;
-  padding: 8px 12px 12px;
+  gap: 6px;
+  padding: 6px 6px 6px 8px;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
   border-top: 1px solid var(--tm-border);
   background: var(--tm-surface-2);
 }
+.tm-quick,
 .tm-keys {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-.tm-keys-items {
-  display: flex;
-  flex: 1;
-  gap: 6px;
-  min-width: 0;
-  margin-right: 6px;
-  padding-bottom: 1px;
   overflow-x: auto;
   scrollbar-width: none;
+}
+.tm-quick::-webkit-scrollbar,
+.tm-keys::-webkit-scrollbar {
+  display: none;
+}
+.tm-quick[hidden] {
+  display: none;
+}
+/* the keypad repeats the menu, only shown when the menu is hidden */
+.tm-app:not([data-menu-hidden]) .tm-keys,
+.tm-keys:empty {
+  display: none;
+}
+.tm-quick-label {
+  flex: none;
+  margin-right: 2px;
+  color: var(--tm-faint);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.tm-chip {
+  flex: none;
+  max-width: 24ch;
+  overflow: hidden;
+  padding: 2px 8px;
+  border: 1px solid var(--tm-border);
+  border-radius: 5px;
+  background: var(--tm-surface-3);
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.tm-chip:hover {
+  border-color: var(--tm-accent);
+  color: var(--tm-accent);
+}
+.tm-chip-key {
+  color: var(--tm-accent);
+  font-weight: 700;
 }
 .tm-key {
   display: inline-grid;
   flex: none;
   place-items: center;
-  min-width: 30px;
-  height: 28px;
+  min-width: 32px;
+  height: 30px;
   padding: 0 8px;
   border: 1px solid var(--tm-border);
   border-bottom-width: 2px;
@@ -607,29 +563,20 @@ $_lightTokens
 .tm-key:active {
   transform: translateY(1px);
 }
-.tm-key:disabled {
-  opacity: 0.4;
-  cursor: default;
-  transform: none;
-}
 .tm-key-exit {
   color: var(--tm-red);
 }
 .tm-command {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   margin: 0;
-}
-.tm-command-caret {
-  flex: none;
-  color: var(--tm-accent);
-  font-weight: 700;
 }
 .tm-input {
   flex: 1;
   min-width: 0;
-  padding: 8px 12px;
+  margin-right: 2px;
+  padding: 6px 10px;
   border: 1px solid var(--tm-border);
   border-radius: 8px;
   outline: none;
@@ -649,15 +596,13 @@ $_lightTokens
   border-color: var(--tm-amber);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--tm-amber) 18%, transparent);
 }
-.tm-root[data-prompting] .tm-command-caret {
-  color: var(--tm-amber);
-}
 .tm-send {
   display: inline-grid;
   flex: none;
   place-items: center;
-  width: 40px;
-  height: 36px;
+  width: 38px;
+  height: 34px;
+  margin-left: 2px;
   padding: 0;
   border: 0;
   border-radius: 8px;
@@ -669,17 +614,8 @@ $_lightTokens
   filter: brightness(1.12);
 }
 
-/* phones: full bleed window */
+/* phones: no zoom on focus (ios) */
 @media (max-width: 560px) {
-  .tm-root {
-    --tm-pad: 0px;
-    padding: 0;
-  }
-  .tm-window {
-    min-height: 0;
-    border: 0;
-    border-radius: 0;
-  }
   .tm-input {
     font-size: 16px;
   }

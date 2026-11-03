@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.2
+
+- Web console fills the page (no window frame, no dots): one header row
+  (menu path starting with the page title, status dot, hide menu, clear,
+  settings), the theme moved to the settings, no menu title, recent items
+  in the footer, keypad only shown when the menu is hidden, history
+  buttons next to the command line
+
 ## 0.9.1
 
 - New web console look: dark/light theme, breadcrumb, recent items, keypad,

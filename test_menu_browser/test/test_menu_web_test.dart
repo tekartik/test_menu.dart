@@ -54,9 +54,14 @@ void main() {
     expect(document.querySelector('.tm-root'), isNotNull);
     expect(_texts('.tm-item-name'), ['main']);
     expect(_status(), 'READY');
+    // Ready is only a dot.
+    expect(
+      _element('.tm-status-label').getBoundingClientRect().width,
+      lessThanOrEqualTo(1),
+    );
 
     await presenter.processLine('0');
-    expect(_texts('.tm-menu-title'), ['>_root_>main']);
+    expect(_texts('.tm-crumb').skip(1), ['main']);
     expect(_texts('.tm-item-name'), ['exit', 'write hi', 'ask', 'shortcut']);
 
     await presenter.processLine('0');
@@ -83,7 +88,7 @@ void main() {
     expect(_texts('.tm-line-error').last, contains('Unknown command'));
 
     await presenter.processLine('-');
-    expect(_texts('.tm-menu-title'), ['>_root_']);
+    expect(_texts('.tm-crumb'), hasLength(1));
 
     presenter.clearOutput();
     expect(_texts('.tm-log .tm-line'), isEmpty);
@@ -97,17 +102,21 @@ void main() {
     final prefs = getPrefsLightBrowser(name: 'tekartik_test_menu');
     Future<Map<String, Object?>?> savedMenu() => prefs.getMap('menu');
 
-    final frame = _element('.tm-window');
+    final frame = _element('.tm-app');
     final menu = _element('.tm-menu');
-    final menuButton = _element('.tm-titlebar [aria-pressed]');
+    final menuButton = _element('.tm-header [aria-pressed]');
+    final keys = _element('.tm-keys');
     expect(frame.hasAttribute('data-menu-hidden'), isFalse);
     expect(frame.hasAttribute('data-menu-limit'), isTrue);
     expect(menuButton.getAttribute('aria-label'), 'Hide menu');
+    // The keypad repeats the menu, only shown when the menu is hidden.
+    expect(window.getComputedStyle(keys).display, 'none');
 
     menuButton.click();
     expect(frame.hasAttribute('data-menu-hidden'), isTrue);
     expect(window.getComputedStyle(menu).display, 'none');
     expect(menuButton.getAttribute('aria-label'), 'Show menu');
+    expect(window.getComputedStyle(keys).display, isNot('none'));
     await _untilAsync(() async => (await savedMenu())?['hidden'] == true);
 
     menuButton.click();
@@ -117,7 +126,7 @@ void main() {
 
     final settings = _element('.tm-settings');
     expect(settings.hasAttribute('hidden'), isTrue);
-    _element('.tm-titlebar [aria-expanded]').click();
+    _element('.tm-header [aria-expanded]').click();
     expect(settings.hasAttribute('hidden'), isFalse);
 
     final inputs = document.querySelectorAll('.tm-settings .tm-num');

@@ -91,7 +91,8 @@ void _setLabel(Element element, String label) {
 
 /// Built from char codes, ddc emits non ascii characters as is and a page
 /// without `<meta charset="utf-8">` would display `â€º`.
-final _pathSeparator = ' ${String.fromCharCode(0x203a)} ';
+final _separator = String.fromCharCode(0x203a);
+final _pathSeparator = ' $_separator ';
 final _arrowsUpDown = String.fromCharCodes([0x2191, 0x2193]);
 
 // can be extended
@@ -118,12 +119,12 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   late HTMLElement _scroller;
   late HTMLElement _outputSection;
   late HTMLElement _status;
-  late HTMLElement _crumbPath;
-  late HTMLElement _crumbMeta;
+  late HTMLElement _statusLabel;
+  late HTMLElement _crumbs;
   late HTMLElement _quick;
   late HTMLElement _keys;
   late HTMLButtonElement _themeButton;
-  late HTMLElement _frame;
+  late HTMLElement _app;
   late HTMLButtonElement _menuButton;
   late HTMLButtonElement _settingsButton;
   late HTMLElement _settings;
@@ -254,7 +255,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     }
   }
 
-  static const _commandPlaceholder = 'Item # or command (? help)';
+  static const _commandPlaceholder = '# or command, ? help';
 
   /// Build the console in the container (created if needed), once.
   void findContainer() {
@@ -271,56 +272,37 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     root.classList.add('tm-root');
     container = root;
 
-    final frame = _frame = _withClass(HTMLDivElement(), 'tm-window');
+    final app = _app = _withClass(HTMLDivElement(), 'tm-app');
 
-    // Title bar
-    final dots = _withClass(HTMLSpanElement(), 'tm-dots')
-      ..setAttribute('aria-hidden', 'true');
-    for (var i = 0; i < 3; i++) {
-      dots.appendChild(HTMLSpanElement());
-    }
-    final title = document.title.trim();
+    // Header: the menu path (the page title for the root menu), the status
+    // and the actions, on one row.
+    _crumbs = _withClass(HTMLElement.nav(), 'tm-crumbs')
+      ..setAttribute('aria-label', 'Menu path')
+      ..appendChild(
+        _withClass(HTMLSpanElement(), 'tm-crumb', _title)
+          ..setAttribute('aria-current', 'page'),
+      );
+    _statusLabel = _withClass(HTMLSpanElement(), 'tm-status-label');
     _status = _withClass(HTMLSpanElement(), 'tm-status')
-      ..setAttribute('role', 'status');
-    _themeButton = _button('tm-icon-btn')
-      ..onClick.listen((_) => _toggleTheme());
+      ..setAttribute('role', 'status')
+      ..appendChild(_statusLabel);
     _menuButton = _iconButton('tm-icon-btn', iconMenu, 'Hide menu')
       ..onClick.listen((_) {
         _menuHidden = !_menuHidden;
         _menuLayoutChanged();
       });
-    _settingsButton = _iconButton('tm-icon-btn', iconSettings, 'Menu layout')
+    _settingsButton = _iconButton('tm-icon-btn', iconSettings, 'Settings')
       ..setAttribute('aria-expanded', 'false')
       ..onClick.listen((_) => _toggleSettings());
-    final titleBar = _withClass(HTMLElement.header(), 'tm-titlebar')
-      ..appendChild(dots)
-      ..appendChild(
-        _withClass(
-          HTMLSpanElement(),
-          'tm-title',
-          title.isEmpty ? 'test menu' : title,
-        ),
-      )
+    final header = _withClass(HTMLElement.header(), 'tm-header')
+      ..appendChild(_crumbs)
       ..appendChild(_status)
-      ..appendChild(_withClass(HTMLSpanElement(), 'tm-spacer'))
       ..appendChild(_menuButton)
-      ..appendChild(_settingsButton)
       ..appendChild(
         _iconButton('tm-icon-btn', iconTrash, 'Clear output')
           ..onClick.listen((_) => clearOutput()),
       )
-      ..appendChild(_themeButton);
-
-    // Breadcrumb and recent items
-    _crumbPath = _withClass(HTMLSpanElement(), 'tm-crumb-path');
-    _crumbMeta = _withClass(HTMLSpanElement(), 'tm-crumb-meta')
-      ..title = 'Reloading the page runs this item again';
-    final crumbs = _withClass(HTMLElement.nav(), 'tm-crumbs')
-      ..setAttribute('aria-label', 'Menu path')
-      ..appendChild(_crumbPath)
-      ..appendChild(_crumbMeta);
-    _quick = _withClass(HTMLDivElement(), 'tm-quick')
-      ..setAttribute('hidden', '');
+      ..appendChild(_settingsButton);
 
     // Output and menu
     output = _withClass(HTMLDivElement(), 'tm-log')
@@ -334,24 +316,16 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       ..appendChild(_outputSection)
       ..appendChild(menuContainer!);
 
-    // Keypad and command line
-    // Item keys scroll, history keys stay on the right.
-    _keys = _withClass(HTMLDivElement(), 'tm-keys-items');
+    // Footer: recent items, keypad (only when the menu is hidden, it repeats
+    // the menu otherwise) and command line.
+    _quick = _withClass(HTMLDivElement(), 'tm-quick')
+      ..setAttribute('hidden', '');
+    _keys = _withClass(HTMLDivElement(), 'tm-keys');
     void history(int delta) {
       _historyMove(delta);
       basicInput!.focus();
     }
 
-    final keyRow = _withClass(HTMLDivElement(), 'tm-keys')
-      ..appendChild(_keys)
-      ..appendChild(
-        _iconButton('tm-key', iconUp, 'Previous command')
-          ..onClick.listen((_) => history(-1)),
-      )
-      ..appendChild(
-        _iconButton('tm-key', iconDown, 'Next command')
-          ..onClick.listen((_) => history(1)),
-      );
     basicInput = _withClass(HTMLInputElement(), 'tm-input')
       ..type = 'text'
       ..autocomplete = 'off'
@@ -361,11 +335,15 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       ..setAttribute('autocapitalize', 'off');
     basicInput!.onKeyDown.listen(_onInputKeyDown);
     final form = _withClass(HTMLFormElement(), 'tm-command')
-      ..appendChild(
-        _withClass(HTMLSpanElement(), 'tm-command-caret', '>')
-          ..setAttribute('aria-hidden', 'true'),
-      )
       ..appendChild(basicInput!)
+      ..appendChild(
+        _iconButton('tm-icon-btn', iconUp, 'Previous command')
+          ..onClick.listen((_) => history(-1)),
+      )
+      ..appendChild(
+        _iconButton('tm-icon-btn', iconDown, 'Next command')
+          ..onClick.listen((_) => history(1)),
+      )
       ..appendChild(_iconButton('tm-send', iconSend, 'Run')..type = 'submit');
     form.onSubmit.listen((event) {
       event.preventDefault();
@@ -376,18 +354,17 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       processLine(line);
     });
     final footer = _withClass(HTMLElement.footer(), 'tm-footer')
-      ..appendChild(keyRow)
+      ..appendChild(_quick)
+      ..appendChild(_keys)
       ..appendChild(form);
 
     _settings = _buildSettings();
-    frame
-      ..appendChild(titleBar)
+    app
+      ..appendChild(header)
       ..appendChild(_settings)
-      ..appendChild(crumbs)
-      ..appendChild(_quick)
       ..appendChild(_scroller)
       ..appendChild(footer);
-    root.appendChild(frame);
+    root.appendChild(app);
 
     _updateThemeButton();
     _applyMenuLayout();
@@ -422,10 +399,14 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       _numberInput(min: 0, max: 10000, step: 10, onValue: (v) => _menuMax = v),
     ];
     final [percent, minHeight, maxHeight] = _menuSizeInputs;
+    _themeButton = _button('tm-chip tm-theme')
+      ..onClick.listen((_) => _toggleTheme());
     return _withClass(HTMLDivElement(), 'tm-settings')
       ..setAttribute('hidden', '')
       ..setAttribute('role', 'group')
-      ..setAttribute('aria-label', 'Menu layout')
+      ..setAttribute('aria-label', 'Settings')
+      ..appendChild(_withClass(HTMLSpanElement(), 'tm-settings-label', 'THEME'))
+      ..appendChild(_themeButton)
       ..appendChild(_withClass(HTMLSpanElement(), 'tm-settings-label', 'MENU'))
       ..appendChild(_field([_menuShowInput, 'show']))
       ..appendChild(_field([_menuLimitInput, 'limit height to']))
@@ -495,10 +476,10 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   }
 
   void _applyMenuLayout({bool syncInputs = true}) {
-    _frame
+    _app
       ..toggleAttribute('data-menu-hidden', _menuHidden)
       ..toggleAttribute('data-menu-limit', _menuLimit);
-    _frame.style
+    _app.style
       ..setProperty('--tm-menu-percent', '$_menuPercent%')
       ..setProperty('--tm-menu-min', '${_menuMin}px')
       ..setProperty('--tm-menu-max', '${_menuMax}px');
@@ -684,9 +665,11 @@ class TestMenuManagerBrowser extends TestMenuPresenter
         : _lastRunFailed
         ? ('error', 'ERROR')
         : ('ready', 'READY');
+    // Only a dot when ready, the label still read by screen readers.
     _status
       ..setAttribute('data-state', state)
-      ..textContent = label;
+      ..title = label;
+    _statusLabel.textContent = label;
   }
 
   bool get _isDark {
@@ -710,8 +693,10 @@ class TestMenuManagerBrowser extends TestMenuPresenter
       _themeButton,
       dark ? 'Switch to light theme' : 'Switch to dark theme',
     );
-    _themeButton.textContent = '';
-    _themeButton.appendChild(svgIcon(dark ? iconSun : iconMoon));
+    _themeButton
+      ..textContent = ''
+      ..appendChild(svgIcon(dark ? iconMoon : iconSun))
+      ..appendChild(Text(dark ? ' dark' : ' light'));
   }
 
   void _onDocumentKeyDown(KeyboardEvent event) {
@@ -985,37 +970,39 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     }
   }
 
-  /// Append `> _root_ > main` to [parent], clickable for the breadcrumb.
-  void _appendMenuPath(Element parent, {required bool clickable}) {
+  /// The page title, shown for the root menu.
+  String get _title {
+    final title = document.title.trim();
+    return title.isEmpty ? 'test menu' : title;
+  }
+
+  /// `title › main › sub`, the parent menus going back when clicked.
+  void _renderCrumbs() {
+    final crumbs = _crumbs;
+    crumbs.textContent = '';
     final stack = testMenuManager!.stackMenus;
     for (var i = 0; i < stack.length; i++) {
       final depth = i;
-      final last = i == stack.length - 1;
-      parent.appendChild(_withClass(HTMLSpanElement(), 'tm-sep', '>'));
-      final name = stack[i].menu.name;
-      final HTMLElement segment;
-      if (clickable) {
-        segment = _button('tm-crumb', text: name);
-        if (!last) {
-          segment
-            ..title = 'Back to $name'
-            ..onClick.listen((_) => _popTo(depth));
-        }
-      } else {
-        segment = HTMLSpanElement()..textContent = name;
+      final menu = stack[i].menu;
+      final name = menu is RootTestMenu ? _title : menu.name;
+      if (i > 0) {
+        crumbs.appendChild(
+          _withClass(HTMLSpanElement(), 'tm-sep', _separator)
+            ..setAttribute('aria-hidden', 'true'),
+        );
       }
-      if (last) {
+      final segment = _button('tm-crumb', text: name);
+      if (i == stack.length - 1) {
         segment.setAttribute('aria-current', 'page');
+      } else {
+        segment
+          ..title = 'Back to $name'
+          ..onClick.listen((_) => _popTo(depth));
       }
-      parent.appendChild(segment);
+      crumbs.appendChild(segment);
     }
-  }
-
-  void _renderCrumbs() {
-    final path = _crumbPath;
-    path.textContent = '';
-    _appendMenuPath(path, clickable: true);
-    _crumbMeta.textContent = window.location.hash;
+    // Keep the current menu visible, the parents scroll out on the left.
+    crumbs.scrollLeft = crumbs.scrollWidth;
   }
 
   void _renderKeys(TestMenu menu) {
@@ -1061,7 +1048,6 @@ class TestMenuManagerBrowser extends TestMenuPresenter
   Future preProcessItem(TestItem item) async {
     findContainer();
     window.location.hash = '#${getMenuStackNames(item).join('_')}';
-    _crumbMeta.textContent = window.location.hash;
     _append(_line('tm-line-cmd', _itemPath(item)), follow: true);
     _addRecent(item);
     // process after setting the hash to allow reload in case of crash in processing
@@ -1077,9 +1063,7 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     displayedMenu = menu;
     _displayedDepth = depth;
 
-    final title = _withClass(HTMLHeadingElement.h3(), 'tm-menu-title');
-    _appendMenuPath(title, clickable: false);
-
+    // No title, the header shows the menu path.
     final list = _withClass(HTMLUListElement(), 'tm-menu-list')
       ..setAttribute('role', 'list');
     _itemButtons.clear();
@@ -1119,7 +1103,6 @@ class TestMenuManagerBrowser extends TestMenuPresenter
     final section = menuContainer!;
     section.textContent = '';
     section
-      ..appendChild(title)
       ..appendChild(list)
       ..scrollTop = 0;
     _renderCrumbs();

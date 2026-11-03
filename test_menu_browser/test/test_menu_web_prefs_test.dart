@@ -21,7 +21,7 @@ void main() {
     await initTestMenuBrowser(prefs: prefs);
 
     final root = document.querySelector('.tm-root')!;
-    final frame = document.querySelector('.tm-window')! as HTMLElement;
+    final frame = document.querySelector('.tm-app')! as HTMLElement;
     for (var i = 0; i < 100 && !frame.hasAttribute('data-menu-hidden'); i++) {
       await Future<void>.delayed(const Duration(milliseconds: 10));
     }
@@ -37,9 +37,7 @@ void main() {
     );
 
     // Theme toggle saved
-    (document.querySelector('.tm-titlebar .tm-icon-btn:last-child')!
-            as HTMLElement)
-        .click();
+    (document.querySelector('.tm-theme')! as HTMLElement).click();
     expect(root.getAttribute('data-theme'), 'dark');
     expect(await prefs.getString('theme'), 'dark');
   });

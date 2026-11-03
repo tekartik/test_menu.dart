@@ -82,7 +82,12 @@ Its `test_menu_universal.dart` library runs the *same* menu on the console
   extra scripts first:
   `await initTestMenuBrowser(jsFiles: ['my_lib.js'])`, then call a global
   JavaScript function with `jsTest('myGlobalFunction')`.
-* Title bar buttons hide/show the menu and open the menu layout settings:
+* The console fills the page. Its header shows the menu path (the page
+  `<title>` for the root menu, a parent goes back when clicked), the status
+  (a dot when ready, RUNNING, INPUT or ERROR otherwise) and buttons to
+  hide/show the menu, clear the output and open the settings (theme, menu
+  layout). The footer holds the recent items, the item keypad (only when
+  the menu is hidden) and the command line. Menu layout:
   when the menu is below the output (narrow screens, < 900px) its height can
   be limited to a percent of the output and menu area, bounded by a min and
   max in pixels (default on, 40%, 120px to 480px), the menu then scrolling on
@@ -102,8 +107,7 @@ Its `test_menu_universal.dart` library runs the *same* menu on the console
 * The command line takes an item number or its `cmd` shortcut, `-` or `.` to
   go back, `?` for help, and hands any other line to the menu
   `command((line) {...})` handler if declared; arrow up/down browse the
-  history. Recently run items are offered as chips and the breadcrumb goes
-  back to a parent menu. Drive it from a browser test with
+  history (also the up/down buttons). Drive it from a browser test with
   `(menuPresenter as TestMenuManagerBrowser).processLine('0')`
   (`menuPresenter` comes from
   `package:tekartik_test_menu/test_menu_presenter.dart`).
