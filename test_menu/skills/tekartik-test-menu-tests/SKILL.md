@@ -72,21 +72,25 @@ companion package renders the menu on a console, on node or in a browser.
   index (`0`, `1`, ...); `cmd: 'a'` gives a word shortcut, `.` leaves the
   current menu, `?` reprints it.
 * `test(name, body, {cmd, solo})` is `item` and
-  `group(name, body, {solo})` is `menu(..., group: true)`. Use them when the
-  menu is a manual test suite; they are interchangeable with `item`/`menu`
-  in the same file. `group()` accepts a `cmd` named argument but ignores it —
-  use `menu(name, body, cmd: 'x')` when a group needs a shortcut.
+  `group(name, body, {cmd, solo})` is `menu(..., group: true)`. Use them
+  when the menu is a manual test suite; they are interchangeable with
+  `item`/`menu` in the same file, `cmd` gives the shortcut of both.
 * `expect(actual, matcher, {reason, skip})` and `fail(message)` come from
   this package, not from `package:test`: a mismatch throws the package's own
   `TestFailure`, which the menu catches and prints, leaving the menu open.
   All `package:matcher` matchers (`isTrue`, `equals`, `isNotNull`, ...) are
-  re-exported by `test.dart`.
+  re-exported by `test.dart`. The async matchers of
+  `package:matcher/expect.dart` (`throwsA`, `throwsStateError`,
+  `completion`, `emits`...) are not, and fail with this `expect` (they need
+  a running `package:test` test): catch the error or await the future,
+  then `expect` the value.
 * Never import `package:test/test.dart` in a file that imports
   `test.dart`: `test`, `group` and `expect` clash. In a real `package:test`
   file, import `package:tekartik_test_menu/test_menu.dart` instead and use
   `menu`/`item`.
-* `solo_test`, `solo_group`, `solo_item`, `solo_menu` (and `solo: true`) run
-  only that entry at startup, for a quick debug loop. They are annotated
+* `solo_test`, `solo_group`, `solo_item`, `solo_menu` (and `solo: true`)
+  open that entry at startup (an item is run, a menu is shown), for a quick
+  debug loop; the other entries stay in the menus. They are annotated
   `@doNotSubmit`, so the analyzer flags them (`// ignore:
   invalid_use_of_do_not_submit_member`) — remove them before committing. Same
   for `devWrite`.
@@ -99,15 +103,21 @@ companion package renders the menu on a console, on node or in a browser.
   and starts the loop: `mainMenu(args, declare)` /
   `initTestMenuConsole(args)` in `tekartik_test_menu_io`,
   `mainMenuConsole(args, declare)` in `package:dev_build/menu/menu_io.dart`
-  (`tekartik_test_menu_io` is a thin wrapper over it), `runMenuConsole` style
-  entry points in `tekartik_test_menu_node`, and the browser presenters of
-  `tekartik_test_menu_browser`.
+  (`tekartik_test_menu_io` is a thin wrapper over it), `mainMenuConsole(args,
+  declare)` of `package:tekartik_test_menu_node/test_menu_console.dart` on
+  node, `await initTestMenuBrowser()` of `tekartik_test_menu_browser`, and
+  `mainMenuFlutter(declare)` of `tekartik_test_menu_flutter`
+  (github.com/tekartik/test_menu_flutter).
 * `testMenuRun()` (or `menuRun()`) runs the menu that was just declared,
   once, with the current presenter, and resets the declarer. That is how a
   menu is exercised from an automated `package:test` test; with no presenter
   set, output goes to `print` and `prompt` returns `''`.
 * Extra command line arguments are replayed as keystrokes by the console
-  runners: `dart run tool/menu.dart 0 1 .` picks item 0, then 1, then quits.
+  runners: `dart run tool/menu.dart 0 1 .` picks item 0, then 1, then quits
+  (or goes back when item 0 opened a sub menu). Prefer them to piped input:
+  when piped input ends while an item prompts (`prompt`,
+  `keyValuePrompt`), the program ends with exit code 0, the rest of the
+  item never runs (dev_build console).
 * Keep the declaration in its own platform-agnostic library (importing only
   `test_menu.dart`/`test.dart`) and have one small entry point per platform
   call it. That is how the same menu runs on the console and in a browser.
@@ -276,4 +286,6 @@ void useLogPresenter() {
 * Expecting `tekartik_test_menu` alone to show a menu: it declares, a runner
   package (io, node, browser) presents.
 * Committing `solo_test`/`solo_group`/`solo_item`/`solo_menu`/`devWrite`;
-  they silently skip everything else.
+  the solo entry then runs at every start.
+* `expect(..., throwsA(...))` or `completion(...)` (from
+  `package:matcher/expect.dart`): always a failure in a menu.

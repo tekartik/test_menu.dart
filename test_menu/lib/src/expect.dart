@@ -42,20 +42,14 @@ typedef ErrorFormatter =
 ///
 /// If the assertion fails a [TestFailure] is thrown.
 ///
-/// If [skip] is a String or `true`, the assertion is skipped. The arguments are
-/// still evaluated, but [actual] is not verified to match [matcher]. If
-/// [actual] is a [Future], the test won't complete until the future emits a
-/// value.
+/// If [skip] is a String or `true`, the assertion is skipped (a line is
+/// printed). The arguments are still evaluated, but [actual] is not verified
+/// to match [matcher].
 ///
-/// If [skip] is a string, it should explain why the assertion is skipped; this
-/// reason will be printed when running the test.
-///
-/// Certain matchers, like [completion] and [throwsA], either match or fail
-/// asynchronously. When you use [expect] with these matchers, it ensures that
-/// the test doesn't complete until the matcher has either matched or failed. If
-/// you want to wait for the matcher to complete before continuing the test, you
-
-/// can call [expectLater] instead and `await` the result.
+/// The async matchers of `package:matcher/expect.dart` (`completion`,
+/// `throwsA`, `throwsStateError`, `emits`, `prints`...) need a running
+/// `package:test` test and always fail here: await the future (or catch the
+/// error) first, then check the value.
 void expect(Object? actual, Object? matcher, {String? reason, Object? skip}) {
   _expect(actual, matcher, reason: reason, skip: skip);
 }

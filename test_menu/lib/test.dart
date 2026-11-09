@@ -1,3 +1,9 @@
+/// Declare a manual test menu like a `package:test` file: [test] (an item),
+/// [group] (a sub menu), `expect`, `fail` and the `package:matcher` matchers,
+/// plus everything of `package:tekartik_test_menu/test_menu.dart`.
+///
+/// A runner package shows the menu (`tekartik_test_menu_io`'s `mainMenu` on
+/// a console). Do not import `package:test/test.dart` in the same file.
 library;
 
 import 'package:meta/meta.dart';
