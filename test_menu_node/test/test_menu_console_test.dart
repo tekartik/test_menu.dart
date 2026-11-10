@@ -1,23 +1,25 @@
 @TestOn('vm')
 library;
 
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:process_run/shell.dart';
 import 'package:test/test.dart';
 
 /// Run the node console menu (its io implementation) with [arguments].
-Future<ProcessResult> runConsoleMenu(List<String> arguments) async {
-  var process = await Process.start(Platform.resolvedExecutable, [
-    'test/src/console_menu_main.dart',
-    ...arguments,
-  ]);
-  // Arguments end with an exit, never wait on stdin.
-  await process.stdin.close();
-  var out = process.stdout.transform(utf8.decoder).join();
-  var err = process.stderr.transform(utf8.decoder).join();
-  var exitCode = await process.exitCode.timeout(const Duration(minutes: 1));
-  return ProcessResult(process.pid, exitCode, await out, await err);
+Future<ProcessResult> runConsoleMenu(List<String> arguments) {
+  // Arguments end with an exit, never wait on stdin: no input, its end at
+  // once.
+  return Shell(
+        stdin: const Stream<List<int>>.empty(),
+        verbose: false,
+        throwOnError: false,
+      )
+      .runExecutableArguments(Platform.resolvedExecutable, [
+        'test/src/console_menu_main.dart',
+        ...arguments,
+      ])
+      .timeout(const Duration(minutes: 1));
 }
 
 void main() {
