@@ -8,16 +8,15 @@ import 'package:test/test.dart';
 import 'package:web/web.dart' as web;
 
 void main() {
-  test('mdl existing container', () async {
+  test('legacy mdl entry point uses an existing container', () async {
     var container = web.document.createElement('div')
-      ..id = 'tekartik_test_menu_container';
-    var output = web.document.createElement('pre')..id = 'output';
-    container.appendChild(output);
+      ..id = testMenuBrowserContainerId;
     web.document.body!.appendChild(container);
     await initTestMenuBrowser();
-    // The input is created, prompting does not throw.
-    prompt('value').ignore();
-    expect(web.document.querySelectorAll('#output').length, 1);
-    expect(web.document.querySelector('#input'), isNotNull);
+    expect(
+      web.document.querySelectorAll('#$testMenuBrowserContainerId').length,
+      1,
+    );
+    expect(container.classList.contains('tm-root'), isTrue);
   });
 }

@@ -60,9 +60,11 @@ Its `test_menu_universal.dart` library runs the *same* menu on the console
 * Never import `test_menu_universal.dart` and `test_menu_web.dart` in the
   same file: both define `mainMenu` with different signatures
   (`(arguments, declare)` vs `(declare)`).
-* `test_menu_mdl_browser.dart`, `test_menu_mdl_browser_compat.dart` and
-  `test_menu_browser_compat.dart` are `@Deprecated` legacy (`dart:html`,
-  Material Design Lite). Do not use them in new code.
+* `test_menu_mdl_browser.dart` and `test_menu_mdl_browser_compat.dart` are
+  `@Deprecated` entry points kept for old code: their `initTestMenuBrowser`
+  / `mainMenu` / `mainMenuBrowser({js})` now run the default web menu (no
+  Material Design Lite any more). `test_menu_browser_compat.dart` is
+  `@Deprecated` legacy (`dart:html`). Use `test_menu_web.dart` in new code.
 * Keep the declarations in a platform-agnostic library that imports only
   `package:tekartik_test_menu/test_menu.dart`, and add one thin entry point
   per platform (`web/main.dart`, `tool/menu.dart`).

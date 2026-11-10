@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.4
+
+- No more Material Design Lite: the deprecated `test_menu_mdl_browser*`
+  entry points run the default web menu (`test_menu_web.dart`); the
+  `tekartik_mdl_js` and `tekartik_platform_browser` dependencies and
+  `css/test_menu_mdl.css` are gone
+
 ## 0.9.3
 
 - A page opened with `?agent` can be driven by an LLM agent

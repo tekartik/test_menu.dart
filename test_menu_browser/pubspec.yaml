@@ -1,5 +1,5 @@
 name: tekartik_test_menu_browser
-version: 0.9.3
+version: 0.9.4
 homepage: https://github.com/tekartik/test_menu.dart
 # https://github.com/tekartik/tekartik_test_menu.dart
 description: Simple test menu
@@ -19,18 +19,10 @@ dependencies:
       url: https://github.com/tekartik/test_menu.dart
       path: test_menu_io
     version: '>=0.8.0'
-  tekartik_mdl_js:
-    git:
-      url: https://github.com/tekartik/mdl_js.dart
-    version: '>=0.4.0+1'
   tekartik_browser_utils:
     git:
       url: https://github.com/tekartik/browser_utils.dart
     version: '>=0.6.8+1'
-  tekartik_platform_browser:
-    git:
-      url: https://github.com/tekartik/platform.dart
-      path: platform_browser
   web: '>=0.5.1'
   tekartik_common_utils:
     git:
@@ -57,9 +49,6 @@ dev_dependencies:
 resolution: workspace
   # dev_build:
   #  path: ../../../tekartik/dev_test.dart/dev_build
-
-#  tekartik_mdl_js:
-#    path: /opt/devx/git/github.com/alextekartik/mdl_js.dart
 #  platform_context:
 #    # path: /opt/devx/git/github.com/tekartik/platform_context.dart
 #    path: /opt/devx/git/github.com/alextekartik/platform_context.dart

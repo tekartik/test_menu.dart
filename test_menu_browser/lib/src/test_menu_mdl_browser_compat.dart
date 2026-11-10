@@ -1,309 +1,39 @@
-@Deprecated('Do not use')
+/// Legacy entry points of the former Material Design Lite browser menu.
+///
+/// They now run the default web test menu (`test_menu_web.dart`), so old
+/// code keeps working without the MDL scripts and styles.
+@Deprecated('Use test_menu_web.dart')
 library;
 
-import 'dart:async';
-import 'dart:html';
+import 'test_menu_web.dart' as web;
 
-import 'package:tekartik_browser_utils/css_utils.dart';
-import 'package:tekartik_mdl_js/mdl_button.dart';
-import 'package:tekartik_mdl_js/mdl_classes.dart';
-import 'package:tekartik_mdl_js/mdl_js_loader.dart';
-import 'package:tekartik_mdl_js/mdl_list.dart';
-import 'package:tekartik_mdl_js/mdl_textfield.dart';
-import 'package:tekartik_platform_browser/context_browser.dart';
-// ignore: implementation_imports
-import 'package:tekartik_test_menu/src/test_menu/test_menu.dart';
-// ignore: implementation_imports
-import 'package:tekartik_test_menu/src/test_menu/test_menu_manager.dart';
-import 'package:tekartik_test_menu/test_menu_presenter.dart';
+export 'test_menu_web.dart' hide initTestMenuBrowser, mainMenu;
 
-import 'test_menu_browser.dart' as common_browser;
-import 'test_menu_web.dart' as browser;
-
-export 'package:tekartik_test_menu/test_menu.dart';
-
-export 'common_browser.dart';
-export 'test_menu_browser.dart' show jsTest;
-
-void _log(Object? message) {
-  // ignore: avoid_print
-  print(message);
-}
-
-const String testMenuBrowserContainerId = 'tekartik_test_menu_container';
+/// Element id of the former MDL menu list (not used by the web menu).
 const String testMenuBrowserMenuId = 'test_menu';
+
+/// Element id of the former MDL output (not used by the web menu).
 const String testMenuBrowserOutputId = 'output';
+
+/// Element id of the former MDL input (not used by the web menu).
 const String testMenuBrowserInputId = 'input';
 
-// can be extended
-class TestMenuManagerBrowser extends common_browser.TestMenuManagerBrowser {
-  late TextField input;
-
-  PlatformContext platformContext = platformContextBrowser;
-
-  bool get isMobile => platformContext.browser!.isMobile;
-
-  @override
-  void write(Object message) {
-    writeln(message);
-  }
-
-  @override
-  void writeln(Object message) {
-    final text = '$message';
-    if (debugTestMenuManager) {
-      _log('writing $text');
-    }
-    commonLog(message);
-    outBuffer.add(text);
-    output!.text = outBuffer.toString();
-    autoScroll();
-  }
-
-  void initInputForMenu() {
-    input.label = 'Your choice';
-    input.value = '';
-
-    if (!isMobile) {
-      input.focus();
-    }
-  }
-
-  @override
-  void findContainer() {
-    if (container == null) {
-      container = document.getElementById(testMenuBrowserContainerId);
-      if (container == null) {
-        container = DivElement()..id = testMenuBrowserContainerId;
-        document.body!.children.add(container!);
-      }
-      // Reuse the output and menu of an existing container, the input
-      // (not reusable) is always created.
-      output =
-          container!.querySelector('#$testMenuBrowserOutputId') ??
-          (PreElement()..id = testMenuBrowserOutputId);
-      menuContainer =
-          container!.querySelector('#$testMenuBrowserMenuId') ??
-          (DivElement()..id = testMenuBrowserMenuId);
-      container!.querySelector('#$testMenuBrowserInputId')?.remove();
-
-      var form = FormElement();
-      form.setAttribute('action', '#');
-
-      input = TextField(id: testMenuBrowserInputId, floatingLabel: true);
-      form.append(input.element!);
-      form.onSubmit.listen((Event e) {
-        //_log('on submit: ${input.value}');
-        final value = input.value;
-        input.value = null;
-        e.preventDefault();
-        if (promptCompleter != null) {
-          promptCompleter!.complete(value);
-          promptCompleter = null;
-
-          initInputForMenu();
-        } else {
-          if (value == '-') {
-            testMenuManager!.popMenu();
-          } else {
-            final index = int.tryParse(value!) ?? -1;
-            //_log('on submit: $value ${index}');
-            final menu = displayedMenu;
-            if (menu != null && index >= 0 && index < menu.length) {
-              testMenuManager!.runItem(menu[index]);
-            }
-          }
-        }
-      });
-
-      for (var element in [output!, menuContainer!, form]) {
-        if (element.parent == null) {
-          container!.append(element);
-        }
-      }
-    }
-  }
-
-  /*
-  ???
-
-  @override
-  Future runItem(TestItem item) async {
-    try {
-      return await super.runItem(item);
-    } catch (e, st) {
-      write(e);
-      write(st);
-      write(e);
-    }
-  }
-  */
-
-  void autoScroll() {
-    window.scrollTo(0, document.body!.scrollHeight);
-  }
-
-  //@override
-  void init() {
-    // devPrint('output: $output');
-    findContainer();
-  }
-
-  void _updateMenuHash() {
-    final menuNames = getMenuStackNames();
-    window.location.hash = '#${menuNames.join('_')}';
-  }
-
-  @override
-  void displayMenu(TestMenu menu) {
-    findContainer();
-
-    if (displayedMenu != menu) {
-      //Element header = new HeadingElement.h4();
-      Element header = DivElement();
-
-      _updateMenuHash();
-
-      //StringBuffer sb = new StringBuffer();
-      var popCount = testMenuManager!.activeDepth;
-      for (final runner in testMenuManager!.stackMenus) {
-        final testMenu = runner.menu;
-        final menuPopCount = popCount--;
-        void clickOnMenu([_]) {
-          //devPrint('Click on menu');
-          if (menuPopCount <= testMenuManager!.activeDepth &&
-              menuPopCount > 0) {
-            testMenuManager!.popMenu(menuPopCount);
-          } else {
-            // Make the href is updated
-            _updateMenuHash();
-          }
-        }
-
-        header.append(
-          buttonCreate()
-            ..text = testMenu.name
-            ..onClick.listen(clickOnMenu),
-        );
-        /*
-        header.append(new AnchorElement(href: '#')
-          ..text = ' > ${testMenu.name}'
-          ..onClick.listen((_) {
-            _log('$menuPopCount / $activeDepth');
-            if (menuPopCount <= activeDepth && menuPopCount > 0) {
-              testMenuManager.pop(menuPopCount);
-            }
-          }));
-          */
-      }
-      //header.setInnerHtml(sb.toString());
-      final list = listCreate();
-
-      Element liElement;
-
-      if (testMenuManager!.activeDepth > 0) {
-        liElement = listItemCreate()
-          ..append(
-            listItemPrimaryContentCreate()
-              ..append(
-                SpanElement()
-                  ..className = listItemIcon
-                  ..appendText('-'),
-              )
-              ..appendText('exit'),
-          )
-          ..onClick.listen((_) {
-            if (TestMenuManager.debug.on) {
-              write('[mdl poping] ${testMenuManager!.menuRunners}');
-            }
-            testMenuManager!.popMenu();
-          });
-        list.children.add(liElement);
-      }
-
-      for (var i = 0; i < menu.length; i++) {
-        //int index = i;
-        final item = menu[i];
-        liElement = listItemCreate()
-          ..append(
-            listItemPrimaryContentCreate()
-              ..append(
-                SpanElement()
-                  ..className = listItemIcon
-                  ..appendText('$i'),
-              )
-              ..appendText('$item'),
-          )
-          ..onClick.listen((_) {
-            _log("[i] running '$i $item'");
-            testMenuManager!.runItem(item).then((_) {
-              _log("[i] done '$i $item'");
-              initInputForMenu();
-            });
-          });
-        list.children.add(liElement);
-        if (debugTestMenuManager) {
-          _log('$i $item');
-        }
-      }
-
-      displayedMenu = menu;
-      menuContainer!.children
-        ..clear()
-        ..addAll([header, list]);
-
-      initInputForMenu();
-    }
-  }
-
-  @override
-  Future<String> prompt(Object? message) {
-    //String message = (message == null || message.length == 0)
-    message = message == null ? 'Enter text' : '$message';
-    input.value = null;
-    write('$message >');
-    var completer = Completer<String>.sync();
-    promptCompleter = completer;
-    input.label = message as String;
-    input.focus();
-    return completer.future;
-  }
-}
-
-Future initMenuBrowser({List<String>? js}) async {
+/// Init the web test menu, loading the [js] scripts first.
+Future<void> initMenuBrowser({List<String>? js}) async {
   await initTestMenuBrowser(js: js);
 }
 
-Future initTestMenuBrowser({List<String>? js}) async {
-  var futures = [
-    loadMdlJs(),
-    loadMdlCss(),
-    loadMaterialIconsCss(),
-    loadStylesheet('packages/tekartik_test_menu_browser/css/test_menu_mdl.css'),
-  ];
-  if (debugTestMenuManager) {
-    _log('loading js: $js');
-  }
-  await Future.wait(futures);
-  await browser.testMenuLoadJs(js);
-
-  _testMenuManagerBrowser = TestMenuManagerBrowser();
-  _testMenuManagerBrowser!.init();
-
-  testMenuPresenter = _testMenuManagerBrowser!;
-
-  initTestMenuManager();
-  final hash = window.location.hash;
-  testMenuManager!.initCommands = TestMenuManager.initCommandsFromHash(hash);
+/// Init the web test menu, loading the [js] scripts first.
+Future<void> initTestMenuBrowser({List<String>? js}) async {
+  await web.initTestMenuBrowser(jsFiles: js);
 }
 
-TestMenuManagerBrowser? _testMenuManagerBrowser;
-
-/// Main menu declaration
+/// Main menu declaration.
 Future<void> mainMenu(void Function() declare, {List<String>? js}) async {
   await mainMenuBrowser(declare, js: js);
 }
 
+/// Main menu declaration, loading the [js] scripts first.
 Future<void> mainMenuBrowser(
   void Function() declare, {
   List<String>? js,
