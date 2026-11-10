@@ -23,6 +23,11 @@ dependencies:
     git:
       url: https://github.com/tekartik/browser_utils.dart
     version: '>=0.6.8+1'
+  tekartik_platform:
+    git:
+      url: https://github.com/tekartik/platform.dart
+      path: platform
+    version: '>=0.4.0'
   web: '>=0.5.1'
   tekartik_common_utils:
     git:

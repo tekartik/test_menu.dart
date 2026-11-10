@@ -5,7 +5,8 @@
 - No more Material Design Lite: the deprecated `test_menu_mdl_browser*`
   entry points run the default web menu (`test_menu_web.dart`); the
   `tekartik_mdl_js` and `tekartik_platform_browser` dependencies and
-  `css/test_menu_mdl.css` are gone
+  `css/test_menu_mdl.css` are gone; `tekartik_platform` (exported) is now a
+  direct dependency
 
 ## 0.9.3
 
