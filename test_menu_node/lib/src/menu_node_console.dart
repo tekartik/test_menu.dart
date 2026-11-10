@@ -12,6 +12,8 @@ import 'package:tekartik_core_node/console.dart';
 import 'package:tekartik_core_node/process.dart';
 import 'package:tekartik_stdio_node/readline.dart';
 
+import 'node_arguments.dart';
+
 // ignore_for_file: implementation_imports
 
 // set to false before checkin
@@ -281,7 +283,13 @@ class _MenuManagerConsole extends MenuPresenter with MenuPresenterMixin {
 }
 
 /// Initialize the test menu console.
+///
+/// On node, where `main` always gets an empty list (dart2js), empty
+/// [arguments] are read from the node command line.
 void initMenuConsoleImpl(List<String> arguments) {
+  if (arguments.isEmpty) {
+    arguments = nodeProcessArguments ?? arguments;
+  }
   _menuManagerConsole = _MenuManagerConsole(arguments);
   // set current
   menuPresenter = _menuManagerConsole!;
@@ -294,7 +302,12 @@ Future<T> usingSharedStdIn<T>(Future<T> Function() action) {
 
 _MenuManagerConsole? _menuManagerConsole;
 
-/// Main menu declaration
+/// Shows the menus and items declared by [declare] (synchronous) in the
+/// console, reading the commands from stdin.
+///
+/// [arguments] (the ones of `main`; on node, where `main` gets none, the
+/// node command line) are commands typed first: `0 .` runs item 0 and exits.
+/// `-h` prints the help and exits, `-v` traces each command.
 void mainMenuConsole(List<String> arguments, void Function() declare) {
   initMenuConsoleImpl(arguments);
 

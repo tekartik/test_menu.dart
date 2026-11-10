@@ -15,7 +15,9 @@ description: >-
 the same declarations (`menu`, `item`, `prompt`...) presented with a console
 built on `tekartik_core_node` (`console.out`, `process.exit`) and
 `tekartik_stdio_node` (`readline.question`). The menu runs after the Dart
-entry point has been compiled to JavaScript and started with `node`.
+entry point has been compiled to JavaScript and started with `node`; the
+same entry point also runs on the Dart VM (`dart run`, the io
+implementations of those packages).
 
 ## Guidelines
 
@@ -66,7 +68,9 @@ entry point has been compiled to JavaScript and started with `node`.
 * Extra command line arguments are replayed as typed commands, so
   `node deploy/simple_menu.js 0 .` runs item 0 and exits. `-h` prints the
   hint and exits, `-v` traces each command. Without a trailing `.` the
-  process keeps waiting on `readline`.
+  process keeps waiting on `readline`. dart2js calls `main` with an empty
+  list on node: `mainMenuConsole` then reads `process.argv` itself, so pass
+  `main`'s `arguments` as is.
 * `write`/`writeln` go to `console.out`; `prompt(message)` is answered by the
   next line read by `readline`. Plain `print` also works on node but bypasses
   the presenter.
@@ -83,7 +87,8 @@ entry point has been compiled to JavaScript and started with `node`.
 * `builder.compile()`, `builder.run(runOptions: ...)` and `builder.clean()`
   are the separate steps. Run these `tool/` scripts with `dart run`.
 * `node` must be installed; the compiled JavaScript, not the Dart file, is
-  the thing to start.
+  the thing to start. `NodeAppRunOptions` has no arguments: to replay
+  commands, run `node deploy/<basename>.js 0 .` after `builder.compile()`.
 * In automated tests use `testMenuRun()`, which runs the declared menu once
   without the node presenter, so the test also passes on the VM
   (`@TestOn('vm || node')`).
@@ -213,8 +218,8 @@ void main() {
 
 ## Common mistakes
 
-* Running the Dart file directly on the VM: this runner needs the Node.js
-  `readline`/`console` bindings, compile it first.
+* Expecting `dart run bin/menu.dart` to test the node build: it runs the
+  io implementations; compile and run the JavaScript to check node.
 * Looking for `mainMenu`, `initTestMenuConsole`, `usingSharedStdIn` or the
   `key_value_io.dart` env helpers here: they are `tekartik_test_menu_io`
   only.
