@@ -6,8 +6,8 @@ import 'package:tekartik_test_menu_browser/test_menu_browser.dart';
 
 import 'common_test_menu.dart' as common_test_menu;
 
-void main() {
-  initTestMenuBrowser();
+Future<void> main() async {
+  await initTestMenuBrowser();
 
   /*
   TestMenu subMenu = new TestMenu("sub");

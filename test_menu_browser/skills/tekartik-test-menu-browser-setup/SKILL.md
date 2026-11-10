@@ -107,7 +107,9 @@ Its `test_menu_universal.dart` library runs the *same* menu on the console
 * `write`/`writeln` append to the output log (the last 100 entries are kept,
   a line starting with `ERROR` is shown as an error with a collapsible stack
   trace); `prompt` highlights the command line and the next submitted line,
-  even empty, answers it.
+  even empty, answers it. One prompt at a time: an item run (clicked) while
+  another one waits for its answer and that prompts too replaces the pending
+  prompt, the first item then never completes (status stuck on RUNNING).
 * The command line takes an item number or its `cmd` shortcut, `-` or `.` to
   go back, `?` for help, and hands any other line to the menu
   `command((line) {...})` handler if declared; arrow up/down browse the
@@ -157,7 +159,7 @@ Its `test_menu_universal.dart` library runs the *same* menu on the console
   adds the deprecated `getLocalStorageVar`/`setLocalStorageVar`/
   `deleteLocalStorageVar`): `'MY_VAR'.kvFromLocalStorage(defaultValue: ...)`,
   `'MY_VAR'.fromLocalStorage()`, `await kv.promptToLocalStorage()`.
-  `fromLocalStorage` caches the first read for the lifetime of the page.
+  `fromLocalStorage` reads the local storage at each call (not cached).
 * `keyValuesMenu('vars', [kv1, kv2])` (defined in both libraries, import only
   one) declares a sub menu with `dump`, `all`, `prompt invalids`, one
   `update <key>` item per value (under a `one by one` sub menu from 6 values
@@ -323,7 +325,8 @@ void main() {
   passing `arguments` to the one-argument `mainMenu` of `test_menu_web.dart`.
 * Forgetting to `await mainMenu(...)` / `mainMenuWeb(...)` /
   `initTestMenuBrowser()`: the declaration then runs before the presenter is
-  installed.
+  installed. Calling `initTestMenuBrowser()` twice (or before
+  `mainMenuWeb`): a second console is added to the page.
 * Opening the `.dart` file directly instead of serving the compiled page
   (`webdev serve`), or serving a page whose `<script>` does not point at the
   compiled `*.dart.js`.
